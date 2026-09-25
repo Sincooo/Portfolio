@@ -1,0 +1,27 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import { projects, type Project } from '../../data/projects';
+
+export const getStaticPaths = (() => projects.map((project) => ({ params: { slug: project.slug }, props: { project } }))) satisfies GetStaticPaths;
+const { project } = Astro.props as { project: Project };
+---
+<BaseLayout title={`${project.title} — Edward Ranz V. Cardoza`} description={project.summary}>
+  <Nav />
+  <main id="main" class="case-study section-shell">
+    <a class="case-back" href="/#projects">← Back to projects</a>
+    <p class="eyebrow">{project.category} / {project.status} / {project.date}</p>
+    <h1>{project.title}</h1>
+    <p class="case-summary">{project.summary}</p>
+    {project.preview && <img class="case-preview" src={project.preview} alt={project.previewAlt || `Preview of ${project.title}`} />}
+    <div class="case-grid">
+      <div><h2>Overview</h2><p>{project.overview}</p></div>
+      <aside><h2>Details</h2><p><strong>Status</strong><br />{project.status}</p><p><strong>Technologies</strong><br />{project.technologies.join(' · ')}</p><p><strong>Date</strong><br />{project.date}</p></aside>
+    </div>
+    {project.contribution && <section class="case-block"><h2>My contribution</h2><p>{project.contribution}</p></section>}
+    {project.challenges && <section class="case-block"><h2>Challenges</h2><p>{project.challenges}</p></section>}
+    {project.lessons && <section class="case-block"><h2>What I learned</h2><p>{project.lessons}</p></section>}
+    <div class="case-links">{project.repository && <a href={project.repository} target="_blank" rel="noopener noreferrer">GitHub repository ↗</a>}{project.demo && <a href={project.demo} target="_blank" rel="noopener noreferrer">Live demo ↗</a>}</div>
+  </main>
+</BaseLayout>

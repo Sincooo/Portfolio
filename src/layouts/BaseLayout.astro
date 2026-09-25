@@ -1,0 +1,23 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/sora';
+import '../styles/global.css';
+import '../styles/sections.css';
+
+const { title = 'Edward Ranz V. Cardoza — Computer Science Student', description = 'Portfolio of Edward Ranz V. Cardoza, a Computer Science student at Cavite State University.' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c1017" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+  </body>
+</html>

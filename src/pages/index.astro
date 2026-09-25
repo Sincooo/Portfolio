@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import { projects } from '../data/projects';
+const technologies = [
+  { name: 'Java', tag: 'CURRENT FOCUS', color: 'yellow', summary: 'A return to the language that started it all.', story: 'Java was my first programming language in senior high school. I am studying it again in college, revisiting the fundamentals with a more deliberate approach and building a stronger grasp of how programs are structured.', next: 'Currently learning through coursework and practice.' },
+  { name: 'Python', tag: 'COLLEGE FOUNDATION', color: 'cyan', summary: 'Learning to turn a problem into a sequence of steps.', story: 'I encountered Python in my first year of college, mainly through the curriculum. Working with it helped me become more comfortable with core programming ideas and approaching problems logically.', next: 'Continuing to strengthen the fundamentals.' },
+  { name: 'HTML · CSS · JavaScript', tag: 'WEB FUNDAMENTALS', color: 'violet', summary: 'Understanding how the web is put together.', story: 'I learned HTML, CSS, and JavaScript through college coursework. Together, they introduced me to the relationship between structure, visual presentation, and interaction.', next: 'Looking to apply them in more complete work.' },
+  { name: 'Visual Basic', tag: 'EARLY EXPERIENCE', color: 'blue', summary: 'An early introduction to coding logic.', story: 'I studied Visual Basic in senior high school. It introduced me to the basics of coding and helped make programming feel approachable before I moved on to other languages.', next: 'Part of the foundation I still build on.' },
+];
+const seminars = [
+  { title: 'The Role of AI in Education', subtitle: 'Balancing the Benefits and Risk of Using AI in Education', detail: 'Webinar participation · DICT Region V', date: 'MAY 2025', image: '/assets/certificate-ai-education.png' },
+  { title: 'AI in English Teaching: Friend or Foe?', subtitle: 'Exploring the Benefits and Challenges While Keeping the Human Touch', detail: 'Webinar participation · National Teachers College', date: 'MAY 2025', image: '/assets/certificate-ai-english.png' },
+  { title: 'Safeguarding the Future', subtitle: 'Data Privacy and Cybersecurity in Education', detail: 'Webinar participation · National Teachers College', date: 'WEBINAR', image: '/assets/certificate-cybersecurity.png' },
+];
+---
+<BaseLayout>
+  <Nav />
+  <main id="main">
+    <section id="home" class="hero section-shell">
+      <div class="profile-card" data-reveal>
+        <div class="profile-topline"><span>PORTFOLIO / 2026</span><span class="profile-cross" aria-hidden="true">✳</span></div>
+        <div class="portrait-frame"><img src="/assets/portrait.jpg" alt="Portrait of Edward Ranz V. Cardoza" width="853" height="1280" fetchpriority="high" /></div>
+        <h1>Edward Ranz<br />V. Cardoza</h1>
+        <p class="profile-role">Computer Science Student</p>
+        <div class="profile-bottomline"><span>CAVITE STATE UNIVERSITY</span><span>MAIN CAMPUS</span></div>
+      </div>
+      <div class="hero-statement" data-reveal>
+        <p class="eyebrow">INTRODUCING / EDWARD RANZ</p>
+        <h2>COMPUTER<br /><span>SCIENCE</span><br />STUDENT<span class="period">.</span></h2>
+        <p class="hero-intro">I’m building my foundation in software development through Java and coursework, while staying curious about the many directions technology can take me.</p>
+        <a class="button button-light" href="#projects">View Projects <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section id="projects" class="section-shell section-projects">
+      <div class="section-heading" data-reveal><p class="eyebrow">01 / WORK IN PROGRESS</p><h2>SELECTED<br /><span>PROJECTS</span></h2></div>
+      {projects.length > 0 ? <div class="project-list">
+        {projects.map((project, index) => <a class="project-entry" href={`/projects/${project.slug}/`} data-reveal>
+          <span class="project-entry-number">0{index + 1} / {project.status}</span>
+          <div><h3>{project.title}</h3><p>{project.summary}</p><span>{project.technologies.join(' · ')}</span></div>
+          {project.preview && <img src={project.preview} alt={project.previewAlt || `Preview of ${project.title}`} loading="lazy" />}
+          <span class="project-entry-arrow" aria-hidden="true">↗</span>
+        </a>)}
+      </div> : <div class="project-empty" data-reveal>
+        <div class="project-empty-main"><span class="big-asterisk" aria-hidden="true">✳</span><p class="eyebrow">A SPACE FOR THE WORK AHEAD</p><h3>Building toward my first published project.</h3><p>I’m strengthening my foundations through coursework and practice. This space will grow with projects ready to represent my work.</p></div>
+        <div class="project-empty-side"><span>01 / BEGINNING</span><span>MORE TO COME ↗</span></div>
+      </div>}
+    </section>
+
+    <section id="technologies" class="section-shell section-technologies">
+      <div class="split-heading" data-reveal><p class="eyebrow">02 / LANGUAGES & TOOLS</p><h2>TECHNOLOGIES<span class="period">.</span></h2><p>The story behind what I’ve learned matters more than a percentage. These are foundations I’m developing—not claims of expertise.</p></div>
+      <div class="technology-grid">
+        {technologies.map((technology, index) => <article class={`technology-card ${technology.color}`} data-reveal>
+          <div class="technology-meta"><span>{technology.tag}</span><span>0{index + 1} / 04</span></div>
+          <div class="technology-title"><h3>{technology.name}</h3><span aria-hidden="true">↗</span></div>
+          <p class="technology-summary">{technology.summary}</p>
+          <div class="technology-story"><p>{technology.story}</p><span>{technology.next}</span></div>
+        </article>)}
+      </div>
+    </section>
+
+    <section id="experience" class="section-experience">
+      <div class="section-shell experience-layout">
+        <div class="experience-intro" data-reveal><p class="eyebrow">03 / EXPERIENCE</p><h2>LEARNING<br />BEYOND<br /><em>the classroom.</em></h2><p>Experience is also the questions you ask and the conversations you join. These seminars are part of how I continue exploring technology and its impact.</p></div>
+        <div class="experience-list">
+          {seminars.map((seminar, index) => <article class="experience-item" data-reveal>
+            <span class="experience-index">0{index + 1}</span>
+            <div><p class="eyebrow">{seminar.date} / {seminar.detail}</p><h3>{seminar.title}</h3><p>{seminar.subtitle}</p></div>
+            <a href="#gallery" aria-label={`View certificates in gallery for ${seminar.title}`}>↗</a>
+          </article>)}
+        </div>
+      </div>
+    </section>
+
+    <section id="education" class="section-shell section-education">
+      <div class="education-heading" data-reveal><p class="eyebrow">04 / EDUCATION</p><h2>THE<br /><span>FOUNDATION</span></h2></div>
+      <div class="education-card" data-reveal><div class="education-mark" aria-hidden="true">CVSU<span>✳</span></div><div class="education-details"><p class="eyebrow">2025 — PRESENT</p><h3>Bachelor of Science in Computer Science</h3><p>Cavite State University<br />Main Campus</p></div><div class="education-foot">LEARNING IN PROGRESS <span aria-hidden="true">↗</span></div></div>
+    </section>
+
+    <section id="about" class="section-about">
+      <div class="section-shell about-grid">
+        <div class="about-label" data-reveal><p class="eyebrow">05 / ABOUT</p><span class="about-orbit" aria-hidden="true">✳</span></div>
+        <div data-reveal><h2>CURIOUS BY<br /><em>default.</em></h2><p>I’m a Computer Science student at Cavite State University – Main Campus, building my foundation in software development through Java and other languages introduced through coursework. I’m interested in AI engineering and cloud engineering, while remaining open to exploring different environments and sectors of technology. I value steady progress, learning, and mastering the fundamentals.</p><div class="current-learning"><span class="eyebrow">CURRENT LEARNING</span><h3>Java, and whatever<br />comes next.</h3><p>I’m currently strengthening my Java foundation and exploring where my interests lead. No fixed path—just a commitment to keep learning.</p></div></div>
+      </div>
+    </section>
+
+    <section id="gallery" class="section-shell section-gallery">
+      <div class="split-heading" data-reveal><p class="eyebrow">06 / GALLERY</p><h2>A VISUAL<br /><span>RECORD.</span></h2><p>A place for the work, moments, and milestones that shape my path. For now, these certificates document seminars I’ve attended.</p></div>
+      <div class="gallery-subhead"><h3>Certificates</h3><span>01 — 03</span></div>
+      <div class="gallery-grid">
+        {seminars.map((seminar, index) => <button class="gallery-item" type="button" data-gallery-index={index} data-reveal aria-label={`Open certificate: ${seminar.title}`}>
+          <span class="gallery-image"><img src={seminar.image} alt={`Certificate of participation for ${seminar.title}`} loading="lazy" /></span>
+          <span class="gallery-caption"><span>0{index + 1} / CERTIFICATE</span><strong>{seminar.title}</strong><span aria-hidden="true">↗</span></span>
+        </button>)}
+      </div>
+    </section>
+
+    <section id="contact" class="section-contact">
+      <div class="section-shell contact-inner" data-reveal><p class="eyebrow">07 / CONTACT</p><h2>LET’S<br /><span>CONNECT.</span></h2><p>Interested in connecting, sharing ideas, or following what I’m learning? You can find me here.</p><a class="contact-email" href="mailto:cardozaedwardranz14@gmail.com">cardozaedwardranz14@gmail.com <span aria-hidden="true">↗</span></a><div class="contact-links"><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://www.facebook.com/ranz.edward.92" target="_blank" rel="noopener noreferrer">Facebook ↗</a></div><div class="contact-bottom"><span>EDWARD RANZ V. CARDOZA</span><a href="#home">BACK TO TOP ↑</a><span>© {new Date().getFullYear()}</span></div></div>
+    </section>
+  </main>
+
+  <dialog id="gallery-dialog" class="gallery-dialog" aria-label="Certificate preview">
+    <div class="dialog-bar"><span id="dialog-count"></span><button type="button" id="dialog-close" aria-label="Close preview">✕</button></div>
+    <div class="dialog-image"><img id="dialog-img" alt="" /></div>
+    <div class="dialog-bottom"><button type="button" id="dialog-prev" aria-label="Previous certificate">←</button><p id="dialog-title"></p><button type="button" id="dialog-next" aria-label="Next certificate">→</button></div>
+  </dialog>
+  <script define:vars={{ gallery: seminars.map(({ title, image }) => ({ title, image })) }}>
+    const revealItems = document.querySelectorAll('[data-reveal]');
+    if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('has-reveal');
+      const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); observer.unobserve(entry.target); } }), { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      revealItems.forEach((item) => observer.observe(item));
+    }
+    const sections = document.querySelectorAll('main section[id]');
+    const links = document.querySelectorAll('.desktop-nav a');
+    const navObserver = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `/#${entry.target.id}`)); }), { rootMargin: '-35% 0px -55% 0px' });
+    sections.forEach((section) => navObserver.observe(section));
+    document.querySelectorAll('.mobile-nav-links a').forEach((link) => link.addEventListener('click', () => { document.querySelector('.mobile-nav details').open = false; }));
+    const dialog = document.getElementById('gallery-dialog');
+    const dialogImage = document.getElementById('dialog-img');
+    const dialogTitle = document.getElementById('dialog-title');
+    const dialogCount = document.getElementById('dialog-count');
+    let selected = 0;
+    let opener = null;
+    const show = (index) => { selected = (index + gallery.length) % gallery.length; dialogImage.src = gallery[selected].image; dialogImage.alt = `Certificate of participation for ${gallery[selected].title}`; dialogTitle.textContent = gallery[selected].title; dialogCount.textContent = `CERTIFICATE 0${selected + 1} / 0${gallery.length}`; };
+    document.querySelectorAll('[data-gallery-index]').forEach((button) => button.addEventListener('click', () => { opener = button; show(Number(button.dataset.galleryIndex)); dialog.showModal(); document.getElementById('dialog-close').focus(); }));
+    document.getElementById('dialog-close').addEventListener('click', () => dialog.close());
+    document.getElementById('dialog-prev').addEventListener('click', () => show(selected - 1));
+    document.getElementById('dialog-next').addEventListener('click', () => show(selected + 1));
+    dialog.addEventListener('keydown', (event) => { if (event.key === 'ArrowLeft') show(selected - 1); if (event.key === 'ArrowRight') show(selected + 1); });
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => opener?.focus());
+  </script>
+</BaseLayout>

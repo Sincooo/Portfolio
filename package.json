@@ -1,0 +1,20 @@
+{
+  "name": "edward-ranz-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1 --port 4321",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1 --port 4321",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "latest",
+    "@fontsource-variable/inter": "latest",
+    "@fontsource-variable/sora": "latest"
+  },
+  "devDependencies": {
+    "@astrojs/check": "latest",
+    "typescript": "^6.0.0"
+  }
+}
