@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import TechnologyIcon from '../components/TechnologyIcon.astro';
 import { projects } from '../data/projects';
-import { cvUrl } from '../data/profile';
 const technologies = [
   { name: 'Java', tag: 'CURRENT FOCUS', color: 'yellow', summary: 'A return to the language that started it all.', story: 'Java was my first programming language in senior high school. I am studying it again in college, revisiting the fundamentals with a more deliberate approach and building a stronger grasp of how programs are structured.', next: 'Currently learning through coursework and practice.' },
   { name: 'HTML', tag: 'WEB STRUCTURE', color: 'orange', summary: 'Giving web pages a meaningful structure.', story: 'I learned HTML through college coursework, alongside CSS and JavaScript. It introduced me to the structure behind a web page and how its content is organized.', next: 'Looking to apply it in more complete work.' },
@@ -29,9 +28,7 @@ const seminars = [
         <p class="hero-intro hero-enter" style="--enter-delay: 260ms">A Computer Science student curious about how systems work. I’m learning to build software and sharpening my programming skills, one step at a time.</p>
         <div class="hero-actions hero-enter" style="--enter-delay: 330ms">
           <a class="button button-primary" href="#contact">Contact Me <span aria-hidden="true">↗</span></a>
-          {cvUrl ? <a class="button button-outline" href={cvUrl} download>Download CV <span aria-hidden="true">↓</span></a>
-            : <button class="button button-outline" type="button" disabled aria-describedby="cv-status">Download CV <span aria-hidden="true">↓</span></button>}
-          {!cvUrl && <span id="cv-status" class="cv-status">CV coming soon</span>}
+          <a class="button button-outline" href="#projects">View Projects <span aria-hidden="true">↗</span></a>
         </div>
         <div class="hero-socials hero-enter" style="--enter-delay: 380ms"><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a><span aria-hidden="true">/</span><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a></div>
       </div>
@@ -40,11 +37,22 @@ const seminars = [
         <div class="portrait-frame"><img src="/assets/portrait.jpg" alt="Portrait of Edward Ranz V. Cardoza" width="853" height="1280" fetchpriority="high" /></div>
         <figcaption class="profile-bottomline"><span>CURIOUS. LEARNING. BUILDING.</span><span aria-hidden="true">↗</span></figcaption>
       </figure>
-      <div class="hero-footer"><p>COMPUTER SCIENCE <span aria-hidden="true">/</span> CVSU MAIN CAMPUS</p><a href="#projects">Explore my journey <span aria-hidden="true">↓</span></a></div>
+      <div class="hero-footer"><p>COMPUTER SCIENCE <span aria-hidden="true">/</span> CVSU MAIN CAMPUS</p><a href="#technologies">Explore my journey <span aria-hidden="true">↓</span></a></div>
+    </section>
+
+    <section id="technologies" class="section-shell section-technologies">
+      <div class="split-heading" data-reveal><p class="eyebrow">01 / LANGUAGES & TOOLS</p><h2>TECHNOLOGIES<span class="period">.</span></h2><p>The story behind what I’ve learned matters more than a percentage. These are foundations I’m developing—not claims of expertise.</p></div>
+      <div class="technology-grid">
+        {technologies.map((technology, index) => <article class={`technology-card ${technology.color}`} data-reveal style={`--reveal-delay: ${index * 55}ms`}>
+          <div class="technology-title"><TechnologyIcon name={technology.name} /><div><h3>{technology.name}</h3><span class="technology-meta">{technology.tag}</span></div></div>
+          <p class="technology-summary">{technology.summary}</p>
+          <details class="technology-story"><summary>My learning story <span aria-hidden="true">+</span></summary><div><p>{technology.story}</p><span>{technology.next}</span></div></details>
+        </article>)}
+      </div>
     </section>
 
     <section id="projects" class="section-shell section-projects">
-      <div class="section-heading" data-reveal><p class="eyebrow">01 / WORK IN PROGRESS</p><h2>SELECTED<br /><span>PROJECTS</span></h2></div>
+      <div class="section-heading" data-reveal><p class="eyebrow">02 / WORK IN PROGRESS</p><h2>SELECTED<br /><span>PROJECTS</span></h2></div>
       {projects.length > 0 ? <div class="project-list">
         {projects.map((project, index) => <a class="project-entry" href={`/projects/${project.slug}/`} data-reveal>
           <span class="project-entry-number">0{index + 1} / {project.status}</span>
@@ -58,20 +66,21 @@ const seminars = [
       </div>}
     </section>
 
-    <section id="technologies" class="section-shell section-technologies">
-      <div class="split-heading" data-reveal><p class="eyebrow">02 / LANGUAGES & TOOLS</p><h2>TECHNOLOGIES<span class="period">.</span></h2><p>The story behind what I’ve learned matters more than a percentage. These are foundations I’m developing—not claims of expertise.</p></div>
-      <div class="technology-grid">
-        {technologies.map((technology, index) => <article class={`technology-card ${technology.color}`} data-reveal style={`--reveal-delay: ${index * 55}ms`}>
-          <div class="technology-title"><TechnologyIcon name={technology.name} /><div><h3>{technology.name}</h3><span class="technology-meta">{technology.tag}</span></div></div>
-          <p class="technology-summary">{technology.summary}</p>
-          <details class="technology-story"><summary>My learning story <span aria-hidden="true">+</span></summary><div><p>{technology.story}</p><span>{technology.next}</span></div></details>
-        </article>)}
+    <section id="about" class="section-about">
+      <div class="section-shell about-grid">
+        <div class="about-label" data-reveal><p class="eyebrow">03 / ABOUT</p><span class="about-orbit" aria-hidden="true">✳</span></div>
+        <div data-reveal><h2>CURIOUS BY<br /><em>default.</em></h2><p>I’m a Computer Science student at Cavite State University – Main Campus, building my foundation in software development through Java and other languages introduced through coursework. I’m interested in AI engineering and cloud engineering, while remaining open to exploring different environments and sectors of technology. I value steady progress, learning, and mastering the fundamentals.</p><div class="current-learning"><span class="eyebrow">CURRENT LEARNING</span><h3>Java, and whatever<br />comes next.</h3><p>I’m currently strengthening my Java foundation and exploring where my interests lead. No fixed path—just a commitment to keep learning.</p></div></div>
       </div>
+    </section>
+
+    <section id="education" class="section-shell section-education">
+      <div class="education-heading" data-reveal><p class="eyebrow">04 / EDUCATION</p><h2>THE<br /><span>FOUNDATION</span></h2></div>
+      <div class="education-card" data-reveal><div class="education-mark"><img src="/assets/cvsu-logo.png" alt="Cavite State University official logo" width="200" height="174" loading="lazy" /></div><div class="education-details"><p class="eyebrow">2025 — PRESENT</p><h3>Bachelor of Science in Computer Science</h3><p>Cavite State University<br />Main Campus</p></div><div class="education-foot">LEARNING IN PROGRESS <span aria-hidden="true">↗</span></div></div>
     </section>
 
     <section id="experience" class="section-experience">
       <div class="section-shell experience-layout">
-        <div class="experience-intro" data-reveal><p class="eyebrow">03 / EXPERIENCE</p><h2>LEARNING<br />BEYOND<br /><em>the classroom.</em></h2><p>Experience is also the questions you ask and the conversations you join. These seminars are part of how I continue exploring technology and its impact.</p></div>
+        <div class="experience-intro" data-reveal><p class="eyebrow">05 / EXPERIENCE</p><h2>LEARNING<br />BEYOND<br /><em>the classroom.</em></h2><p>Experience is also the questions you ask and the conversations you join. These seminars are part of how I continue exploring technology and its impact.</p></div>
         <div class="experience-list">
           {seminars.map((seminar, index) => <article class="experience-item" data-reveal>
             <span class="experience-index">0{index + 1}</span>
@@ -79,18 +88,6 @@ const seminars = [
             <a href="#gallery" aria-label={`View certificates in gallery for ${seminar.title}`}>↗</a>
           </article>)}
         </div>
-      </div>
-    </section>
-
-    <section id="education" class="section-shell section-education">
-      <div class="education-heading" data-reveal><p class="eyebrow">04 / EDUCATION</p><h2>THE<br /><span>FOUNDATION</span></h2></div>
-      <div class="education-card" data-reveal><div class="education-mark" aria-hidden="true">CVSU<span>✳</span></div><div class="education-details"><p class="eyebrow">2025 — PRESENT</p><h3>Bachelor of Science in Computer Science</h3><p>Cavite State University<br />Main Campus</p></div><div class="education-foot">LEARNING IN PROGRESS <span aria-hidden="true">↗</span></div></div>
-    </section>
-
-    <section id="about" class="section-about">
-      <div class="section-shell about-grid">
-        <div class="about-label" data-reveal><p class="eyebrow">05 / ABOUT</p><span class="about-orbit" aria-hidden="true">✳</span></div>
-        <div data-reveal><h2>CURIOUS BY<br /><em>default.</em></h2><p>I’m a Computer Science student at Cavite State University – Main Campus, building my foundation in software development through Java and other languages introduced through coursework. I’m interested in AI engineering and cloud engineering, while remaining open to exploring different environments and sectors of technology. I value steady progress, learning, and mastering the fundamentals.</p><div class="current-learning"><span class="eyebrow">CURRENT LEARNING</span><h3>Java, and whatever<br />comes next.</h3><p>I’m currently strengthening my Java foundation and exploring where my interests lead. No fixed path—just a commitment to keep learning.</p></div></div>
       </div>
     </section>
 
@@ -126,7 +123,7 @@ const seminars = [
     }
     motionPreference.addEventListener('change', (event) => { if (event.matches) { revealObserver?.disconnect(); document.documentElement.classList.remove('has-reveal'); } });
     const sections = document.querySelectorAll('main section[id]');
-    const links = document.querySelectorAll('.desktop-nav a');
+    const links = document.querySelectorAll('.desktop-nav a, .mobile-nav-links a');
     if ('IntersectionObserver' in window) {
       const navObserver = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) links.forEach((link) => { const active = link.getAttribute('href') === `/#${entry.target.id}`; link.classList.toggle('active', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); }); }), { rootMargin: '-35% 0px -55% 0px' });
       sections.forEach((section) => navObserver.observe(section));
@@ -138,13 +135,21 @@ const seminars = [
     const dialogCount = document.getElementById('dialog-count');
     let selected = 0;
     let opener = null;
+    let closeTimer;
+    const closePreview = () => {
+      if (!dialog.open || dialog.classList.contains('is-closing')) return;
+      if (motionPreference.matches) { dialog.close(); return; }
+      dialog.classList.add('is-closing');
+      closeTimer = setTimeout(() => dialog.close(), 160);
+    };
     const show = (index) => { selected = (index + gallery.length) % gallery.length; dialogImage.src = gallery[selected].image; dialogImage.alt = `Certificate of participation for ${gallery[selected].title}`; dialogTitle.textContent = gallery[selected].title; dialogCount.textContent = `CERTIFICATE 0${selected + 1} / 0${gallery.length}`; };
-    document.querySelectorAll('[data-gallery-index]').forEach((button) => button.addEventListener('click', () => { opener = button; show(Number(button.dataset.galleryIndex)); dialog.showModal(); document.getElementById('dialog-close').focus(); }));
-    document.getElementById('dialog-close').addEventListener('click', () => dialog.close());
+    document.querySelectorAll('[data-gallery-index]').forEach((button) => button.addEventListener('click', () => { opener = button; show(Number(button.dataset.galleryIndex)); dialog.classList.remove('is-closing'); dialog.showModal(); document.body.classList.add('modal-open'); document.getElementById('dialog-close').focus(); }));
+    document.getElementById('dialog-close').addEventListener('click', closePreview);
     document.getElementById('dialog-prev').addEventListener('click', () => show(selected - 1));
     document.getElementById('dialog-next').addEventListener('click', () => show(selected + 1));
     dialog.addEventListener('keydown', (event) => { if (event.key === 'ArrowLeft') show(selected - 1); if (event.key === 'ArrowRight') show(selected + 1); });
-    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
-    dialog.addEventListener('close', () => opener?.focus());
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) closePreview(); });
+    dialog.addEventListener('cancel', (event) => { event.preventDefault(); closePreview(); });
+    dialog.addEventListener('close', () => { clearTimeout(closeTimer); dialog.classList.remove('is-closing'); document.body.classList.remove('modal-open'); opener?.focus(); });
   </script>
 </BaseLayout>

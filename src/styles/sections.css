@@ -53,8 +53,8 @@
 .education-heading .eyebrow{color:var(--yellow)}
 .education-heading h2{margin:1rem 0}
 .education-card{display:grid;grid-template-columns:1fr 1.5fr;gap:2rem;min-height:320px;padding:clamp(1.5rem,3vw,2.5rem);border-radius:1.5rem;background:#245fdf;position:relative;overflow:hidden}
-.education-mark{font-family:'Sora Variable',Sora,sans-serif;font-size:clamp(4rem,8vw,8rem);font-weight:800;letter-spacing:-.12em;line-height:1;align-self:center;color:#ffffff2f}
-.education-mark span{font-size:.4em;color:var(--yellow);vertical-align:top}
+.education-mark { display: grid; place-items: center; align-self: center; padding: 1.25rem; }
+.education-mark img { display: block; width: min(100%, 180px); height: auto; }
 .education-details{align-self:center}
 .education-details .eyebrow{color:#d4ddf8}
 .education-details h3{font-family:'Sora Variable',Sora,sans-serif;font-size:clamp(1.8rem,3vw,3rem);line-height:1.1;letter-spacing:-.06em;margin:1.5rem 0}
@@ -118,8 +118,6 @@
 .has-reveal .section-heading:not(.revealed)::after, .has-reveal .split-heading:not(.revealed)::after, .has-reveal .education-heading:not(.revealed)::after { transform: scaleX(0); }
 .experience-item a, .contact-links a { transition: transform .2s ease, background .2s ease, color .2s ease; }
 .experience-item a:hover, .contact-links a:hover { transform: translateY(-2px); }
-.education-mark > span { display: inline-block; transition: transform .25s ease; }
-.education-card:hover .education-mark > span { transform: rotate(15deg); }
 @media (max-width: 900px) { .split-heading::after { grid-column: 1; } }
 @media (max-width: 540px) {
   .technology-grid { grid-template-columns: minmax(0, 1fr); gap: .75rem; }
@@ -131,4 +129,44 @@
   .hero-enter, .hero-surname, .has-reveal [data-reveal] { opacity: 1; transform: none; animation: none; transition: none; }
   .section-heading::after, .split-heading::after, .education-heading::after { transform: none; transition: none; }
   .technology-card:hover, .technology-icon, .button:hover, .desktop-nav a:hover, .hero-socials a:hover span, .profile-card:hover .profile-cross, .experience-item a:hover, .contact-links a:hover, .education-card:hover .education-mark > span, .gallery-item:hover .gallery-image img { transform: none !important; }
+}
+
+/* Size headings against their containers rather than splitting a word mid-letter. */
+.split-heading { grid-template-columns: minmax(0, .65fr) minmax(0, 2fr); gap: 1rem 2.5rem; container-type: inline-size; }
+.split-heading h2 { font-size: clamp(2rem, 7.2cqi, 6.25rem); overflow-wrap: normal; word-break: normal; }
+.section-technologies .split-heading h2 { font-size: clamp(1.8rem, 7.2cqi, 6.25rem); white-space: nowrap; }
+.section-heading h2, .education-heading h2 { font-size: clamp(2.25rem, 6.5vw, 6.5rem); overflow-wrap: normal; word-break: normal; }
+.contact-inner h2 { font-size: clamp(2.8rem, 10vw, 9rem); overflow-wrap: normal; }
+.about-grid h2 { font-size: clamp(2.35rem, 6.5vw, 6.5rem); }
+.split-heading > *, .about-grid > *, .education-card > *, .experience-item > *, .project-entry > *, .case-grid > * { min-width: 0; }
+.project-entry h3, .education-details h3, .experience-item h3, .case-study h1, .gallery-caption strong { overflow-wrap: break-word; text-wrap: pretty; }
+.education-card { grid-template-columns: minmax(0, .7fr) minmax(0, 1.5fr); }
+.experience-item { grid-template-columns: 2.7rem minmax(0, 1fr) 2.5rem; }
+.contact-email { max-width: 100%; }
+.modal-open { overflow: hidden; }
+@keyframes panel-in { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes panel-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(6px) scale(.985); } }
+@keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes quiet-mark { 0%, 100% { opacity: .8; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: no-preference) {
+  .profile-cross { animation: quiet-mark 5s ease-in-out infinite; }
+  .gallery-dialog[open] { animation: panel-in .22s ease-out both; }
+  .gallery-dialog[open]::backdrop { animation: backdrop-in .22s ease-out both; }
+  .gallery-dialog[open].is-closing { animation: panel-out .16s ease-in both; }
+  .gallery-dialog[open].is-closing::backdrop { animation: backdrop-out .16s ease-in both; }
+  .mobile-nav details[open] .mobile-nav-links, .technology-story[open] > div { animation: panel-in .2s ease-out both; }
+}
+@media (max-width: 900px) {
+  .split-heading { grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
+  .split-heading h2, .section-technologies .split-heading h2 { font-size: clamp(1.8rem, 8.4cqi, 5.5rem); }
+}
+@media (max-width: 700px) {
+  .education-card { grid-template-columns: minmax(0, 1fr); }
+  .education-mark { padding: .75rem 0; justify-items: start; }
+  .education-mark img { width: 130px; }
+  .experience-item { grid-template-columns: 1.75rem minmax(0, 1fr) 2.5rem; gap: .65rem; }
+  .experience-intro h2 { font-size: clamp(2.35rem, 9vw, 4rem); }
+  .dialog-bottom { gap: .5rem; }
+  .dialog-bottom p { min-width: 0; font-size: .85rem; }
 }
