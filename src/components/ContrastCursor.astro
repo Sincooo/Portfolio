@@ -1,0 +1,81 @@
+---
+const arrow = 'M5 4v24l6-6 5 10 5-2-5-10h10Z';
+const hand = 'M12 20V6a3 3 0 0 1 6 0v10l2-1a3 3 0 0 1 4 2l1-1a3 3 0 0 1 4 3c4-1 5 2 4 6l-2 10H14L6 23c-2-4 2-6 4-3l2 2Z';
+---
+{['outline', 'fill'].map((layer) => <svg class={`contrast-cursor cursor-${layer}`} aria-hidden="true" width="36" height="38" viewBox="0 0 36 38" data-shape="arrow"><path class="cursor-arrow" d={arrow} /><path class="cursor-hand" d={hand} /></svg>)}
+<script>
+  const cursors = [...document.querySelectorAll<SVGElement>('.contrast-cursor')];
+  const root = document.documentElement;
+  const desktop = matchMedia('(hover: hover) and (pointer: fine)');
+  const forcedColors = matchMedia('(forced-colors: active)');
+  const supported = CSS.supports('mix-blend-mode', 'difference');
+  let x = 0;
+  let y = 0;
+  let tracking = false;
+  let lastTarget: Element | null = null;
+  const hide = () => {
+    tracking = false;
+    root.classList.remove('contrast-cursor-active');
+    cursors.forEach((cursor) => cursor.classList.remove('is-visible'));
+    lastTarget = null;
+  };
+  const update = () => {
+    if (!desktop.matches || forcedColors.matches || !supported) { hide(); return; }
+    const target = document.elementFromPoint(x, y);
+    if (!target) { hide(); return; }
+    // Explicit text, resize, drag and disabled cursors remain native.
+    const native = getComputedStyle(target).cursor;
+    if (!['auto', 'default', 'pointer', 'none'].includes(native) && !native.startsWith('url(')) { hide(); return; }
+    const hand = !!target.closest('a[href], button:not(:disabled), summary, [role="button"]');
+    if (target !== lastTarget) {
+      // The outline eases between light and dark surfaces. The fill blends
+      // with actual pixels, including images and gradients, without sampling.
+      let surface: Element | null = target;
+      let light = false;
+      while (surface) {
+        const channels = getComputedStyle(surface).backgroundColor.match(/[\d.]+/g)?.map(Number);
+        if (channels && (channels.length === 3 || channels[3] > .8)) {
+          light = channels[0] * .2126 + channels[1] * .7152 + channels[2] * .0722 > 150;
+          break;
+        }
+        surface = surface.parentElement;
+      }
+      cursors.forEach((cursor) => cursor.dataset.surface = light ? 'light' : 'dark');
+      lastTarget = target;
+    }
+    const modal = target.closest<HTMLDialogElement>('dialog[open]');
+    const host = modal || document.body;
+    const inDialog = !!modal;
+    const bounds = inDialog ? host.getBoundingClientRect() : null;
+    const scale = bounds ? bounds.width / host.offsetWidth : 1;
+    const localX = bounds ? (x - bounds.left) / scale - host.clientLeft + host.scrollLeft : x;
+    const localY = bounds ? (y - bounds.top) / scale - host.clientTop + host.scrollTop : y;
+    cursors.forEach((cursor) => {
+      // Keep the cursor in the browser's top layer while a preview is open.
+      if (cursor.parentElement !== host) host.append(cursor);
+      cursor.dataset.shape = hand ? 'hand' : 'arrow';
+      cursor.style.position = inDialog ? 'absolute' : 'fixed';
+      cursor.style.transform = `translate3d(${localX - (hand ? 15 : 5)}px, ${localY - 4}px, 0)`;
+      cursor.classList.add('is-visible');
+    });
+    root.classList.add('contrast-cursor-active');
+  };
+  document.addEventListener('pointermove', (event) => {
+    if (event.pointerType !== 'mouse') { hide(); return; }
+    x = event.clientX; y = event.clientY; tracking = true; update();
+  }, { passive: true });
+  document.addEventListener('scroll', () => { if (tracking) update(); }, { passive: true, capture: true });
+  document.documentElement.addEventListener('pointerleave', hide);
+  document.addEventListener('pointerdown', (event) => { if (event.pointerType !== 'mouse') hide(); });
+  document.addEventListener('keydown', hide);
+  window.addEventListener('blur', hide);
+  desktop.addEventListener('change', hide);
+  forcedColors.addEventListener('change', hide);
+  document.querySelectorAll('dialog').forEach((dialog) => {
+    new MutationObserver(() => { if (dialog.open && tracking) update(); }).observe(dialog, { attributes: true, attributeFilter: ['open'] });
+    dialog.addEventListener('close', () => {
+      cursors.forEach((cursor) => document.body.append(cursor));
+      hide();
+    });
+  });
+</script>

@@ -108,8 +108,7 @@
   .hero-footer p { font-size: .56rem; line-height: 1.8; }
 }
 
-/* Native custom cursor: two contrasting edges stay legible on light and dark surfaces.
-   No pointer tracking, cursor hiding, or replacement of text-selection cursors. */
+/* Native SVGs remain the fallback until a fine mouse activates the blended cursor. */
 @media (hover: hover) and (pointer: fine) {
   :root { cursor: url('/assets/cursor-arrow.svg') 5 4, default; }
   a[href], button:not(:disabled), summary, [role='button'] { cursor: url('/assets/cursor-pointer.svg') 15 4, pointer; }
@@ -119,6 +118,19 @@
 @media (forced-colors: active) {
   :root { cursor: auto; }
   a[href], button:not(:disabled), summary, [role='button'] { cursor: pointer; }
+}
+.contrast-cursor { position: fixed; left: 0; top: 0; width: 36px; height: 38px; pointer-events: none; opacity: 0; overflow: visible; }
+.contrast-cursor.is-visible { opacity: 1; }
+.contrast-cursor path { stroke-linejoin: round; }
+.cursor-outline { z-index: 2147483646; fill: none; stroke: #080a0d; stroke-width: 5; }
+.cursor-outline[data-surface='light'] { stroke: white; }
+.cursor-fill { z-index: 2147483647; mix-blend-mode: difference; fill: white; stroke: white; stroke-width: 1; }
+.cursor-hand, [data-shape='hand'] .cursor-arrow { display: none; }
+[data-shape='hand'] .cursor-hand { display: block; }
+@media (hover: hover) and (pointer: fine) and (forced-colors: none) {
+  :root.contrast-cursor-active { cursor: none; }
+  .contrast-cursor-active :is(a[href], button:not(:disabled), summary, [role='button']) { cursor: none; }
+  .cursor-outline { transition: stroke 80ms ease-out; }
 }
 @media (max-width: 700px) {
   .portfolio-brand { top: .85rem; min-height: 2.75rem; padding: .35rem .55rem; font-size: 1rem; }

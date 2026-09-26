@@ -3,6 +3,7 @@ import '@fontsource-variable/inter';
 import '@fontsource-variable/sora';
 import '../styles/global.css';
 import '../styles/sections.css';
+import ContrastCursor from '../components/ContrastCursor.astro';
 
 const { title = 'Edward Ranz Cardoza — Aspiring Software Engineer', description = 'Edward Ranz Cardoza, a Computer Science student at Cavite State University, learning to build software and understand how systems work.' } = Astro.props;
 ---
@@ -19,5 +20,6 @@ const { title = 'Edward Ranz Cardoza — Aspiring Software Engineer', descriptio
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
+    <ContrastCursor />
   </body>
 </html>

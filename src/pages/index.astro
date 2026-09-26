@@ -76,6 +76,7 @@ const seminars = [
     <section id="education" class="section-shell section-education">
       <div class="education-heading" data-reveal><p class="eyebrow">04 / EDUCATION</p><h2>THE<br /><span>FOUNDATION</span></h2></div>
       <div class="education-card" data-reveal><div class="education-mark"><img src="/assets/cvsu-logo.png" alt="Cavite State University official logo" width="200" height="174" loading="lazy" /></div><div class="education-details"><p class="eyebrow">2025 — PRESENT</p><h3>Bachelor of Science in Computer Science</h3><p>Cavite State University<br />Main Campus</p></div><div class="education-foot">LEARNING IN PROGRESS <span aria-hidden="true">↗</span></div></div>
+      <div class="education-card" data-reveal><div class="education-mark"><span class="education-monogram" aria-hidden="true">PCU<span>2023 — 2025</span></span></div><div class="education-details"><p class="eyebrow">2023 — 2025</p><h3>Senior High School</h3><p>Philippine Christian University<br />Dasmariñas</p></div><div class="education-foot">SENIOR HIGH SCHOOL <span aria-hidden="true">↗</span></div></div>
     </section>
 
     <section id="experience" class="section-experience">
@@ -115,13 +116,36 @@ const seminars = [
   <script define:vars={{ gallery: seminars.map(({ title, image }) => ({ title, image })) }}>
     const revealItems = document.querySelectorAll('[data-reveal]');
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
-    let revealObserver;
-    if ('IntersectionObserver' in window && !motionPreference.matches) {
+    let revealObservers = [];
+    const configureReveals = () => {
+      revealObservers.forEach((observer) => observer.disconnect());
+      revealObservers = [];
+      document.documentElement.classList.remove('has-reveal');
+      if (!('IntersectionObserver' in window) || motionPreference.matches) return;
       document.documentElement.classList.add('has-reveal');
-      revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); revealObserver.unobserve(entry.target); } }), { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
-      revealItems.forEach((item) => revealObserver.observe(item));
-    }
-    motionPreference.addEventListener('change', (event) => { if (event.matches) { revealObserver?.disconnect(); document.documentElement.classList.remove('has-reveal'); } });
+      revealItems.forEach((item) => {
+        const height = item.getBoundingClientRect().height;
+        // Separate entrance/exit thresholds prevent toggling at one boundary.
+        // Pixel-based limits also keep tall blocks readable on small screens.
+        const enter = Math.min(80, height * .2) / height;
+        const leave = Math.min(20, height * .05) / height;
+        const observer = new IntersectionObserver(([entry]) => {
+          if (item.contains(document.activeElement)) { item.classList.add('revealed'); return; }
+          if (entry.isIntersecting && entry.intersectionRatio >= enter) item.classList.add('revealed');
+          else if (!entry.isIntersecting || entry.intersectionRatio <= leave) {
+            item.style.setProperty('--reveal-offset', entry.boundingClientRect.top < 0 ? '-10px' : '10px');
+            item.classList.remove('revealed');
+          }
+        }, { threshold: [0, leave, enter], rootMargin: '-8px 0px -8px 0px' });
+        observer.observe(item);
+        revealObservers.push(observer);
+      });
+    };
+    configureReveals();
+    motionPreference.addEventListener('change', configureReveals);
+    let resizeTimer;
+    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(configureReveals, 150); });
+    document.addEventListener('focusin', (event) => event.target.closest('[data-reveal]')?.classList.add('revealed'));
     const sections = document.querySelectorAll('main section[id]');
     const links = document.querySelectorAll('.desktop-nav a, .mobile-nav-links a');
     if ('IntersectionObserver' in window) {
@@ -143,7 +167,7 @@ const seminars = [
       closeTimer = setTimeout(() => dialog.close(), 160);
     };
     const show = (index) => { selected = (index + gallery.length) % gallery.length; dialogImage.src = gallery[selected].image; dialogImage.alt = `Certificate of participation for ${gallery[selected].title}`; dialogTitle.textContent = gallery[selected].title; dialogCount.textContent = `CERTIFICATE 0${selected + 1} / 0${gallery.length}`; };
-    document.querySelectorAll('[data-gallery-index]').forEach((button) => button.addEventListener('click', () => { opener = button; show(Number(button.dataset.galleryIndex)); dialog.classList.remove('is-closing'); dialog.showModal(); document.body.classList.add('modal-open'); document.getElementById('dialog-close').focus(); }));
+    document.querySelectorAll('[data-gallery-index]').forEach((button) => button.addEventListener('click', () => { clearTimeout(closeTimer); opener = button; show(Number(button.dataset.galleryIndex)); dialog.classList.remove('is-closing'); dialog.showModal(); document.body.classList.add('modal-open'); document.getElementById('dialog-close').focus(); }));
     document.getElementById('dialog-close').addEventListener('click', closePreview);
     document.getElementById('dialog-prev').addEventListener('click', () => show(selected - 1));
     document.getElementById('dialog-next').addEventListener('click', () => show(selected + 1));
