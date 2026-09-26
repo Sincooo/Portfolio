@@ -1,11 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
+import TechnologyIcon from '../components/TechnologyIcon.astro';
 import { projects } from '../data/projects';
+import { cvUrl } from '../data/profile';
 const technologies = [
   { name: 'Java', tag: 'CURRENT FOCUS', color: 'yellow', summary: 'A return to the language that started it all.', story: 'Java was my first programming language in senior high school. I am studying it again in college, revisiting the fundamentals with a more deliberate approach and building a stronger grasp of how programs are structured.', next: 'Currently learning through coursework and practice.' },
-  { name: 'Python', tag: 'COLLEGE FOUNDATION', color: 'cyan', summary: 'Learning to turn a problem into a sequence of steps.', story: 'I encountered Python in my first year of college, mainly through the curriculum. Working with it helped me become more comfortable with core programming ideas and approaching problems logically.', next: 'Continuing to strengthen the fundamentals.' },
-  { name: 'HTML · CSS · JavaScript', tag: 'WEB FUNDAMENTALS', color: 'violet', summary: 'Understanding how the web is put together.', story: 'I learned HTML, CSS, and JavaScript through college coursework. Together, they introduced me to the relationship between structure, visual presentation, and interaction.', next: 'Looking to apply them in more complete work.' },
+  { name: 'HTML', tag: 'WEB STRUCTURE', color: 'orange', summary: 'Giving web pages a meaningful structure.', story: 'I learned HTML through college coursework, alongside CSS and JavaScript. It introduced me to the structure behind a web page and how its content is organized.', next: 'Looking to apply it in more complete work.' },
+  { name: 'CSS', tag: 'WEB PRESENTATION', color: 'blue', summary: 'Connecting structure with visual presentation.', story: 'I learned CSS through college coursework, alongside HTML and JavaScript. It introduced me to how styles shape the visual presentation of a web page.', next: 'Looking to apply it in more complete work.' },
+  { name: 'JavaScript', tag: 'WEB INTERACTION', color: 'yellow', summary: 'Exploring how the web becomes interactive.', story: 'I learned JavaScript through college coursework, alongside HTML and CSS. Together, they introduced me to the relationship between structure, visual presentation, and interaction.', next: 'Looking to apply it in more complete work.' },
+  { name: 'Python', tag: 'COLLEGE FOUNDATION', color: 'cyan', summary: 'Turning problems into a sequence of steps.', story: 'I encountered Python in my first year of college, mainly through the curriculum. Working with it helped me become more comfortable with core programming ideas and approaching problems logically.', next: 'Continuing to strengthen the fundamentals.' },
   { name: 'Visual Basic', tag: 'EARLY EXPERIENCE', color: 'blue', summary: 'An early introduction to coding logic.', story: 'I studied Visual Basic in senior high school. It introduced me to the basics of coding and helped make programming feel approachable before I moved on to other languages.', next: 'Part of the foundation I still build on.' },
 ];
 const seminars = [
@@ -18,19 +22,25 @@ const seminars = [
   <Nav />
   <main id="main">
     <section id="home" class="hero section-shell">
-      <div class="profile-card" data-reveal>
-        <div class="profile-topline"><span>PORTFOLIO / 2026</span><span class="profile-cross" aria-hidden="true">✳</span></div>
+      <div class="hero-statement">
+        <p class="hero-greeting hero-enter" style="--enter-delay: 40ms">Hello, I am <span aria-hidden="true">↘</span></p>
+        <h1 class="hero-name hero-enter" style="--enter-delay: 110ms"><span class="hero-given">Edward Ranz</span><span class="hero-surname">CARDOZA<span class="name-period" aria-hidden="true">.</span></span></h1>
+        <p class="hero-role hero-enter" style="--enter-delay: 190ms">Aspiring Software Engineer</p>
+        <p class="hero-intro hero-enter" style="--enter-delay: 260ms">A Computer Science student curious about how systems work. I’m learning to build software and sharpening my programming skills, one step at a time.</p>
+        <div class="hero-actions hero-enter" style="--enter-delay: 330ms">
+          <a class="button button-primary" href="#contact">Contact Me <span aria-hidden="true">↗</span></a>
+          {cvUrl ? <a class="button button-outline" href={cvUrl} download>Download CV <span aria-hidden="true">↓</span></a>
+            : <button class="button button-outline" type="button" disabled aria-describedby="cv-status">Download CV <span aria-hidden="true">↓</span></button>}
+          {!cvUrl && <span id="cv-status" class="cv-status">CV coming soon</span>}
+        </div>
+        <div class="hero-socials hero-enter" style="--enter-delay: 380ms"><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a><span aria-hidden="true">/</span><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a></div>
+      </div>
+      <figure class="profile-card hero-enter" style="--enter-delay: 210ms">
+        <div class="profile-topline"><span>THE PERSON BEHIND THE CODE</span><span class="profile-cross" aria-hidden="true">✳</span></div>
         <div class="portrait-frame"><img src="/assets/portrait.jpg" alt="Portrait of Edward Ranz V. Cardoza" width="853" height="1280" fetchpriority="high" /></div>
-        <h1>Edward Ranz<br />V. Cardoza</h1>
-        <p class="profile-role">Computer Science Student</p>
-        <div class="profile-bottomline"><span>CAVITE STATE UNIVERSITY</span><span>MAIN CAMPUS</span></div>
-      </div>
-      <div class="hero-statement" data-reveal>
-        <p class="eyebrow">INTRODUCING / EDWARD RANZ</p>
-        <h2>COMPUTER<br /><span>SCIENCE</span><br />STUDENT<span class="period">.</span></h2>
-        <p class="hero-intro">I’m building my foundation in software development through Java and coursework, while staying curious about the many directions technology can take me.</p>
-        <a class="button button-light" href="#projects">View Projects <span aria-hidden="true">↗</span></a>
-      </div>
+        <figcaption class="profile-bottomline"><span>CURIOUS. LEARNING. BUILDING.</span><span aria-hidden="true">↗</span></figcaption>
+      </figure>
+      <div class="hero-footer"><p>COMPUTER SCIENCE <span aria-hidden="true">/</span> CVSU MAIN CAMPUS</p><a href="#projects">Explore my journey <span aria-hidden="true">↓</span></a></div>
     </section>
 
     <section id="projects" class="section-shell section-projects">
@@ -51,11 +61,10 @@ const seminars = [
     <section id="technologies" class="section-shell section-technologies">
       <div class="split-heading" data-reveal><p class="eyebrow">02 / LANGUAGES & TOOLS</p><h2>TECHNOLOGIES<span class="period">.</span></h2><p>The story behind what I’ve learned matters more than a percentage. These are foundations I’m developing—not claims of expertise.</p></div>
       <div class="technology-grid">
-        {technologies.map((technology, index) => <article class={`technology-card ${technology.color}`} data-reveal>
-          <div class="technology-meta"><span>{technology.tag}</span><span>0{index + 1} / 04</span></div>
-          <div class="technology-title"><h3>{technology.name}</h3><span aria-hidden="true">↗</span></div>
+        {technologies.map((technology, index) => <article class={`technology-card ${technology.color}`} data-reveal style={`--reveal-delay: ${index * 55}ms`}>
+          <div class="technology-title"><TechnologyIcon name={technology.name} /><div><h3>{technology.name}</h3><span class="technology-meta">{technology.tag}</span></div></div>
           <p class="technology-summary">{technology.summary}</p>
-          <div class="technology-story"><p>{technology.story}</p><span>{technology.next}</span></div>
+          <details class="technology-story"><summary>My learning story <span aria-hidden="true">+</span></summary><div><p>{technology.story}</p><span>{technology.next}</span></div></details>
         </article>)}
       </div>
     </section>
@@ -108,15 +117,20 @@ const seminars = [
   </dialog>
   <script define:vars={{ gallery: seminars.map(({ title, image }) => ({ title, image })) }}>
     const revealItems = document.querySelectorAll('[data-reveal]');
-    if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+    let revealObserver;
+    if ('IntersectionObserver' in window && !motionPreference.matches) {
       document.documentElement.classList.add('has-reveal');
-      const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); observer.unobserve(entry.target); } }), { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-      revealItems.forEach((item) => observer.observe(item));
+      revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); revealObserver.unobserve(entry.target); } }), { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+      revealItems.forEach((item) => revealObserver.observe(item));
     }
+    motionPreference.addEventListener('change', (event) => { if (event.matches) { revealObserver?.disconnect(); document.documentElement.classList.remove('has-reveal'); } });
     const sections = document.querySelectorAll('main section[id]');
     const links = document.querySelectorAll('.desktop-nav a');
-    const navObserver = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `/#${entry.target.id}`)); }), { rootMargin: '-35% 0px -55% 0px' });
-    sections.forEach((section) => navObserver.observe(section));
+    if ('IntersectionObserver' in window) {
+      const navObserver = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) links.forEach((link) => { const active = link.getAttribute('href') === `/#${entry.target.id}`; link.classList.toggle('active', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); }); }), { rootMargin: '-35% 0px -55% 0px' });
+      sections.forEach((section) => navObserver.observe(section));
+    }
     document.querySelectorAll('.mobile-nav-links a').forEach((link) => link.addEventListener('click', () => { document.querySelector('.mobile-nav details').open = false; }));
     const dialog = document.getElementById('gallery-dialog');
     const dialogImage = document.getElementById('dialog-img');
