@@ -123,7 +123,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible, [tabindex='0']:foc
 .loader-word > span { color: var(--accent-yellow); }
 .loader-line { display: block; height: 3px; background: var(--accent-yellow); margin-top: .75rem; transform-origin: left; animation: loader-progress 1.2s ease-out both; }
 @keyframes loader-progress { from { transform: scaleX(.08); } to { transform: scaleX(1); } }
-.page-loading .hero-enter, .page-loading .hero-surname { animation-play-state: paused; }
 @media (prefers-reduced-motion: no-preference) {
   body, .section-about, .section-experience, .portfolio-brand, .desktop-nav, .theme-toggle, .profile-card, .gallery-dialog, .repository-card, .contribution-card { transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease; }
 }
