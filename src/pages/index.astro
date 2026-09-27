@@ -2,7 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import TechnologyIcon from '../components/TechnologyIcon.astro';
+import GitHubActivity from '../components/GitHubActivity.astro';
 import { projects } from '../data/projects';
+import { cv } from '../data/site';
 const technologies = [
   { name: 'Java', tag: 'CURRENT FOCUS', color: 'yellow', summary: 'A return to the language that started it all.', story: 'Java was my first programming language in senior high school. I am studying it again in college, revisiting the fundamentals with a more deliberate approach and building a stronger grasp of how programs are structured.', next: 'Currently learning through coursework and practice.' },
   { name: 'HTML', tag: 'WEB STRUCTURE', color: 'orange', summary: 'Giving web pages a meaningful structure.', story: 'I learned HTML through college coursework, alongside CSS and JavaScript. It introduced me to the structure behind a web page and how its content is organized.', next: 'Looking to apply it in more complete work.' },
@@ -12,9 +14,9 @@ const technologies = [
   { name: 'Visual Basic', tag: 'EARLY EXPERIENCE', color: 'blue', summary: 'An early introduction to coding logic.', story: 'I studied Visual Basic in senior high school. It introduced me to the basics of coding and helped make programming feel approachable before I moved on to other languages.', next: 'Part of the foundation I still build on.' },
 ];
 const seminars = [
-  { title: 'The Role of AI in Education', subtitle: 'Balancing the Benefits and Risk of Using AI in Education', detail: 'Webinar participation · DICT Region V', date: 'MAY 2025', image: '/assets/certificate-ai-education.png' },
-  { title: 'AI in English Teaching: Friend or Foe?', subtitle: 'Exploring the Benefits and Challenges While Keeping the Human Touch', detail: 'Webinar participation · National Teachers College', date: 'MAY 2025', image: '/assets/certificate-ai-english.png' },
-  { title: 'Safeguarding the Future', subtitle: 'Data Privacy and Cybersecurity in Education', detail: 'Webinar participation · National Teachers College', date: 'WEBINAR', image: '/assets/certificate-cybersecurity.png' },
+  { title: 'The Role of AI in Education', subtitle: 'Balancing the Benefits and Risk of Using AI in Education', detail: 'Webinar participation · DICT Region V', date: 'MAY 2025', image: '/assets/certificate-ai-education-full.webp', thumbnail: '/assets/certificate-ai-education-thumb.webp', width: 1800, height: 1274, thumbnailHeight: 544 },
+  { title: 'AI in English Teaching: Friend or Foe?', subtitle: 'Exploring the Benefits and Challenges While Keeping the Human Touch', detail: 'Webinar participation · National Teachers College', date: 'MAY 2025', image: '/assets/certificate-ai-english-full.webp', thumbnail: '/assets/certificate-ai-english-thumb.webp', width: 1800, height: 1273, thumbnailHeight: 543 },
+  { title: 'Safeguarding the Future', subtitle: 'Data Privacy and Cybersecurity in Education', detail: 'Webinar participation · National Teachers College', date: 'WEBINAR', image: '/assets/certificate-cybersecurity-full.webp', thumbnail: '/assets/certificate-cybersecurity-thumb.webp', width: 1800, height: 1273, thumbnailHeight: 543 },
 ];
 ---
 <BaseLayout>
@@ -29,12 +31,13 @@ const seminars = [
         <div class="hero-actions hero-enter" style="--enter-delay: 330ms">
           <a class="button button-primary" href="#contact">Contact Me <span aria-hidden="true">↗</span></a>
           <a class="button button-outline" href="#projects">View Projects <span aria-hidden="true">↗</span></a>
+          <a class="button button-outline" href={cv.url} download={cv.filename}>Download CV <span aria-hidden="true">↓</span></a>
         </div>
         <div class="hero-socials hero-enter" style="--enter-delay: 380ms"><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a><span aria-hidden="true">/</span><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a></div>
       </div>
       <figure class="profile-card hero-enter" style="--enter-delay: 210ms">
         <div class="profile-topline"><span>THE PERSON BEHIND THE CODE</span><span class="profile-cross" aria-hidden="true">✳</span></div>
-        <div class="portrait-frame"><img src="/assets/portrait.jpg" alt="Portrait of Edward Ranz V. Cardoza" width="853" height="1280" fetchpriority="high" /></div>
+        <div class="portrait-frame"><img src="/assets/portrait-700.webp" srcset="/assets/portrait-350.webp 350w, /assets/portrait-700.webp 700w" sizes="(max-width: 700px) 310px, (max-width: 900px) 28vw, 355px" alt="Portrait of Edward Ranz V. Cardoza" width="700" height="1050" fetchpriority="high" decoding="async" /></div>
         <figcaption class="profile-bottomline"><span>CURIOUS. LEARNING. BUILDING.</span><span aria-hidden="true">↗</span></figcaption>
       </figure>
       <div class="hero-footer"><p>COMPUTER SCIENCE <span aria-hidden="true">/</span> CVSU MAIN CAMPUS</p><a href="#technologies">Explore my journey <span aria-hidden="true">↓</span></a></div>
@@ -64,6 +67,7 @@ const seminars = [
         <div class="project-empty-main"><span class="big-asterisk" aria-hidden="true">✳</span><p class="eyebrow">A SPACE FOR THE WORK AHEAD</p><h3>Building toward my first published project.</h3><p>I’m strengthening my foundations through coursework and practice. This space will grow with projects ready to represent my work.</p></div>
         <div class="project-empty-side"><span>01 / BEGINNING</span><span>MORE TO COME ↗</span></div>
       </div>}
+      <GitHubActivity />
     </section>
 
     <section id="about" class="section-about">
@@ -71,12 +75,13 @@ const seminars = [
         <div class="about-label" data-reveal><p class="eyebrow">03 / ABOUT</p><span class="about-orbit" aria-hidden="true">✳</span></div>
         <div data-reveal><h2>CURIOUS BY<br /><em>default.</em></h2><p>I’m a Computer Science student at Cavite State University – Main Campus, building my foundation in software development through Java and other languages introduced through coursework. I’m interested in AI engineering and cloud engineering, while remaining open to exploring different environments and sectors of technology. I value steady progress, learning, and mastering the fundamentals.</p><div class="current-learning"><span class="eyebrow">CURRENT LEARNING</span><h3>Java, and whatever<br />comes next.</h3><p>I’m currently strengthening my Java foundation and exploring where my interests lead. No fixed path—just a commitment to keep learning.</p></div></div>
       </div>
+      <figure class="personal-quote section-shell" data-reveal><figcaption class="eyebrow">A PERSONAL REMINDER</figcaption><blockquote>“A man's pain when doing something he loves isn't pain, but an obstacle”</blockquote></figure>
     </section>
 
     <section id="education" class="section-shell section-education">
       <div class="education-heading" data-reveal><p class="eyebrow">04 / EDUCATION</p><h2>THE<br /><span>FOUNDATION</span></h2></div>
       <div class="education-card" data-reveal><div class="education-mark"><img src="/assets/cvsu-logo.png" alt="Cavite State University official logo" width="200" height="174" loading="lazy" /></div><div class="education-details"><p class="eyebrow">2025 — PRESENT</p><h3>Bachelor of Science in Computer Science</h3><p>Cavite State University<br />Main Campus</p></div><div class="education-foot">LEARNING IN PROGRESS <span aria-hidden="true">↗</span></div></div>
-      <div class="education-card" data-reveal><div class="education-mark"><span class="education-monogram" aria-hidden="true">PCU<span>2023 — 2025</span></span></div><div class="education-details"><p class="eyebrow">2023 — 2025</p><h3>Senior High School</h3><p>Philippine Christian University<br />Dasmariñas</p></div><div class="education-foot">SENIOR HIGH SCHOOL <span aria-hidden="true">↗</span></div></div>
+      <div class="education-card" data-reveal><div class="education-mark"><span class="education-monogram" aria-hidden="true">PCU</span></div><div class="education-details"><p class="eyebrow">2023 — 2025</p><h3>Senior High School</h3><p>Philippine Christian University<br />Dasmariñas</p></div><div class="education-foot">SENIOR HIGH SCHOOL <span aria-hidden="true">↗</span></div></div>
     </section>
 
     <section id="experience" class="section-experience">
@@ -97,7 +102,7 @@ const seminars = [
       <div class="gallery-subhead"><h3>Certificates</h3><span>01 — 03</span></div>
       <div class="gallery-grid">
         {seminars.map((seminar, index) => <button class="gallery-item" type="button" data-gallery-index={index} data-reveal aria-label={`Open certificate: ${seminar.title}`}>
-          <span class="gallery-image"><img src={seminar.image} alt={`Certificate of participation for ${seminar.title}`} loading="lazy" /></span>
+          <span class="gallery-image"><img src={seminar.thumbnail} alt={`Certificate of participation for ${seminar.title}`} width="768" height={seminar.thumbnailHeight} loading="lazy" decoding="async" /></span>
           <span class="gallery-caption"><span>0{index + 1} / CERTIFICATE</span><strong>{seminar.title}</strong><span aria-hidden="true">↗</span></span>
         </button>)}
       </div>
@@ -113,7 +118,7 @@ const seminars = [
     <div class="dialog-image"><img id="dialog-img" alt="" /></div>
     <div class="dialog-bottom"><button type="button" id="dialog-prev" aria-label="Previous certificate">←</button><p id="dialog-title"></p><button type="button" id="dialog-next" aria-label="Next certificate">→</button></div>
   </dialog>
-  <script define:vars={{ gallery: seminars.map(({ title, image }) => ({ title, image })) }}>
+  <script define:vars={{ gallery: seminars.map(({ title, image, width, height }) => ({ title, image, width, height })) }}>
     const revealItems = document.querySelectorAll('[data-reveal]');
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
     let revealObservers = [];
@@ -166,7 +171,7 @@ const seminars = [
       dialog.classList.add('is-closing');
       closeTimer = setTimeout(() => dialog.close(), 160);
     };
-    const show = (index) => { selected = (index + gallery.length) % gallery.length; dialogImage.src = gallery[selected].image; dialogImage.alt = `Certificate of participation for ${gallery[selected].title}`; dialogTitle.textContent = gallery[selected].title; dialogCount.textContent = `CERTIFICATE 0${selected + 1} / 0${gallery.length}`; };
+    const show = (index) => { selected = (index + gallery.length) % gallery.length; dialogImage.width = gallery[selected].width; dialogImage.height = gallery[selected].height; dialogImage.src = gallery[selected].image; dialogImage.alt = `Certificate of participation for ${gallery[selected].title}`; dialogTitle.textContent = gallery[selected].title; dialogCount.textContent = `CERTIFICATE 0${selected + 1} / 0${gallery.length}`; };
     document.querySelectorAll('[data-gallery-index]').forEach((button) => button.addEventListener('click', () => { clearTimeout(closeTimer); opener = button; show(Number(button.dataset.galleryIndex)); dialog.classList.remove('is-closing'); dialog.showModal(); document.body.classList.add('modal-open'); document.getElementById('dialog-close').focus(); }));
     document.getElementById('dialog-close').addEventListener('click', closePreview);
     document.getElementById('dialog-prev').addEventListener('click', () => show(selected - 1));

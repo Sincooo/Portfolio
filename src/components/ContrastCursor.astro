@@ -8,6 +8,7 @@ const hand = 'M12 20V6a3 3 0 0 1 6 0v10l2-1a3 3 0 0 1 4 2l1-1a3 3 0 0 1 4 3c4-1 
   const root = document.documentElement;
   const desktop = matchMedia('(hover: hover) and (pointer: fine)');
   const forcedColors = matchMedia('(forced-colors: active)');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const supported = CSS.supports('mix-blend-mode', 'difference');
   let x = 0;
   let y = 0;
@@ -20,7 +21,7 @@ const hand = 'M12 20V6a3 3 0 0 1 6 0v10l2-1a3 3 0 0 1 4 2l1-1a3 3 0 0 1 4 3c4-1 
     lastTarget = null;
   };
   const update = () => {
-    if (!desktop.matches || forcedColors.matches || !supported) { hide(); return; }
+    if (!desktop.matches || forcedColors.matches || reducedMotion.matches || !supported) { hide(); return; }
     const target = document.elementFromPoint(x, y);
     if (!target) { hide(); return; }
     // Explicit text, resize, drag and disabled cursors remain native.
@@ -71,6 +72,7 @@ const hand = 'M12 20V6a3 3 0 0 1 6 0v10l2-1a3 3 0 0 1 4 2l1-1a3 3 0 0 1 4 3c4-1 
   window.addEventListener('blur', hide);
   desktop.addEventListener('change', hide);
   forcedColors.addEventListener('change', hide);
+  reducedMotion.addEventListener('change', hide);
   document.querySelectorAll('dialog').forEach((dialog) => {
     new MutationObserver(() => { if (dialog.open && tracking) update(); }).observe(dialog, { attributes: true, attributeFilter: ['open'] });
     dialog.addEventListener('close', () => {

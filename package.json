@@ -6,7 +6,8 @@
     "dev": "astro dev --host 127.0.0.1 --port 4321",
     "build": "astro build",
     "preview": "astro preview --host 127.0.0.1 --port 4321",
-    "check": "astro check"
+    "check": "astro check",
+    "github:refresh": "node scripts/refresh-github.mjs"
   },
   "dependencies": {
     "astro": "latest",

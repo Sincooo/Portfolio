@@ -1,0 +1,16 @@
+<div class="page-loader" aria-hidden="true"><div><span class="loader-word">RANZ<span>.</span></span><span class="loader-line"></span></div></div>
+<script>
+  const root = document.documentElement;
+  const loader = document.querySelector('.page-loader')!;
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const finish = () => {
+    if (!root.classList.contains('page-loading')) return;
+    if (motion.matches) { root.classList.remove('page-loading'); return; }
+    loader.classList.add('is-leaving');
+    setTimeout(() => root.classList.remove('page-loading'), 160);
+  };
+  const portrait = document.querySelector<HTMLImageElement>('.portrait-frame img');
+  const essential = [document.fonts.ready, portrait?.decode().catch(() => {})];
+  Promise.allSettled(essential).then(finish);
+  motion.addEventListener('change', (event) => { if (event.matches) finish(); });
+</script>

@@ -1,0 +1,22 @@
+<button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme" title="Switch color theme"><span class="theme-sun" aria-hidden="true">☀</span><span class="theme-moon" aria-hidden="true">☾</span></button>
+<script>
+  const button = document.getElementById('theme-toggle')!;
+  const preference = matchMedia('(prefers-color-scheme: dark)');
+  let manual = false;
+  try { manual = ['light', 'dark'].includes(localStorage.getItem('portfolio-theme') || ''); } catch {}
+  const apply = (theme: string) => {
+    document.documentElement.dataset.theme = theme;
+    const label = `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`;
+    button.setAttribute('aria-label', label);
+    button.setAttribute('title', label);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0c1017' : '#f6f5f0');
+  };
+  apply(document.documentElement.dataset.theme || 'dark');
+  button.addEventListener('click', () => {
+    const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    manual = true;
+    apply(theme);
+    try { localStorage.setItem('portfolio-theme', theme); } catch {}
+  });
+  preference.addEventListener('change', (event) => { if (!manual) apply(event.matches ? 'dark' : 'light'); });
+</script>

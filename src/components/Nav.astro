@@ -1,4 +1,5 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
 const items = [
   { label: 'Technologies', href: '/#technologies', icon: '⌘' },
   { label: 'Projects', href: '/#projects', icon: '□' },
@@ -6,7 +7,7 @@ const items = [
   { label: 'Contact', href: '/#contact', icon: '↗' },
 ];
 ---
-<a class="portfolio-brand" href="/#home" aria-label="Edward Ranz Cardoza — Home"><img src="/favicon.svg" alt="" width="32" height="32" /><span>ERC<span class="brand-dot">.</span></span></a>
+<a class="portfolio-brand" href="/#home" aria-label="ERC. — Edward Ranz Cardoza — Home"><img src="/favicon.svg" alt="" width="32" height="32" /><span>ERC<span class="brand-dot">.</span></span></a>
 <header class="site-header section-shell">
   <nav class="desktop-nav" aria-label="Primary navigation">
     {items.map((item) => <a href={item.href}><span aria-hidden="true">{item.icon}</span><span>{item.label}</span></a>)}
@@ -17,4 +18,5 @@ const items = [
     <div class="mobile-nav-links">{items.map((item) => <a href={item.href}>{item.label}</a>)}</div>
   </details>
   </nav>
+  <ThemeToggle />
 </header>

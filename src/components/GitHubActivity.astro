@@ -1,0 +1,134 @@
+---
+import snapshot from '../data/github.json';
+const total = snapshot.days.reduce((sum, day) => sum + day.count, 0);
+const weeks = Math.ceil(snapshot.days.length / 7);
+const months = snapshot.days.flatMap((day, index) => {
+  const date = new Date(`${day.date}T12:00:00Z`);
+  return date.getUTCDate() <= 7 && date.getUTCDay() === 0 ? [{ index: Math.floor(index / 7), label: date.toLocaleDateString('en', {month: 'short', timeZone: 'UTC'}) }] : [];
+});
+const dateLabel = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateString('en', {month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'});
+const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
+---
+<div class="github-area">
+  <div class="github-heading" data-reveal><div><p class="eyebrow">OPEN SOURCE / IN PROGRESS</p><h3>On GitHub<span class="period">.</span></h3></div><a href="https://github.com/Sincooo?tab=repositories" target="_blank" rel="noopener noreferrer">All repositories <span aria-hidden="true">↗</span></a></div>
+  <p class="github-intro">Public repositories from my account, including coursework and this portfolio.</p>
+  <div class="repository-grid" id="repository-grid">
+    {snapshot.repositories.map((repo) => <a class="repository-card" href={repo.url} target="_blank" rel="noopener noreferrer">
+      <div class="repository-top"><span>PUBLIC{repo.fork ? ' / FORK' : ''}</span><span aria-hidden="true">↗</span></div><h4>{repo.name}</h4><p>{repo.description || 'No description provided on GitHub.'}</p><div class="repository-meta"><span>{repo.language || 'Language not specified'}</span><span aria-label={`${repo.stars} stars`}>☆ {repo.stars}</span><span aria-label={`${repo.forks} forks`}>⑂ {repo.forks}</span></div>
+    </a>)}
+  </div>
+  <p class="repository-status" id="repository-status" aria-live="polite">Repository snapshot · {dateLabel(snapshot.repositoriesUpdated.slice(0, 10))}</p>
+  <div class="contribution-card" data-reveal>
+    <div class="contribution-heading"><h4>My GitHub contributions</h4><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">@Sincooo <span aria-hidden="true">↗</span></a></div>
+    <div class="contribution-scroll" tabindex="0" role="region" aria-label="Contribution calendar. Scroll horizontally on small screens.">
+      <svg class="contribution-chart" viewBox={`0 0 ${weeks * 16 + 32} 148`} role="img" aria-labelledby="contribution-title contribution-description">
+        <title id="contribution-title">{total} contributions in the displayed year</title><desc id="contribution-description">GitHub activity from {dateLabel(snapshot.days[0].date)} to {dateLabel(snapshot.days.at(-1)!.date)}. Darker orange squares represent more contributions. Daily counts are available below.</desc>
+        {months.map(month => <text x={32 + month.index * 16} y="16">{month.label}</text>)}
+        {['Mon', 'Wed', 'Fri'].map((day, index) => <text x="0" y={49 + index * 32}>{day}</text>)}
+        {snapshot.days.map((day, index) => <rect x={32 + Math.floor(index / 7) * 16} y={28 + index % 7 * 16} width="12" height="12" rx="2" class={`activity-level-${day.level}`}><title>{dateLabel(day.date)}: {day.count} {day.count === 1 ? 'contribution' : 'contributions'}</title></rect>)}
+      </svg>
+    </div>
+    <div class="contribution-footer"><p><strong>{total}</strong> contributions in the displayed year</p><div class="contribution-legend" aria-hidden="true"><span>Less</span>{[0,1,2,3,4].map(level => <i class={`activity-level-${level}`}></i>)}<span>More</span></div></div>
+    <p class="activity-updated" id="activity-updated" aria-live="polite">Calendar snapshot · {updated}</p>
+    <details class="activity-details"><summary>View daily contribution counts</summary><ul>{snapshot.days.filter(day => day.count > 0).map(day => <li><time datetime={day.date}>{dateLabel(day.date)}</time><span>{day.count} {day.count === 1 ? 'contribution' : 'contributions'}</span></li>)}</ul><p>All other displayed days have no contributions.</p></details>
+  </div>
+</div>
+<script>
+  const grid = document.getElementById('repository-grid')!;
+  const status = document.getElementById('repository-status')!;
+  type Repository = { name: string; description: string | null; html_url: string; language: string | null; stargazers_count: number; forks_count: number; private: boolean; fork: boolean; owner: { login: string } };
+  const render = (repositories: Repository[]) => {
+    const cards = repositories.filter(repo => !repo.private && repo.owner?.login.toLowerCase() === 'sincooo').slice(0, 6).map(repo => {
+      const card = document.createElement('a'); card.className = 'repository-card'; card.href = `https://github.com/Sincooo/${encodeURIComponent(repo.name)}`; card.target = '_blank'; card.rel = 'noopener noreferrer';
+      const top = document.createElement('div'); top.className = 'repository-top';
+      const label = document.createElement('span'); label.textContent = repo.fork ? 'PUBLIC / FORK' : 'PUBLIC';
+      const arrow = document.createElement('span'); arrow.textContent = '↗'; arrow.setAttribute('aria-hidden', 'true'); top.append(label, arrow);
+      const title = document.createElement('h4'); title.textContent = repo.name;
+      const description = document.createElement('p'); description.textContent = repo.description || 'No description provided on GitHub.';
+      const meta = document.createElement('div'); meta.className = 'repository-meta';
+      const language = document.createElement('span'); language.textContent = repo.language || 'Language not specified';
+      const stars = document.createElement('span'); stars.textContent = `☆ ${repo.stargazers_count}`; stars.setAttribute('aria-label', `${repo.stargazers_count} stars`);
+      const forks = document.createElement('span'); forks.textContent = `⑂ ${repo.forks_count}`; forks.setAttribute('aria-label', `${repo.forks_count} forks`);
+      meta.append(language, stars, forks); card.append(top, title, description, meta); return card;
+    });
+    // Keep the verified snapshot if a malformed or empty response arrives.
+    if (!cards.length) throw new Error('No public repositories returned');
+    grid.replaceChildren(...cards);
+  };
+  const refresh = async () => {
+    try {
+      const response = await fetch('https://api.github.com/users/Sincooo/repos?per_page=100&sort=updated', { signal: AbortSignal.timeout(8000) });
+      if (!response.ok) throw new Error('GitHub request failed');
+      const repositories = await response.json();
+      if (!Array.isArray(repositories)) throw new Error('Invalid GitHub response');
+      render(repositories);
+      status.textContent = 'Repository information refreshed from GitHub';
+    } catch { status.textContent = 'Showing the saved repository snapshot · View GitHub for the latest activity'; }
+  };
+  type ActivityDay = { date: string; count: number; level: number };
+  const calendarStatus = document.getElementById('activity-updated')!;
+  const chart = document.querySelector<SVGSVGElement>('.contribution-chart')!;
+  const renderActivity = (days: ActivityDay[]) => {
+    if (days.length < 350 || days.length > 371 || days.some(day => !/^\d{4}-\d{2}-\d{2}$/.test(day.date) || !Number.isInteger(day.count) || day.count < 0 || !Number.isInteger(day.level) || day.level < 0 || day.level > 4)) throw new Error('Invalid calendar');
+    const dateLabel = (value: string) => new Date(`${value}T12:00:00Z`).toLocaleDateString('en', {month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'});
+    const total = days.reduce((sum, day) => sum + day.count, 0);
+    const offset = new Date(`${days[0].date}T12:00:00Z`).getUTCDay();
+    const weeks = Math.ceil((days.length + offset) / 7);
+    const svgNode = (tag: string, attrs: Record<string, string>, text?: string) => {
+      const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+      if (text) node.textContent = text;
+      return node;
+    };
+    const nodes = [svgNode('title', { id: 'contribution-title' }, `${total} contributions in the displayed year`), svgNode('desc', { id: 'contribution-description' }, `GitHub activity from ${dateLabel(days[0].date)} to ${dateLabel(days.at(-1)!.date)}. Daily counts are available below.`)];
+    ['Mon', 'Wed', 'Fri'].forEach((day, index) => nodes.push(svgNode('text', {x: '0', y: String(49 + index * 32)}, day)));
+    const list = document.querySelector('.activity-details ul')!;
+    const counts: HTMLLIElement[] = [];
+    days.forEach((day, index) => {
+      const position = index + offset;
+      const date = new Date(`${day.date}T12:00:00Z`);
+      if (date.getUTCDate() <= 7 && date.getUTCDay() === 0) nodes.push(svgNode('text', {x: String(32 + Math.floor(position / 7) * 16), y: '16'}, date.toLocaleDateString('en', {month: 'short', timeZone: 'UTC'})));
+      const rect = svgNode('rect', {x: String(32 + Math.floor(position / 7) * 16), y: String(28 + position % 7 * 16), width: '12', height: '12', rx: '2', class: `activity-level-${day.level}`});
+      const description = `${day.count} ${day.count === 1 ? 'contribution' : 'contributions'}`;
+      rect.append(svgNode('title', {}, `${dateLabel(day.date)}: ${description}`)); nodes.push(rect);
+      if (day.count) {
+        const item = document.createElement('li'); const time = document.createElement('time'); time.dateTime = day.date; time.textContent = dateLabel(day.date);
+        const count = document.createElement('span'); count.textContent = description; item.append(time, count); counts.push(item);
+      }
+    });
+    chart.setAttribute('viewBox', `0 0 ${weeks * 16 + 32} 148`);
+    chart.replaceChildren(...nodes); list.replaceChildren(...counts);
+    document.querySelector('.contribution-footer strong')!.textContent = String(total);
+  };
+  let inView = false;
+  let lastAttempt = 0;
+  let refreshing = false;
+  const refreshActivity = async () => {
+    if (!inView || document.hidden || refreshing || Date.now() - lastAttempt < 300000) return;
+    refreshing = true; lastAttempt = Date.now();
+    try {
+      const response = await fetch('/api/github', {signal: AbortSignal.timeout(10000)});
+      if (!response.ok) throw new Error('Activity unavailable');
+      const result = await response.json();
+      if (!Array.isArray(result.days)) throw new Error('Invalid activity response');
+      renderActivity(result.days);
+      calendarStatus.textContent = 'Updated from GitHub · Refreshes every 5 minutes while visible';
+    } catch { calendarStatus.textContent = 'Showing the saved calendar · View GitHub for the latest activity'; }
+    finally { refreshing = false; }
+  };
+  // Astro's static local preview has no Vercel function; retain its saved calendar.
+  const deployed = !['localhost', '127.0.0.1', '::1'].includes(location.hostname);
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { observer.disconnect(); refresh(); } }, { rootMargin: '200px' });
+    observer.observe(grid);
+    if (deployed) {
+      const activityObserver = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; if (inView) refreshActivity(); }, {rootMargin: '100px'});
+      activityObserver.observe(chart);
+    }
+  } else refresh();
+  if (deployed) {
+    if (!('IntersectionObserver' in window)) { inView = true; refreshActivity(); }
+    setInterval(refreshActivity, 300000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshActivity(); });
+  }
+</script>
