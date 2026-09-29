@@ -1,5 +1,6 @@
 /* Phase 2 refines the established visual system without changing its core palette. */
 .sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
+.hero { min-height: min(100svh, 850px); padding-top: clamp(6.5rem, 11vh, 8rem); }
 .hero-location {
   display: inline-flex;
   align-items: center;
@@ -280,6 +281,7 @@
 }
 
 @media (max-width: 700px) {
+  .hero { min-height: auto; padding-top: 6.5rem; }
   .section-technologies,
   .section-education,
   .section-gallery,
