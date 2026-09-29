@@ -3,25 +3,201 @@ import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import { projects, type Project } from '../../data/projects';
+import '../../styles/project-detail.css';
 
 export const getStaticPaths = (() => projects.map((project) => ({ params: { slug: project.slug }, props: { project } }))) satisfies GetStaticPaths;
+
 const { project } = Astro.props as { project: Project };
+const projectIndex = projects.findIndex(({ slug }) => slug === project.slug);
+const previousProject = projects[(projectIndex - 1 + projects.length) % projects.length];
+const nextProject = projects[(projectIndex + 1) % projects.length];
+const pageDescription = project.summary ?? `${project.repositoryName} is a public GitHub repository by Edward Ranz V. Cardoza.`;
+const availableTechnologies = project.primaryLanguage ? [project.primaryLanguage] : [];
 ---
-<BaseLayout title={`${project.title} — Edward Ranz V. Cardoza`} description={project.summary}>
+<BaseLayout title={`${project.title} — Edward Ranz V. Cardoza`} description={pageDescription}>
   <Nav />
-  <main id="main" class="case-study section-shell">
-    <a class="case-back" href="/#projects">← Back to projects</a>
-    <p class="eyebrow">{project.category} / {project.status} / {project.date}</p>
-    <h1>{project.title}</h1>
-    <p class="case-summary">{project.summary}</p>
-    {project.preview && <img class="case-preview" src={project.preview} alt={project.previewAlt || `Preview of ${project.title}`} />}
-    <div class="case-grid">
-      <div><h2>Overview</h2><p>{project.overview}</p></div>
-      <aside><h2>Details</h2><p><strong>Status</strong><br />{project.status}</p><p><strong>Technologies</strong><br />{project.technologies.join(' · ')}</p><p><strong>Date</strong><br />{project.date}</p></aside>
+  <main id="main" class="project-detail section-shell">
+    <a class="project-detail__back" href="/#projects">
+      <span aria-hidden="true">←</span>
+      Back to selected projects
+    </a>
+
+    <header class="project-detail__header">
+      <div class="project-detail__heading">
+        <p class="eyebrow">{project.category} <span aria-hidden="true">/</span> {project.status}</p>
+        <h1>{project.title}</h1>
+        {
+          project.summary
+            ? <p class="project-detail__summary">{project.summary}</p>
+            : <p class="project-detail__summary project-detail__summary--muted">No repository description is currently published.</p>
+        }
+      </div>
+
+      <dl class="project-detail__facts" aria-label="Verified repository details">
+        <div>
+          <dt>Project</dt>
+          <dd>{String(projectIndex + 1).padStart(2, '0')} of {String(projects.length).padStart(2, '0')}</dd>
+        </div>
+        <div>
+          <dt>Repository</dt>
+          <dd>{project.repositoryName}</dd>
+        </div>
+        <div>
+          <dt>Primary language</dt>
+          <dd>{project.primaryLanguage ?? 'Not listed'}</dd>
+        </div>
+        <div>
+          <dt>Availability</dt>
+          <dd>{project.status}</dd>
+        </div>
+        <div>
+          <dt>Year</dt>
+          <dd>Template placeholder — verify</dd>
+        </div>
+        <div>
+          <dt>Role</dt>
+          <dd>Template placeholder — verify</dd>
+        </div>
+      </dl>
+    </header>
+
+    <section class="project-detail__preview" aria-labelledby="project-preview-title">
+      <div class="project-detail__preview-art" aria-hidden="true">
+        <span>01</span><span>Preview</span><span>↗</span>
+      </div>
+      <div class="project-detail__preview-copy">
+        <p class="eyebrow">Project preview</p>
+        <h2 id="project-preview-title">Verified imagery coming soon.</h2>
+        <p>Template placeholder — this area is reserved for a reviewed screenshot, mockup, or video from the project.</p>
+      </div>
+    </section>
+
+    <aside class="project-detail__template-note" aria-label="Case-study content notice">
+      <span aria-hidden="true">✳</span>
+      <p><strong>Case-study template:</strong> the repository details above are verified. The sections below are clearly labeled placeholders to be replaced when Edward provides reviewed project information.</p>
+    </aside>
+
+    <div class="project-detail__story">
+      <section class="project-detail__section" aria-labelledby="overview-heading">
+        <p class="project-detail__index" aria-hidden="true">01</p>
+        <div>
+          <p class="eyebrow">Context</p>
+          <h2 id="overview-heading">Overview</h2>
+          <p>{project.template.overview}</p>
+        </div>
+      </section>
+
+      <section class="project-detail__section" aria-labelledby="problem-heading">
+        <p class="project-detail__index" aria-hidden="true">02</p>
+        <div>
+          <p class="eyebrow">Starting point</p>
+          <h2 id="problem-heading">Problem</h2>
+          <p>{project.template.problem}</p>
+        </div>
+      </section>
+
+      <section class="project-detail__section" aria-labelledby="solution-heading">
+        <p class="project-detail__index" aria-hidden="true">03</p>
+        <div>
+          <p class="eyebrow">Approach</p>
+          <h2 id="solution-heading">Solution</h2>
+          <p>{project.template.solution}</p>
+        </div>
+      </section>
+
+      <section class="project-detail__section" aria-labelledby="contribution-heading">
+        <p class="project-detail__index" aria-hidden="true">04</p>
+        <div>
+          <p class="eyebrow">Role</p>
+          <h2 id="contribution-heading">Contribution</h2>
+          <p>{project.template.contribution}</p>
+        </div>
+      </section>
     </div>
-    {project.contribution && <section class="case-block"><h2>My contribution</h2><p>{project.contribution}</p></section>}
-    {project.challenges && <section class="case-block"><h2>Challenges</h2><p>{project.challenges}</p></section>}
-    {project.lessons && <section class="case-block"><h2>What I learned</h2><p>{project.lessons}</p></section>}
-    <div class="case-links">{project.repository && <a href={project.repository} target="_blank" rel="noopener noreferrer">GitHub repository ↗</a>}{project.demo && <a href={project.demo} target="_blank" rel="noopener noreferrer">Live demo ↗</a>}</div>
+
+    <section class="project-detail__split" aria-label="Technology and feature details">
+      <div class="project-detail__technology">
+        <p class="eyebrow">Repository signal</p>
+        <h2>Technologies</h2>
+        {
+          availableTechnologies.length > 0
+            ? <ul class="project-detail__tags">{availableTechnologies.map((technology) => <li>{technology}</li>)}</ul>
+            : <p class="project-detail__unavailable">A primary repository language is not currently listed. More verified technology details will be added later.</p>
+        }
+      </div>
+
+      <div class="project-detail__features">
+        <p class="eyebrow">Template content</p>
+        <h2>Features</h2>
+        <ul>
+          {project.template.features.map((feature) => <li>{feature}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="project-detail__gallery" aria-labelledby="gallery-heading">
+      <div class="project-detail__section-heading">
+        <div>
+          <p class="eyebrow">Visual record</p>
+          <h2 id="gallery-heading">Gallery</h2>
+        </div>
+        <p>Image slots are intentionally left empty until verified project media is available.</p>
+      </div>
+      <div class="project-detail__gallery-grid">
+        {project.template.gallery.map((item, index) => (
+          <article class="project-detail__gallery-slot">
+            <div aria-hidden="true"><span>{String(index + 1).padStart(2, '0')}</span><span>Image pending</span></div>
+            <h3>{item.label}</h3>
+            <p>{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="project-detail__reflection" aria-label="Project reflections">
+      <article>
+        <p class="eyebrow">Template content</p>
+        <h2>Challenges</h2>
+        <p>{project.template.challenges}</p>
+      </article>
+      <article>
+        <p class="eyebrow">Template content</p>
+        <h2>Learning</h2>
+        <p>{project.template.lessons}</p>
+      </article>
+    </section>
+
+    <section class="project-detail__links" aria-labelledby="links-heading">
+      <div>
+        <p class="eyebrow">Explore</p>
+        <h2 id="links-heading">Project links</h2>
+      </div>
+      <div class="project-detail__link-list">
+        <a href={project.repository} target="_blank" rel="noopener noreferrer">
+          GitHub repository <span aria-hidden="true">↗</span>
+        </a>
+        {
+          project.demo
+            ? <a href={project.demo} target="_blank" rel="noopener noreferrer">Live demo <span aria-hidden="true">↗</span></a>
+            : <span class="project-detail__disabled" aria-disabled="true">Live demo <small>Coming soon</small></span>
+        }
+        {
+          project.documentation
+            ? <a href={project.documentation} target="_blank" rel="noopener noreferrer">Documentation <span aria-hidden="true">↗</span></a>
+            : <span class="project-detail__disabled" aria-disabled="true">Documentation <small>Coming soon</small></span>
+        }
+      </div>
+    </section>
+
+    <nav class="project-detail__pagination" aria-label="Project navigation">
+      <a href={`/projects/${previousProject.slug}/`} rel="prev">
+        <span class="eyebrow">Previous project</span>
+        <strong><span aria-hidden="true">←</span> {previousProject.title}</strong>
+      </a>
+      <a href={`/projects/${nextProject.slug}/`} rel="next">
+        <span class="eyebrow">Next project</span>
+        <strong>{nextProject.title} <span aria-hidden="true">→</span></strong>
+      </a>
+    </nav>
   </main>
 </BaseLayout>

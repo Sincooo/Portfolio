@@ -1,0 +1,106 @@
+---
+import type { Project } from '../data/projects';
+
+const { projects } = Astro.props as { projects: Project[] };
+---
+<div class="project-showcase" data-project-showcase>
+  <div class="project-controls" data-reveal>
+    <p>Drag, swipe, or use the controls</p>
+    <div>
+      <button type="button" data-project-previous aria-label="Show previous project">←</button>
+      <span><strong data-project-current>01</strong> / {String(projects.length).padStart(2, '0')}</span>
+      <button type="button" data-project-next aria-label="Show next project">→</button>
+    </div>
+  </div>
+
+  <div class="project-folder-viewport" data-project-viewport tabindex="0" role="region" aria-label="Selected projects. Scroll horizontally to explore.">
+    <div class="project-folder-track">
+      {projects.map((project, index) => (
+        <article class="project-folder" data-project-card data-index={index} style={`--project-index: ${index}`}>
+          <span class="project-folder-tab" aria-hidden="true">PROJECT {String(index + 1).padStart(2, '0')}</span>
+          <div class="project-folder-inner">
+            <div class="project-folder-copy">
+              <div class="project-folder-meta"><span>{String(index + 1).padStart(2, '0')} / {project.status}</span><span>{project.category}</span></div>
+              <h3>{project.title}</h3>
+              <p>{project.summary || 'No description has been provided for this repository.'}</p>
+              <dl>
+                <div><dt>Repository</dt><dd>{project.repositoryName}</dd></div>
+                <div><dt>Primary language</dt><dd>{project.primaryLanguage || 'Not listed on GitHub'}</dd></div>
+              </dl>
+              <a class="project-folder-link" href={`/projects/${project.slug}/`} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.title} project page in a new tab`}>View project <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="project-folder-preview" aria-hidden="true">
+              <span>{project.title.slice(0, 2).toUpperCase()}</span>
+              <i></i><i></i><i></i>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-project-showcase]').forEach((showcase) => {
+    const viewport = showcase.querySelector<HTMLElement>('[data-project-viewport]')!;
+    const cards = [...showcase.querySelectorAll<HTMLElement>('[data-project-card]')];
+    const current = showcase.querySelector<HTMLElement>('[data-project-current]')!;
+    const previous = showcase.querySelector<HTMLButtonElement>('[data-project-previous]')!;
+    const next = showcase.querySelector<HTMLButtonElement>('[data-project-next]')!;
+    let active = 0;
+    let frame = 0;
+    let pointer = 0;
+    let startX = 0;
+    let startScroll = 0;
+    let moved = false;
+
+    const update = () => {
+      frame = 0;
+      const center = viewport.scrollLeft + viewport.clientWidth / 2;
+      active = cards.reduce((closest, card, index) => {
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const closestCenter = cards[closest].offsetLeft + cards[closest].offsetWidth / 2;
+        return Math.abs(cardCenter - center) < Math.abs(closestCenter - center) ? index : closest;
+      }, 0);
+      cards.forEach((card, index) => card.classList.toggle('is-active', index === active));
+      current.textContent = String(active + 1).padStart(2, '0');
+      previous.disabled = active === 0;
+      next.disabled = active === cards.length - 1;
+    };
+    const queueUpdate = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const go = (index: number) => cards[Math.max(0, Math.min(cards.length - 1, index))]?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+
+    viewport.addEventListener('scroll', queueUpdate, { passive: true });
+    viewport.addEventListener('wheel', (event) => {
+      if (!event.shiftKey || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      event.preventDefault();
+      viewport.scrollLeft += event.deltaY;
+    }, { passive: false });
+    viewport.addEventListener('pointerdown', (event) => {
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
+      pointer = event.pointerId; startX = event.clientX; startScroll = viewport.scrollLeft; moved = false;
+      viewport.setPointerCapture(pointer); viewport.classList.add('is-dragging');
+    });
+    viewport.addEventListener('pointermove', (event) => {
+      if (event.pointerId !== pointer || !viewport.hasPointerCapture(pointer)) return;
+      const distance = event.clientX - startX;
+      if (Math.abs(distance) > 6) moved = true;
+      viewport.scrollLeft = startScroll - distance;
+    });
+    const release = (event: PointerEvent) => {
+      if (event.pointerId !== pointer) return;
+      if (viewport.hasPointerCapture(pointer)) viewport.releasePointerCapture(pointer);
+      pointer = 0; viewport.classList.remove('is-dragging');
+    };
+    viewport.addEventListener('pointerup', release);
+    viewport.addEventListener('pointercancel', release);
+    viewport.addEventListener('click', (event) => { if (moved) { event.preventDefault(); event.stopPropagation(); moved = false; } }, true);
+    previous.addEventListener('click', () => go(active - 1));
+    next.addEventListener('click', () => go(active + 1));
+    viewport.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') { event.preventDefault(); go(active - 1); }
+      if (event.key === 'ArrowRight') { event.preventDefault(); go(active + 1); }
+    });
+    update();
+  });
+</script>

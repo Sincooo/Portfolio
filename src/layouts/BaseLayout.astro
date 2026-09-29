@@ -4,13 +4,18 @@ import '@fontsource-variable/sora';
 import '../styles/global.css';
 import '../styles/sections.css';
 import '../styles/themes.css';
+import '../styles/phase2.css';
 import ContrastCursor from '../components/ContrastCursor.astro';
 import PageLoader from '../components/PageLoader.astro';
 
-const { title = 'Edward Ranz Cardoza — Aspiring Software Engineer', description = 'Edward Ranz Cardoza, a Computer Science student at Cavite State University, learning to build software and understand how systems work.' } = Astro.props;
+const {
+  title = 'Edward Ranz Cardoza — Aspiring Software Engineer',
+  description = 'Edward Ranz Cardoza, a Computer Science student at Cavite State University, learning to build software and understand how systems work.',
+  showLoader = Astro.url.pathname === '/',
+} = Astro.props;
 ---
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-home-loader={showLoader ? 'true' : 'false'}>
   <head>
     <meta charset="UTF-8" />
     <script is:inline>
@@ -18,10 +23,13 @@ const { title = 'Edward Ranz Cardoza — Aspiring Software Engineer', descriptio
         let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         try { const saved = localStorage.getItem('portfolio-theme'); if (saved === 'dark' || saved === 'light') theme = saved; } catch {}
         document.documentElement.dataset.theme = theme;
-        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const homeLoader = document.documentElement.dataset.homeLoader === 'true';
+        let alreadyShown = false;
+        try { alreadyShown = sessionStorage.getItem('portfolio-loader-shown') === 'true'; } catch {}
+        if (homeLoader && !alreadyShown && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
           document.documentElement.classList.add('page-loading');
-          // A failed image or script must never hold the page behind the loader.
-          setTimeout(() => document.documentElement.classList.remove('page-loading'), 1500);
+        } else {
+          document.documentElement.classList.add('page-ready');
         }
       })();
     </script>
@@ -32,7 +40,7 @@ const { title = 'Edward Ranz Cardoza — Aspiring Software Engineer', descriptio
     <title>{title}</title>
   </head>
   <body>
-    <PageLoader />
+    {showLoader && <PageLoader />}
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
     <ContrastCursor />

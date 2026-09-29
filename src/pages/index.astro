@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
-import TechnologyIcon from '../components/TechnologyIcon.astro';
+import TechnologyMarquee from '../components/TechnologyMarquee.astro';
+import ProjectShowcase from '../components/ProjectShowcase.astro';
 import GitHubActivity from '../components/GitHubActivity.astro';
 import { projects } from '../data/projects';
 import { cv } from '../data/site';
@@ -27,6 +28,7 @@ const seminars = [
         <p class="hero-greeting hero-enter" style="--enter-delay: 40ms">Hello, I am <span aria-hidden="true">↘</span></p>
         <h1 class="hero-name hero-enter" style="--enter-delay: 110ms"><span class="hero-given">Edward Ranz</span><span class="hero-surname">CARDOZA<span class="name-period" aria-hidden="true">.</span></span></h1>
         <p class="hero-role hero-enter" style="--enter-delay: 190ms">Aspiring Software Engineer</p>
+        <p class="hero-location hero-enter" style="--enter-delay: 225ms"><span aria-hidden="true">⌖</span> Cavite — Philippines</p>
         <p class="hero-intro hero-enter" style="--enter-delay: 260ms">A Computer Science student curious about how systems work. I’m learning to build software and sharpening my programming skills, one step at a time.</p>
         <div class="hero-actions hero-enter" style="--enter-delay: 330ms">
           <a class="button button-primary" href="#contact">Contact Me <span aria-hidden="true">↗</span></a>
@@ -45,38 +47,34 @@ const seminars = [
 
     <section id="technologies" class="section-shell section-technologies">
       <div class="split-heading" data-reveal><p class="eyebrow">01 / LANGUAGES & TOOLS</p><h2>TECHNOLOGIES<span class="period">.</span></h2><p>The story behind what I’ve learned matters more than a percentage. These are foundations I’m developing—not claims of expertise.</p></div>
-      <div class="technology-grid">
-        {technologies.map((technology, index) => <article class={`technology-card ${technology.color}`} data-reveal style={`--reveal-delay: ${index * 55}ms`}>
-          <div class="technology-title"><TechnologyIcon name={technology.name} /><div><h3>{technology.name}</h3><span class="technology-meta">{technology.tag}</span></div></div>
-          <p class="technology-summary">{technology.summary}</p>
-          <details class="technology-story"><summary>My learning story <span aria-hidden="true">+</span></summary><div><p>{technology.story}</p><span>{technology.next}</span></div></details>
-        </article>)}
-      </div>
+      <TechnologyMarquee technologies={technologies} />
     </section>
 
     <section id="projects" class="section-shell section-projects">
-      <div class="section-heading" data-reveal><p class="eyebrow">02 / WORK IN PROGRESS</p><h2>SELECTED<br /><span>PROJECTS</span></h2></div>
-      {projects.length > 0 ? <div class="project-list">
-        {projects.map((project, index) => <a class="project-entry" href={`/projects/${project.slug}/`} data-reveal>
-          <span class="project-entry-number">0{index + 1} / {project.status}</span>
-          <div><h3>{project.title}</h3><p>{project.summary}</p><span>{project.technologies.join(' · ')}</span></div>
-          {project.preview && <img src={project.preview} alt={project.previewAlt || `Preview of ${project.title}`} loading="lazy" />}
-          <span class="project-entry-arrow" aria-hidden="true">↗</span>
-        </a>)}
-      </div> : <div class="project-empty" data-reveal>
-        <div class="project-empty-main"><span class="big-asterisk" aria-hidden="true">✳</span><p class="eyebrow">A SPACE FOR THE WORK AHEAD</p><h3>Building toward my first published project.</h3><p>I’m strengthening my foundations through coursework and practice. This space will grow with projects ready to represent my work.</p></div>
-        <div class="project-empty-side"><span>01 / BEGINNING</span><span>MORE TO COME ↗</span></div>
-      </div>}
-      <GitHubActivity />
+      <div class="section-heading project-heading" data-reveal><p class="eyebrow">02 / SELECTED WORK</p><h2>PROJECT<br /><span>FOLDERS</span></h2><p>A small collection of public repositories. Open a folder to view the reusable case-study template prepared for each project.</p></div>
+      <ProjectShowcase projects={projects} />
     </section>
 
     <section id="about" class="section-about">
       <div class="section-shell about-grid">
-        <div class="about-label" data-reveal><p class="eyebrow">03 / ABOUT</p><span class="about-orbit" aria-hidden="true">✳</span></div>
-        <div data-reveal><h2>CURIOUS BY<br /><em>default.</em></h2><p>I’m a Computer Science student at Cavite State University – Main Campus, building my foundation in software development through Java and other languages introduced through coursework. I’m interested in AI engineering and cloud engineering, while remaining open to exploring different environments and sectors of technology. I value steady progress, learning, and mastering the fundamentals.</p><div class="current-learning"><span class="eyebrow">CURRENT LEARNING</span><h3>Java, and whatever<br />comes next.</h3><p>I’m currently strengthening my Java foundation and exploring where my interests lead. No fixed path—just a commitment to keep learning.</p></div></div>
+        <div class="about-portrait" data-reveal>
+          <div class="about-image-mask"><img src="/assets/portrait-700.webp" srcset="/assets/portrait-350.webp 350w, /assets/portrait-700.webp 700w" sizes="(max-width: 700px) 88vw, 34vw" alt="Edward Ranz Cardoza in Cavite, Philippines" width="700" height="1050" loading="lazy" decoding="async" /></div>
+          <span class="about-orbit" aria-hidden="true">✳</span>
+        </div>
+        <div class="about-copy">
+          <p class="eyebrow" data-reveal>03 / ABOUT</p>
+          <h2 data-reveal>CURIOUS BY<br /><em>default.</em></h2>
+          <p data-reveal>I’m a Computer Science student at Cavite State University – Main Campus, building my foundation in software development through Java and other languages introduced through coursework. I’m interested in AI engineering and cloud engineering, while remaining open to exploring different environments and sectors of technology. I value steady progress, learning, and mastering the fundamentals.</p>
+          <dl class="about-facts" data-reveal>
+            <div><dt>Based in</dt><dd>Cavite, Philippines</dd></div>
+            <div><dt>Interested in</dt><dd>AI and cloud engineering</dd></div>
+            <div><dt>Direction</dt><dd>Software engineering</dd></div>
+          </dl>
+        </div>
       </div>
-      <figure class="personal-quote section-shell" data-reveal><figcaption class="eyebrow">A PERSONAL REMINDER</figcaption><blockquote>“A man's pain when doing something he loves isn't pain, but an obstacle”</blockquote></figure>
     </section>
+
+    <div class="pixel-transition pixel-to-page" data-pixel-transition aria-hidden="true">{Array.from({length: 48}, (_, index) => <i style={`--pixel: ${index % 12}; --row: ${Math.floor(index / 12)}`}></i>)}</div>
 
     <section id="education" class="section-shell section-education">
       <div class="education-heading" data-reveal><p class="eyebrow">04 / EDUCATION</p><h2>THE<br /><span>FOUNDATION</span></h2></div>
@@ -108,10 +106,39 @@ const seminars = [
       </div>
     </section>
 
+    <section id="github" class="section-shell section-github">
+      <GitHubActivity />
+    </section>
+
+    <section class="section-quote" aria-labelledby="quote-heading">
+      <figure class="personal-quote section-shell" data-reveal>
+        <figcaption class="eyebrow" id="quote-heading">A PERSONAL REMINDER</figcaption>
+        <span class="quote-mark" aria-hidden="true">“</span>
+        <blockquote>A man's pain when doing something he loves isn't pain, but an obstacle</blockquote>
+      </figure>
+    </section>
+
+    <div class="pixel-transition pixel-to-contact" data-pixel-transition aria-hidden="true">{Array.from({length: 48}, (_, index) => <i style={`--pixel: ${index % 12}; --row: ${Math.floor(index / 12)}`}></i>)}</div>
+
     <section id="contact" class="section-contact">
-      <div class="section-shell contact-inner" data-reveal><p class="eyebrow">07 / CONTACT</p><h2>LET’S<br /><span>CONNECT.</span></h2><p>Interested in connecting, sharing ideas, or following what I’m learning? You can find me here.</p><a class="contact-email" href="mailto:cardozaedwardranz14@gmail.com">cardozaedwardranz14@gmail.com <span aria-hidden="true">↗</span></a><div class="contact-links"><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://www.facebook.com/ranz.edward.92" target="_blank" rel="noopener noreferrer">Facebook ↗</a></div><div class="contact-bottom"><span>EDWARD RANZ V. CARDOZA</span><a href="#home">BACK TO TOP ↑</a><span>© {new Date().getFullYear()}</span></div></div>
+      <div class="section-shell contact-inner" data-reveal>
+        <p class="eyebrow">08 / CONTACT</p>
+        <h2>LET’S BUILD<br /><span>SOMETHING TOGETHER.</span></h2>
+        <p>Interested in connecting, sharing ideas, or following what I’m learning? My inbox and profiles are open.</p>
+        <a class="contact-email" href="mailto:cardozaedwardranz14@gmail.com">cardozaedwardranz14@gmail.com <span aria-hidden="true">↗</span></a>
+        <div class="contact-links"><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://www.facebook.com/ranz.edward.92" target="_blank" rel="noopener noreferrer">Facebook ↗</a></div>
+      </div>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="section-shell site-footer-inner">
+      <a class="footer-brand" href="#home">RANZ<span>.</span></a>
+      <nav aria-label="Footer links"><a href={cv.url} download={cv.filename}>CV ↓</a><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></nav>
+      <a class="footer-top" href="#home">Back to top ↑</a>
+      <p>© {new Date().getFullYear()} Edward Ranz V. Cardoza</p>
+    </div>
+  </footer>
 
   <dialog id="gallery-dialog" class="gallery-dialog" aria-label="Certificate preview">
     <div class="dialog-bar"><span id="dialog-count"></span><button type="button" id="dialog-close" aria-label="Close preview">✕</button></div>
@@ -152,12 +179,19 @@ const seminars = [
     window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(configureReveals, 150); });
     document.addEventListener('focusin', (event) => event.target.closest('[data-reveal]')?.classList.add('revealed'));
     const sections = document.querySelectorAll('main section[id]');
-    const links = document.querySelectorAll('.desktop-nav a, .mobile-nav-links a');
+    const links = document.querySelectorAll('.menu-link[data-section]');
     if ('IntersectionObserver' in window) {
       const navObserver = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) links.forEach((link) => { const active = link.getAttribute('href') === `/#${entry.target.id}`; link.classList.toggle('active', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); }); }), { rootMargin: '-35% 0px -55% 0px' });
       sections.forEach((section) => navObserver.observe(section));
     }
-    document.querySelectorAll('.mobile-nav-links a').forEach((link) => link.addEventListener('click', () => { document.querySelector('.mobile-nav details').open = false; }));
+    const pixelTransitions = document.querySelectorAll('[data-pixel-transition]');
+    if (!('IntersectionObserver' in window) || motionPreference.matches) pixelTransitions.forEach((transition) => transition.classList.add('is-visible'));
+    else {
+      const pixelObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('is-visible');
+      }), { threshold: .25 });
+      pixelTransitions.forEach((transition) => pixelObserver.observe(transition));
+    }
     const dialog = document.getElementById('gallery-dialog');
     const dialogImage = document.getElementById('dialog-img');
     const dialogTitle = document.getElementById('dialog-title');

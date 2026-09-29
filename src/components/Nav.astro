@@ -1,22 +1,155 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import { cv } from '../data/site';
+import '../styles/navigation.css';
+
 const items = [
-  { label: 'Technologies', href: '/#technologies', icon: '⌘' },
-  { label: 'Projects', href: '/#projects', icon: '□' },
-  { label: 'About', href: '/#about', icon: '◉' },
-  { label: 'Contact', href: '/#contact', icon: '↗' },
+  { label: 'Home', href: '/#home', number: '01', section: 'home' },
+  { label: 'Technologies', href: '/#technologies', number: '02', section: 'technologies' },
+  { label: 'Projects', href: '/#projects', number: '03', section: 'projects' },
+  { label: 'About', href: '/#about', number: '04', section: 'about' },
+  { label: 'Education', href: '/#education', number: '05', section: 'education' },
+  { label: 'Experience', href: '/#experience', number: '06', section: 'experience' },
+  { label: 'Gallery', href: '/#gallery', number: '07', section: 'gallery' },
+  { label: 'GitHub', href: '/#github', number: '08', section: 'github' },
+  { label: 'Contact', href: '/#contact', number: '09', section: 'contact' },
 ];
 ---
-<a class="portfolio-brand" href="/#home" aria-label="ERC. — Edward Ranz Cardoza — Home"><img src="/favicon.svg" alt="" width="32" height="32" /><span>ERC<span class="brand-dot">.</span></span></a>
-<header class="site-header section-shell">
-  <nav class="desktop-nav" aria-label="Primary navigation">
-    {items.map((item) => <a href={item.href}><span aria-hidden="true">{item.icon}</span><span>{item.label}</span></a>)}
-  </nav>
-  <nav class="mobile-nav" aria-label="Mobile navigation">
-  <details>
-    <summary>Menu <span aria-hidden="true">☰</span></summary>
-    <div class="mobile-nav-links">{items.map((item) => <a href={item.href}>{item.label}</a>)}</div>
-  </details>
-  </nav>
+
+<a class="portfolio-brand" href="/#home" aria-label="ERC. — Edward Ranz Cardoza — Home">
+  <img src="/favicon.svg" alt="" width="32" height="32" />
+  <span>ERC<span class="brand-dot">.</span></span>
+</a>
+
+<header class="site-header site-navigation" data-site-navigation>
+  <button
+    class="menu-trigger"
+    type="button"
+    aria-haspopup="dialog"
+    aria-controls="site-menu"
+    aria-expanded="false"
+  >
+    <span>Menu</span>
+    <span class="menu-trigger-mark" aria-hidden="true"><i></i><i></i></span>
+  </button>
   <ThemeToggle />
 </header>
+
+<dialog class="menu-dialog" id="site-menu" aria-labelledby="site-menu-title">
+  <div class="menu-surface">
+    <div class="menu-topline">
+      <div class="menu-identity" aria-hidden="true">
+        <img src="/favicon.svg" alt="" width="32" height="32" />
+        <span>ERC<span>.</span></span>
+      </div>
+      <p id="site-menu-title">Explore the portfolio</p>
+      <button class="menu-close" type="button" data-menu-close>
+        <span>Close</span>
+        <span class="menu-close-mark" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <div class="menu-layout">
+      <nav class="menu-links" aria-label="Primary navigation">
+        {items.map((item) => (
+          <a class="menu-link" href={item.href} data-section={item.section}>
+            <span class="menu-link-number" aria-hidden="true">{item.number}</span>
+            <span>{item.label}</span>
+            <span class="menu-link-arrow" aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </nav>
+
+      <aside class="menu-aside" aria-label="Portfolio details">
+        <div>
+          <p class="menu-aside-label">Based in</p>
+          <p>Cavite — Philippines</p>
+        </div>
+        <div>
+          <p class="menu-aside-label">Elsewhere</p>
+          <div class="menu-secondary-links">
+            <a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+            <a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+            <a href={cv.url} download={cv.filename}>Download CV <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <p class="menu-note">Computer Science student<br />Aspiring Software Engineer</p>
+      </aside>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('#site-menu');
+  const trigger = document.querySelector<HTMLButtonElement>('.menu-trigger');
+  const closeButton = dialog?.querySelector<HTMLButtonElement>('[data-menu-close]');
+  const links = dialog ? Array.from(dialog.querySelectorAll<HTMLAnchorElement>('a')) : [];
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let closeTimer = 0;
+
+  const setOpenState = (isOpen: boolean) => {
+    trigger?.setAttribute('aria-expanded', String(isOpen));
+    document.documentElement.classList.toggle('menu-open', isOpen);
+  };
+
+  const finishClose = (restoreFocus = true) => {
+    if (!dialog?.open) return;
+    window.clearTimeout(closeTimer);
+    dialog.classList.remove('is-closing');
+    dialog.close();
+    setOpenState(false);
+    if (restoreFocus) trigger?.focus({ preventScroll: true });
+  };
+
+  const closeMenu = (restoreFocus = true, animate = true) => {
+    if (!dialog?.open || dialog.classList.contains('is-closing')) return;
+    if (animate && !motionQuery.matches) {
+      dialog.classList.add('is-closing');
+      closeTimer = window.setTimeout(() => finishClose(restoreFocus), 220);
+      return;
+    }
+    finishClose(restoreFocus);
+  };
+
+  const openMenu = () => {
+    if (!dialog || dialog.open) return;
+    dialog.classList.remove('is-closing');
+    dialog.showModal();
+    setOpenState(true);
+    requestAnimationFrame(() => {
+      dialog.querySelector<HTMLAnchorElement>('.menu-link')?.focus({ preventScroll: true });
+    });
+  };
+
+  trigger?.addEventListener('click', openMenu);
+  closeButton?.addEventListener('click', () => closeMenu());
+
+  dialog?.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    closeMenu();
+  });
+
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) closeMenu();
+  });
+
+  links.forEach((link) => {
+    link.addEventListener('click', () => closeMenu(false, false));
+  });
+
+  dialog?.addEventListener('close', () => setOpenState(false));
+
+  const markCurrentLink = () => {
+    if (window.location.pathname !== '/') return;
+    const current = (window.location.hash || '#home').slice(1);
+    dialog?.querySelectorAll<HTMLAnchorElement>('.menu-link').forEach((link) => {
+      const active = link.dataset.section === current;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  };
+
+  markCurrentLink();
+  window.addEventListener('hashchange', markCurrentLink);
+</script>

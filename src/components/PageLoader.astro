@@ -1,16 +1,40 @@
-<div class="page-loader" aria-hidden="true"><div><span class="loader-word">RANZ<span>.</span></span><span class="loader-line"></span></div></div>
+<div class="page-loader" aria-hidden="true">
+  <div class="loader-mark">
+    <span class="loader-kicker">PORTFOLIO / 2026</span>
+    <span class="loader-word">RANZ<span>.</span></span>
+    <span class="loader-line"><i></i></span>
+    <span class="loader-status">LOADING THE WORK</span>
+  </div>
+</div>
 <script>
   const root = document.documentElement;
-  const loader = document.querySelector('.page-loader')!;
+  const loader = document.querySelector<HTMLElement>('.page-loader');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  const finish = () => {
-    if (!root.classList.contains('page-loading')) return;
-    if (motion.matches) { root.classList.remove('page-loading'); return; }
-    loader.classList.add('is-leaving');
-    setTimeout(() => root.classList.remove('page-loading'), 160);
-  };
-  const portrait = document.querySelector<HTMLImageElement>('.portrait-frame img');
-  const essential = [document.fonts.ready, portrait?.decode().catch(() => {})];
-  Promise.allSettled(essential).then(finish);
-  motion.addEventListener('change', (event) => { if (event.matches) finish(); });
+  if (loader && root.classList.contains('page-loading')) {
+    const started = performance.now();
+    const minimum = 1700;
+    const finish = () => {
+      if (!root.classList.contains('page-loading')) return;
+      if (motion.matches) {
+        root.classList.remove('page-loading');
+        root.classList.add('page-ready');
+        return;
+      }
+      loader.classList.add('is-leaving');
+      root.classList.add('page-revealing');
+      window.setTimeout(() => {
+        root.classList.remove('page-loading', 'page-revealing');
+        root.classList.add('page-ready');
+        try { sessionStorage.setItem('portfolio-loader-shown', 'true'); } catch {}
+      }, 420);
+    };
+    const portrait = document.querySelector<HTMLImageElement>('.portrait-frame img');
+    const assets = Promise.allSettled([document.fonts.ready, portrait?.decode().catch(() => {})]);
+    const assetLimit = new Promise((resolve) => window.setTimeout(resolve, 4500));
+    Promise.race([assets, assetLimit]).then(() => {
+      const remaining = Math.max(0, minimum - (performance.now() - started));
+      window.setTimeout(finish, remaining);
+    });
+    motion.addEventListener('change', (event) => { if (event.matches) finish(); });
+  }
 </script>

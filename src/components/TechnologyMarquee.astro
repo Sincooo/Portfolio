@@ -1,0 +1,134 @@
+---
+import TechnologyIcon from './TechnologyIcon.astro';
+
+type Technology = {
+  name: string;
+  tag: string;
+  color: string;
+  summary: string;
+  story: string;
+  next: string;
+};
+
+const { technologies } = Astro.props as { technologies: Technology[] };
+const midpoint = Math.ceil(technologies.length / 2);
+const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
+---
+<div class="technology-marquee" data-technology-marquee>
+  <div class="technology-rows">
+    {rows.map((row, rowIndex) => (
+      <div class={`technology-row ${rowIndex % 2 ? 'is-reverse' : ''}`} data-technology-row>
+        <div class="technology-track">
+          {[false, true].map((duplicate) => (
+            <div class="technology-set" aria-hidden={duplicate ? 'true' : undefined}>
+              {row.map((technology) => (
+                <button
+                  class={`technology-pill ${technology.color}`}
+                  type="button"
+                  data-technology
+                  data-name={technology.name}
+                  data-tag={technology.tag}
+                  data-summary={technology.summary}
+                  data-story={technology.story}
+                  data-next={technology.next}
+                  tabindex={duplicate ? -1 : 0}
+                  aria-pressed="false"
+                >
+                  <TechnologyIcon name={technology.name} />
+                  <span>{technology.name}</span>
+                  <small>{technology.tag}</small>
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <aside class="technology-info">
+    <div class="technology-info-index" aria-hidden="true">↳</div>
+    <div>
+      <p class="technology-info-tag">HOVER, FOCUS, OR TAP A TECHNOLOGY</p>
+      <h3 class="technology-info-name">A moving record of the tools I’m learning.</h3>
+      <p class="technology-info-copy" data-technology-copy>Each item pauses its row and opens the learning story behind it.</p>
+      <p class="technology-info-next" data-technology-next></p>
+      <p class="sr-only" data-technology-announcement aria-live="polite"></p>
+    </div>
+  </aside>
+</div>
+
+<script>
+  const marquees = document.querySelectorAll<HTMLElement>('[data-technology-marquee]');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  marquees.forEach((marquee) => {
+    const tag = marquee.querySelector<HTMLElement>('.technology-info-tag')!;
+    const name = marquee.querySelector<HTMLElement>('.technology-info-name')!;
+    const copy = marquee.querySelector<HTMLElement>('[data-technology-copy]')!;
+    const next = marquee.querySelector<HTMLElement>('[data-technology-next]')!;
+    const announcement = marquee.querySelector<HTMLElement>('[data-technology-announcement]')!;
+    const items = [...marquee.querySelectorAll<HTMLButtonElement>('[data-technology]')];
+    let selected: HTMLButtonElement | null = null;
+    let typingTimer = 0;
+    let currentCopy = '';
+
+    const stopTyping = () => window.clearInterval(typingTimer);
+    const typeCopy = (value: string) => {
+      stopTyping();
+      currentCopy = value;
+      copy.textContent = '';
+      if (reduceMotion.matches) { copy.textContent = value; return; }
+      let index = 0;
+      typingTimer = window.setInterval(() => {
+        index += 1;
+        copy.textContent = value.slice(0, index);
+        if (index >= value.length) stopTyping();
+      }, 13);
+    };
+    const activate = (item: HTMLButtonElement, persist = false) => {
+      items.forEach((candidate) => candidate.setAttribute('aria-pressed', String(candidate === item && persist)));
+      selected = persist ? item : null;
+      marquee.querySelectorAll('[data-technology-row]').forEach((row) => row.classList.toggle('is-paused', row.contains(item)));
+      tag.textContent = item.dataset.tag || '';
+      name.textContent = item.dataset.name || '';
+      next.textContent = item.dataset.next || '';
+      const detail = `${item.dataset.summary} ${item.dataset.story}`;
+      typeCopy(detail);
+      announcement.textContent = `${item.dataset.name}. ${item.dataset.tag}. ${detail} ${item.dataset.next}`;
+      marquee.classList.add('has-selection');
+    };
+    const reset = () => {
+      if (selected) return;
+      stopTyping();
+      marquee.classList.remove('has-selection');
+      marquee.querySelectorAll('[data-technology-row]').forEach((row) => row.classList.remove('is-paused'));
+      items.forEach((candidate) => candidate.setAttribute('aria-pressed', 'false'));
+      tag.textContent = 'HOVER, FOCUS, OR TAP A TECHNOLOGY';
+      name.textContent = 'A moving record of the tools I’m learning.';
+      copy.textContent = 'Each item pauses its row and opens the learning story behind it.';
+      next.textContent = '';
+      announcement.textContent = '';
+    };
+
+    items.forEach((item) => {
+      item.addEventListener('pointerenter', (event) => { if ((event as PointerEvent).pointerType === 'mouse') activate(item); });
+      item.addEventListener('pointerleave', (event) => { if ((event as PointerEvent).pointerType === 'mouse') reset(); });
+      item.addEventListener('focus', () => activate(item, true));
+      item.addEventListener('blur', () => { selected = null; reset(); });
+      item.addEventListener('click', (event) => {
+        if (matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+        event.stopPropagation();
+        const shouldClose = selected === item;
+        selected = null;
+        if (shouldClose) reset(); else activate(item, true);
+      });
+    });
+    document.addEventListener('pointerdown', (event) => {
+      if (!marquee.contains(event.target as Node) && selected) { selected = null; reset(); }
+    });
+    reduceMotion.addEventListener('change', (event) => {
+      if (event.matches && marquee.classList.contains('has-selection')) { stopTyping(); copy.textContent = currentCopy; }
+    });
+  });
+</script>

@@ -1,6 +1,7 @@
 ---
 import snapshot from '../data/github.json';
 const total = snapshot.days.reduce((sum, day) => sum + day.count, 0);
+const activeDays = snapshot.days.filter((day) => day.count > 0).length;
 const weeks = Math.ceil(snapshot.days.length / 7);
 const months = snapshot.days.flatMap((day, index) => {
   const date = new Date(`${day.date}T12:00:00Z`);
@@ -9,16 +10,21 @@ const months = snapshot.days.flatMap((day, index) => {
 const dateLabel = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateString('en', {month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'});
 const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
 ---
-<div class="github-area">
-  <div class="github-heading" data-reveal><div><p class="eyebrow">OPEN SOURCE / IN PROGRESS</p><h3>On GitHub<span class="period">.</span></h3></div><a href="https://github.com/Sincooo?tab=repositories" target="_blank" rel="noopener noreferrer">All repositories <span aria-hidden="true">↗</span></a></div>
-  <p class="github-intro">Public repositories from my account, including coursework and this portfolio.</p>
-  <div class="repository-grid" id="repository-grid">
+<div class="github-area" data-github-reveal>
+  <div class="github-heading" data-github-step style="--github-delay: 0ms"><div><p class="eyebrow">07 / OPEN SOURCE</p><h3>BUILDING<br />IN PUBLIC<span class="period">.</span></h3></div><a href="https://github.com/Sincooo?tab=repositories" target="_blank" rel="noopener noreferrer">All repositories <span aria-hidden="true">↗</span></a></div>
+  <p class="github-intro" data-github-step style="--github-delay: 90ms">A live view of my public repositories and contribution activity. The saved snapshot keeps the section useful if GitHub is temporarily unavailable.</p>
+  <div class="github-stat-row" data-github-step style="--github-delay: 150ms" aria-label="GitHub activity summary">
+    <div><strong id="github-total">{total}</strong><span>contributions shown</span></div>
+    <div><strong id="github-active-days">{activeDays}</strong><span>active days shown</span></div>
+    <div><strong>@Sincooo</strong><span>GitHub profile</span></div>
+  </div>
+  <div class="repository-grid" id="repository-grid" data-github-step style="--github-delay: 210ms">
     {snapshot.repositories.map((repo) => <a class="repository-card" href={repo.url} target="_blank" rel="noopener noreferrer">
       <div class="repository-top"><span>PUBLIC{repo.fork ? ' / FORK' : ''}</span><span aria-hidden="true">↗</span></div><h4>{repo.name}</h4><p>{repo.description || 'No description provided on GitHub.'}</p><div class="repository-meta"><span>{repo.language || 'Language not specified'}</span><span aria-label={`${repo.stars} stars`}>☆ {repo.stars}</span><span aria-label={`${repo.forks} forks`}>⑂ {repo.forks}</span></div>
     </a>)}
   </div>
-  <p class="repository-status" id="repository-status" aria-live="polite">Repository snapshot · {dateLabel(snapshot.repositoriesUpdated.slice(0, 10))}</p>
-  <div class="contribution-card" data-reveal>
+  <p class="repository-status" id="repository-status" aria-live="polite" data-github-step style="--github-delay: 250ms">Repository snapshot · {dateLabel(snapshot.repositoriesUpdated.slice(0, 10))}</p>
+  <div class="contribution-card" data-github-step style="--github-delay: 300ms">
     <div class="contribution-heading"><h4>My GitHub contributions</h4><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">@Sincooo <span aria-hidden="true">↗</span></a></div>
     <div class="contribution-scroll" tabindex="0" role="region" aria-label="Contribution calendar. Scroll horizontally on small screens.">
       <svg class="contribution-chart" viewBox={`0 0 ${weeks * 16 + 32} 148`} role="img" aria-labelledby="contribution-title contribution-description">
@@ -99,6 +105,8 @@ const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
     chart.setAttribute('viewBox', `0 0 ${weeks * 16 + 32} 148`);
     chart.replaceChildren(...nodes); list.replaceChildren(...counts);
     document.querySelector('.contribution-footer strong')!.textContent = String(total);
+    document.getElementById('github-total')!.textContent = String(total);
+    document.getElementById('github-active-days')!.textContent = String(days.filter((day) => day.count > 0).length);
   };
   let inView = false;
   let lastAttempt = 0;
@@ -130,5 +138,19 @@ const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
     if (!('IntersectionObserver' in window)) { inView = true; refreshActivity(); }
     setInterval(refreshActivity, 300000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshActivity(); });
+  }
+
+  const revealSection = document.querySelector<HTMLElement>('[data-github-reveal]');
+  if (revealSection) {
+    const reveal = () => revealSection.classList.add('is-visible');
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) reveal();
+    else {
+      const revealObserver = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        reveal();
+        revealObserver.disconnect();
+      }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+      revealObserver.observe(revealSection);
+    }
   }
 </script>
