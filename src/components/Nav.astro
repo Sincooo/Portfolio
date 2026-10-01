@@ -22,17 +22,20 @@ const items = [
 </a>
 
 <header class="site-header site-navigation" data-site-navigation>
+  <ThemeToggle />
   <button
-    class="menu-trigger"
+    class="menu-trigger menu-control"
     type="button"
+    aria-label="Open navigation menu"
     aria-haspopup="dialog"
     aria-controls="site-menu"
     aria-expanded="false"
   >
-    <span>Menu</span>
+    <span class="menu-toggle-copy" aria-hidden="true">
+      <span class="menu-toggle-track"><span>Menu</span><span>Close</span></span>
+    </span>
     <span class="menu-trigger-mark" aria-hidden="true"><i></i><i></i></span>
   </button>
-  <ThemeToggle />
 </header>
 
 <dialog class="menu-dialog" id="site-menu" aria-labelledby="site-menu-title">
@@ -43,37 +46,49 @@ const items = [
         <span>ERC<span>.</span></span>
       </div>
       <p id="site-menu-title">Explore the portfolio</p>
-      <button class="menu-close" type="button" data-menu-close>
-        <span>Close</span>
+      <button class="menu-close menu-control" type="button" data-menu-close aria-label="Close navigation menu">
+        <span class="menu-toggle-copy" aria-hidden="true">
+          <span class="menu-toggle-track"><span>Menu</span><span>Close</span></span>
+        </span>
         <span class="menu-close-mark" aria-hidden="true"></span>
       </button>
     </div>
 
     <div class="menu-layout">
       <nav class="menu-links" aria-label="Primary navigation">
-        {items.map((item) => (
-          <a class="menu-link" href={item.href} data-section={item.section}>
-            <span class="menu-link-number" aria-hidden="true">{item.number}</span>
-            <span>{item.label}</span>
+        {items.map((item, index) => (
+          <a
+            class="menu-link"
+            href={item.href}
+            data-section={item.section}
+            style={`--menu-order: ${index}; --menu-delay: ${140 + index * 42}ms; --menu-exit-delay: ${(8 - index) * 12}ms`}
+          >
+            <span class="menu-active-mark" aria-hidden="true"></span>
+            <span class="menu-link-copy">
+              <span class="menu-link-text">{item.label}</span>
+              <span class="menu-link-text" aria-hidden="true">{item.label}</span>
+            </span>
             <span class="menu-link-arrow" aria-hidden="true">↗</span>
+            <span class="menu-link-number" aria-hidden="true">{item.number}</span>
           </a>
         ))}
       </nav>
 
       <aside class="menu-aside" aria-label="Portfolio details">
-        <div>
+        <div class="menu-aside-block" style="--menu-delay: 720ms">
           <p class="menu-aside-label">Based in</p>
           <p>Cavite — Philippines</p>
         </div>
-        <div>
+        <div class="menu-aside-block" style="--menu-delay: 790ms">
           <p class="menu-aside-label">Elsewhere</p>
           <div class="menu-secondary-links">
             <a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
             <a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
-            <a href={cv.url} download={cv.filename}>Download CV <span aria-hidden="true">↓</span></a>
+            <a href={cv.url} download={cv.filename}>CV <span aria-hidden="true">↓</span></a>
+            <a href="mailto:cardozaedwardranz14@gmail.com">Email <span aria-hidden="true">↗</span></a>
           </div>
         </div>
-        <p class="menu-note">Computer Science student<br />Aspiring Software Engineer</p>
+        <p class="menu-note menu-aside-block" style="--menu-delay: 860ms">Computer Science student<br />Aspiring Software Engineer</p>
       </aside>
     </div>
   </div>
@@ -83,9 +98,11 @@ const items = [
   const dialog = document.querySelector<HTMLDialogElement>('#site-menu');
   const trigger = document.querySelector<HTMLButtonElement>('.menu-trigger');
   const closeButton = dialog?.querySelector<HTMLButtonElement>('[data-menu-close]');
-  const links = dialog ? Array.from(dialog.querySelectorAll<HTMLAnchorElement>('a')) : [];
+  const primaryLinks = dialog ? Array.from(dialog.querySelectorAll<HTMLAnchorElement>('.menu-link[data-section]')) : [];
+  const allMenuLinks = dialog ? Array.from(dialog.querySelectorAll<HTMLAnchorElement>('a')) : [];
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   let closeTimer = 0;
+  let closeComplete: (() => void) | undefined;
 
   const setOpenState = (isOpen: boolean) => {
     trigger?.setAttribute('aria-expanded', String(isOpen));
@@ -95,17 +112,21 @@ const items = [
   const finishClose = (restoreFocus = true) => {
     if (!dialog?.open) return;
     window.clearTimeout(closeTimer);
+    const callback = closeComplete;
+    closeComplete = undefined;
     dialog.classList.remove('is-closing');
     dialog.close();
     setOpenState(false);
     if (restoreFocus) trigger?.focus({ preventScroll: true });
+    callback?.();
   };
 
-  const closeMenu = (restoreFocus = true, animate = true) => {
+  const closeMenu = (restoreFocus = true, animate = true, onComplete?: () => void) => {
     if (!dialog?.open || dialog.classList.contains('is-closing')) return;
+    closeComplete = onComplete;
     if (animate && !motionQuery.matches) {
       dialog.classList.add('is-closing');
-      closeTimer = window.setTimeout(() => finishClose(restoreFocus), 220);
+      closeTimer = window.setTimeout(() => finishClose(restoreFocus), 480);
       return;
     }
     finishClose(restoreFocus);
@@ -113,11 +134,15 @@ const items = [
 
   const openMenu = () => {
     if (!dialog || dialog.open) return;
+    window.clearTimeout(closeTimer);
+    closeComplete = undefined;
     dialog.classList.remove('is-closing');
     dialog.showModal();
     setOpenState(true);
     requestAnimationFrame(() => {
-      dialog.querySelector<HTMLAnchorElement>('.menu-link')?.focus({ preventScroll: true });
+      const initialLink = dialog.querySelector<HTMLAnchorElement>('.menu-link.active')
+        || dialog.querySelector<HTMLAnchorElement>('.menu-link');
+      initialLink?.focus({ preventScroll: true });
     });
   };
 
@@ -133,23 +158,93 @@ const items = [
     if (event.target === dialog) closeMenu();
   });
 
-  links.forEach((link) => {
-    link.addEventListener('click', () => closeMenu(false, false));
+  primaryLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const destination = link.href;
+      setActiveSection(link.dataset.section || '');
+      closeMenu(true, true, () => navigateToDestination(destination));
+    });
   });
 
-  dialog?.addEventListener('close', () => setOpenState(false));
+  allMenuLinks.filter((link) => !link.classList.contains('menu-link')).forEach((link) => {
+    link.addEventListener('click', () => closeMenu(true));
+  });
 
-  const markCurrentLink = () => {
-    if (window.location.pathname !== '/') return;
-    const current = (window.location.hash || '#home').slice(1);
-    dialog?.querySelectorAll<HTMLAnchorElement>('.menu-link').forEach((link) => {
-      const active = link.dataset.section === current;
+  dialog?.addEventListener('close', () => {
+    window.clearTimeout(closeTimer);
+    closeComplete = undefined;
+    dialog.classList.remove('is-closing');
+    setOpenState(false);
+  });
+
+  const setActiveSection = (section: string) => {
+    primaryLinks.forEach((link) => {
+      const active = Boolean(section) && link.dataset.section === section;
       link.classList.toggle('active', active);
       if (active) link.setAttribute('aria-current', 'location');
       else link.removeAttribute('aria-current');
     });
   };
 
-  markCurrentLink();
-  window.addEventListener('hashchange', markCurrentLink);
+  const normalizedPath = window.location.pathname.replace(/\/+$/, '') || '/';
+  const isHomePage = normalizedPath === '/' || normalizedPath === '/index.html';
+  const navigateToDestination = (destination: string) => {
+    const target = new URL(destination, window.location.href);
+    const targetPath = target.pathname.replace(/\/+$/, '') || '/';
+    const targetsHome = target.origin === window.location.origin && (targetPath === '/' || targetPath === '/index.html');
+    if (isHomePage && targetsHome && target.hash) {
+      if (window.location.hash !== target.hash) window.location.hash = target.hash;
+      else document.getElementById(target.hash.slice(1))?.scrollIntoView({ behavior: motionQuery.matches ? 'auto' : 'smooth' });
+      return;
+    }
+    window.location.assign(target.href);
+  };
+  const homeSections = isHomePage
+    ? primaryLinks
+        .map((link) => document.getElementById(link.dataset.section || ''))
+        .filter((section): section is HTMLElement => Boolean(section))
+    : [];
+  let activeFrame = 0;
+
+  const findActiveSection = () => {
+    if (!isHomePage) {
+      setActiveSection(normalizedPath === '/projects' || normalizedPath.startsWith('/projects/') ? 'projects' : '');
+      return;
+    }
+
+    const scrollTop = window.scrollY;
+    const pageHeight = document.documentElement.scrollHeight;
+    if (scrollTop <= 24) {
+      setActiveSection('home');
+      return;
+    }
+    if (scrollTop + window.innerHeight >= pageHeight - Math.max(24, window.innerHeight * .03)) {
+      setActiveSection('contact');
+      return;
+    }
+
+    const guide = Math.max(88, Math.min(window.innerHeight * .38, 320));
+    let current = 'home';
+    for (const section of homeSections) {
+      if (section.getBoundingClientRect().top <= guide) current = section.id;
+      else break;
+    }
+    setActiveSection(current);
+  };
+
+  const scheduleActiveUpdate = () => {
+    if (activeFrame) return;
+    activeFrame = window.requestAnimationFrame(() => {
+      activeFrame = 0;
+      findActiveSection();
+    });
+  };
+
+  findActiveSection();
+  window.addEventListener('scroll', scheduleActiveUpdate, { passive: true });
+  window.addEventListener('resize', scheduleActiveUpdate, { passive: true });
+  window.addEventListener('hashchange', scheduleActiveUpdate);
+  window.addEventListener('pageshow', scheduleActiveUpdate);
+  window.addEventListener('load', scheduleActiveUpdate, { once: true });
 </script>

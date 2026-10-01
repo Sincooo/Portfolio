@@ -5,8 +5,10 @@ import '../styles/global.css';
 import '../styles/sections.css';
 import '../styles/themes.css';
 import '../styles/phase2.css';
+import '../styles/motion.css';
 import ContrastCursor from '../components/ContrastCursor.astro';
 import PageLoader from '../components/PageLoader.astro';
+import MotionController from '../components/MotionController.astro';
 
 const {
   title = 'Edward Ranz Cardoza — Aspiring Software Engineer',
@@ -43,6 +45,7 @@ const {
     {showLoader && <PageLoader />}
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
+    <MotionController />
     <ContrastCursor />
   </body>
 </html>

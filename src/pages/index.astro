@@ -6,14 +6,8 @@ import ProjectShowcase from '../components/ProjectShowcase.astro';
 import GitHubActivity from '../components/GitHubActivity.astro';
 import { projects } from '../data/projects';
 import { cv } from '../data/site';
-const technologies = [
-  { name: 'Java', tag: 'CURRENT FOCUS', color: 'yellow', summary: 'A return to the language that started it all.', story: 'Java was my first programming language in senior high school. I am studying it again in college, revisiting the fundamentals with a more deliberate approach and building a stronger grasp of how programs are structured.', next: 'Currently learning through coursework and practice.' },
-  { name: 'HTML', tag: 'WEB STRUCTURE', color: 'orange', summary: 'Giving web pages a meaningful structure.', story: 'I learned HTML through college coursework, alongside CSS and JavaScript. It introduced me to the structure behind a web page and how its content is organized.', next: 'Looking to apply it in more complete work.' },
-  { name: 'CSS', tag: 'WEB PRESENTATION', color: 'blue', summary: 'Connecting structure with visual presentation.', story: 'I learned CSS through college coursework, alongside HTML and JavaScript. It introduced me to how styles shape the visual presentation of a web page.', next: 'Looking to apply it in more complete work.' },
-  { name: 'JavaScript', tag: 'WEB INTERACTION', color: 'yellow', summary: 'Exploring how the web becomes interactive.', story: 'I learned JavaScript through college coursework, alongside HTML and CSS. Together, they introduced me to the relationship between structure, visual presentation, and interaction.', next: 'Looking to apply it in more complete work.' },
-  { name: 'Python', tag: 'COLLEGE FOUNDATION', color: 'cyan', summary: 'Turning problems into a sequence of steps.', story: 'I encountered Python in my first year of college, mainly through the curriculum. Working with it helped me become more comfortable with core programming ideas and approaching problems logically.', next: 'Continuing to strengthen the fundamentals.' },
-  { name: 'Visual Basic', tag: 'EARLY EXPERIENCE', color: 'blue', summary: 'An early introduction to coding logic.', story: 'I studied Visual Basic in senior high school. It introduced me to the basics of coding and helped make programming feel approachable before I moved on to other languages.', next: 'Part of the foundation I still build on.' },
-];
+import { technologies } from '../data/technologies';
+
 const seminars = [
   { title: 'The Role of AI in Education', subtitle: 'Balancing the Benefits and Risk of Using AI in Education', detail: 'Webinar participation · DICT Region V', date: 'MAY 2025', image: '/assets/certificate-ai-education-full.webp', thumbnail: '/assets/certificate-ai-education-thumb.webp', width: 1800, height: 1274, thumbnailHeight: 544 },
   { title: 'AI in English Teaching: Friend or Foe?', subtitle: 'Exploring the Benefits and Challenges While Keeping the Human Touch', detail: 'Webinar participation · National Teachers College', date: 'MAY 2025', image: '/assets/certificate-ai-english-full.webp', thumbnail: '/assets/certificate-ai-english-thumb.webp', width: 1800, height: 1273, thumbnailHeight: 543 },
@@ -26,10 +20,10 @@ const seminars = [
     <section id="home" class="hero section-shell">
       <div class="hero-statement">
         <p class="hero-greeting hero-enter" style="--enter-delay: 40ms">Hello, I am <span aria-hidden="true">↘</span></p>
-        <h1 class="hero-name hero-enter" style="--enter-delay: 110ms"><span class="hero-given">Edward Ranz</span><span class="hero-surname">CARDOZA<span class="name-period" aria-hidden="true">.</span></span></h1>
+        <h1 class="hero-name"><span class="hero-given"><span class="hero-word" style="--word-delay: 100ms">Edward Ranz</span></span><span class="hero-surname"><span class="hero-word" style="--word-delay: 180ms">CARDOZA<span class="name-period" aria-hidden="true">.</span></span></span></h1>
         <p class="hero-role hero-enter" style="--enter-delay: 190ms">Aspiring Software Engineer</p>
-        <p class="hero-location hero-enter" style="--enter-delay: 225ms"><span aria-hidden="true">⌖</span> Cavite — Philippines</p>
         <p class="hero-intro hero-enter" style="--enter-delay: 260ms">A Computer Science student curious about how systems work. I’m learning to build software and sharpening my programming skills, one step at a time.</p>
+        <p class="hero-location hero-enter" style="--enter-delay: 310ms"><span aria-hidden="true">⌖</span> Cavite — Philippines</p>
         <div class="hero-actions hero-enter" style="--enter-delay: 330ms">
           <a class="button button-primary" href="#contact">Contact Me <span aria-hidden="true">↗</span></a>
           <a class="button button-outline" href="#projects">View Projects <span aria-hidden="true">↗</span></a>
@@ -46,24 +40,24 @@ const seminars = [
     </section>
 
     <section id="technologies" class="section-shell section-technologies">
-      <div class="split-heading" data-reveal><p class="eyebrow">01 / LANGUAGES & TOOLS</p><h2>TECHNOLOGIES<span class="period">.</span></h2><p>The story behind what I’ve learned matters more than a percentage. These are foundations I’m developing—not claims of expertise.</p></div>
+      <div class="split-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>01 / LANGUAGES & TOOLS</p><h2 data-motion-step="primary" style="--step-delay: 90ms">TECHNOLOGIES<span class="period">.</span></h2><p data-motion-step style="--step-delay: 190ms">The story behind what I’ve learned matters more than a percentage. These are foundations I’m developing—not claims of expertise.</p></div>
       <TechnologyMarquee technologies={technologies} />
     </section>
 
     <section id="projects" class="section-shell section-projects">
-      <div class="section-heading project-heading" data-reveal><p class="eyebrow">02 / SELECTED WORK</p><h2>PROJECT<br /><span>FOLDERS</span></h2><p>A small collection of public repositories. Open a folder to view the reusable case-study template prepared for each project.</p></div>
+      <div class="section-heading project-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>02 / SELECTED WORK</p><h2 data-motion-step="primary" style="--step-delay: 90ms">PROJECT<br /><span>FOLDERS</span></h2><p data-motion-step style="--step-delay: 190ms">A small collection of public repositories. Open a folder to view the reusable case-study template prepared for each project.</p></div>
       <ProjectShowcase projects={projects} />
     </section>
 
     <section id="about" class="section-about">
       <div class="section-shell about-grid">
-        <div class="about-portrait" data-reveal>
+        <div class="about-portrait" data-reveal data-motion="media">
           <div class="about-image-mask"><img src="/assets/portrait-700.webp" srcset="/assets/portrait-350.webp 350w, /assets/portrait-700.webp 700w" sizes="(max-width: 700px) 88vw, 34vw" alt="Edward Ranz Cardoza in Cavite, Philippines" width="700" height="1050" loading="lazy" decoding="async" /></div>
           <span class="about-orbit" aria-hidden="true">✳</span>
         </div>
         <div class="about-copy">
           <p class="eyebrow" data-reveal>03 / ABOUT</p>
-          <h2 data-reveal>CURIOUS BY<br /><em>default.</em></h2>
+          <h2 data-reveal data-motion="primary">CURIOUS BY<br /><em>default.</em></h2>
           <p data-reveal>I’m a Computer Science student at Cavite State University – Main Campus, building my foundation in software development through Java and other languages introduced through coursework. I’m interested in AI engineering and cloud engineering, while remaining open to exploring different environments and sectors of technology. I value steady progress, learning, and mastering the fundamentals.</p>
           <dl class="about-facts" data-reveal>
             <div><dt>Based in</dt><dd>Cavite, Philippines</dd></div>
@@ -77,16 +71,16 @@ const seminars = [
     <div class="pixel-transition pixel-to-page" data-pixel-transition aria-hidden="true">{Array.from({length: 48}, (_, index) => <i style={`--pixel: ${index % 12}; --row: ${Math.floor(index / 12)}`}></i>)}</div>
 
     <section id="education" class="section-shell section-education">
-      <div class="education-heading" data-reveal><p class="eyebrow">04 / EDUCATION</p><h2>THE<br /><span>FOUNDATION</span></h2></div>
-      <div class="education-card" data-reveal><div class="education-mark"><img src="/assets/cvsu-logo.png" alt="Cavite State University official logo" width="200" height="174" loading="lazy" /></div><div class="education-details"><p class="eyebrow">2025 — PRESENT</p><h3>Bachelor of Science in Computer Science</h3><p>Cavite State University<br />Main Campus</p></div><div class="education-foot">LEARNING IN PROGRESS <span aria-hidden="true">↗</span></div></div>
-      <div class="education-card" data-reveal><div class="education-mark"><span class="education-monogram" aria-hidden="true">PCU</span></div><div class="education-details"><p class="eyebrow">2023 — 2025</p><h3>Senior High School</h3><p>Philippine Christian University<br />Dasmariñas</p></div><div class="education-foot">SENIOR HIGH SCHOOL <span aria-hidden="true">↗</span></div></div>
+      <div class="education-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>04 / EDUCATION</p><h2 data-motion-step="primary" style="--step-delay: 90ms">THE<br /><span>FOUNDATION</span></h2></div>
+      <div class="education-card" data-reveal data-motion="sequence"><div class="education-mark" data-motion-step style="--step-delay: 110ms"><img src="/assets/cvsu-logo.png" alt="Cavite State University official logo" width="200" height="174" loading="lazy" /></div><div class="education-details"><p class="eyebrow" data-motion-step style="--step-delay: 300ms">2025 — PRESENT</p><h3 data-motion-step style="--step-delay: 160ms">Bachelor of Science in Computer Science</h3><p data-motion-step style="--step-delay: 230ms">Cavite State University<br />Main Campus</p></div><div class="education-foot" data-motion-step style="--step-delay: 370ms">LEARNING IN PROGRESS <span aria-hidden="true">↗</span></div></div>
+      <div class="education-card" data-reveal data-motion="sequence"><div class="education-mark" data-motion-step style="--step-delay: 110ms"><img src="/assets/pcu-logo.png" alt="Philippine Christian University official seal" width="300" height="298" loading="lazy" decoding="async" /></div><div class="education-details"><p class="eyebrow" data-motion-step style="--step-delay: 300ms">2023 — 2025</p><h3 data-motion-step style="--step-delay: 160ms">Senior High School</h3><p data-motion-step style="--step-delay: 230ms">Philippine Christian University<br />Dasmariñas</p></div><div class="education-foot" data-motion-step style="--step-delay: 370ms">SENIOR HIGH SCHOOL <span aria-hidden="true">↗</span></div></div>
     </section>
 
     <section id="experience" class="section-experience">
       <div class="section-shell experience-layout">
-        <div class="experience-intro" data-reveal><p class="eyebrow">05 / EXPERIENCE</p><h2>LEARNING<br />BEYOND<br /><em>the classroom.</em></h2><p>Experience is also the questions you ask and the conversations you join. These seminars are part of how I continue exploring technology and its impact.</p></div>
+        <div class="experience-intro" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>05 / EXPERIENCE</p><h2 data-motion-step="primary" style="--step-delay: 90ms">LEARNING<br />BEYOND<br /><em>the classroom.</em></h2><p data-motion-step style="--step-delay: 190ms">Experience is also the questions you ask and the conversations you join. These seminars are part of how I continue exploring technology and its impact.</p></div>
         <div class="experience-list">
-          {seminars.map((seminar, index) => <article class="experience-item" data-reveal>
+          {seminars.map((seminar, index) => <article class="experience-item" data-reveal data-motion="card" style={`--reveal-delay: ${index * 85}ms`}>
             <span class="experience-index">0{index + 1}</span>
             <div><p class="eyebrow">{seminar.date} / {seminar.detail}</p><h3>{seminar.title}</h3><p>{seminar.subtitle}</p></div>
             <a href="#gallery" aria-label={`View certificates in gallery for ${seminar.title}`}>↗</a>
@@ -96,10 +90,10 @@ const seminars = [
     </section>
 
     <section id="gallery" class="section-shell section-gallery">
-      <div class="split-heading" data-reveal><p class="eyebrow">06 / GALLERY</p><h2>A VISUAL<br /><span>RECORD.</span></h2><p>A place for the work, moments, and milestones that shape my path. For now, these certificates document seminars I’ve attended.</p></div>
+      <div class="split-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>06 / GALLERY</p><h2 data-motion-step="primary" style="--step-delay: 90ms">A VISUAL<br /><span>RECORD.</span></h2><p data-motion-step style="--step-delay: 190ms">A place for the work, moments, and milestones that shape my path. For now, these certificates document seminars I’ve attended.</p></div>
       <div class="gallery-subhead"><h3>Certificates</h3><span>01 — 03</span></div>
       <div class="gallery-grid">
-        {seminars.map((seminar, index) => <button class="gallery-item" type="button" data-gallery-index={index} data-reveal aria-label={`Open certificate: ${seminar.title}`}>
+        {seminars.map((seminar, index) => <button class="gallery-item" type="button" data-gallery-index={index} data-reveal data-motion="card" style={`--reveal-delay: ${index * 90}ms`} aria-label={`Open certificate: ${seminar.title}`}>
           <span class="gallery-image"><img src={seminar.thumbnail} alt={`Certificate of participation for ${seminar.title}`} width="768" height={seminar.thumbnailHeight} loading="lazy" decoding="async" /></span>
           <span class="gallery-caption"><span>0{index + 1} / CERTIFICATE</span><strong>{seminar.title}</strong><span aria-hidden="true">↗</span></span>
         </button>)}
@@ -111,22 +105,22 @@ const seminars = [
     </section>
 
     <section class="section-quote" aria-labelledby="quote-heading">
-      <figure class="personal-quote section-shell" data-reveal>
-        <figcaption class="eyebrow" id="quote-heading">A PERSONAL REMINDER</figcaption>
-        <span class="quote-mark" aria-hidden="true">“</span>
-        <blockquote>A man's pain when doing something he loves isn't pain, but an obstacle</blockquote>
+      <figure class="personal-quote section-shell" data-reveal data-motion="sequence">
+        <figcaption class="eyebrow" id="quote-heading" data-motion-step>A PERSONAL REMINDER</figcaption>
+        <span class="quote-mark" aria-hidden="true" data-motion-step style="--step-delay: 90ms">“</span>
+        <blockquote data-motion-step="primary" style="--step-delay: 160ms">A man's pain when doing something he loves isn't pain, but an obstacle</blockquote>
       </figure>
     </section>
 
     <div class="pixel-transition pixel-to-contact" data-pixel-transition aria-hidden="true">{Array.from({length: 48}, (_, index) => <i style={`--pixel: ${index % 12}; --row: ${Math.floor(index / 12)}`}></i>)}</div>
 
     <section id="contact" class="section-contact">
-      <div class="section-shell contact-inner" data-reveal>
-        <p class="eyebrow">08 / CONTACT</p>
-        <h2>LET’S BUILD<br /><span>SOMETHING TOGETHER.</span></h2>
-        <p>Interested in connecting, sharing ideas, or following what I’m learning? My inbox and profiles are open.</p>
-        <a class="contact-email" href="mailto:cardozaedwardranz14@gmail.com">cardozaedwardranz14@gmail.com <span aria-hidden="true">↗</span></a>
-        <div class="contact-links"><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://www.facebook.com/ranz.edward.92" target="_blank" rel="noopener noreferrer">Facebook ↗</a></div>
+      <div class="section-shell contact-inner" data-reveal data-motion="sequence">
+        <p class="eyebrow" data-motion-step>08 / CONTACT</p>
+        <h2 data-motion-step="primary" style="--step-delay: 90ms">LET’S BUILD<br /><span>SOMETHING TOGETHER.</span></h2>
+        <p data-motion-step style="--step-delay: 190ms">Interested in connecting, sharing ideas, or following what I’m learning? My inbox and profiles are open.</p>
+        <a class="contact-email" data-motion-step style="--step-delay: 260ms" href="mailto:cardozaedwardranz14@gmail.com">cardozaedwardranz14@gmail.com <span aria-hidden="true">↗</span></a>
+        <div class="contact-links" data-motion-step style="--step-delay: 320ms"><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://www.facebook.com/ranz.edward.92" target="_blank" rel="noopener noreferrer">Facebook ↗</a></div>
       </div>
     </section>
   </main>
@@ -146,52 +140,7 @@ const seminars = [
     <div class="dialog-bottom"><button type="button" id="dialog-prev" aria-label="Previous certificate">←</button><p id="dialog-title"></p><button type="button" id="dialog-next" aria-label="Next certificate">→</button></div>
   </dialog>
   <script define:vars={{ gallery: seminars.map(({ title, image, width, height }) => ({ title, image, width, height })) }}>
-    const revealItems = document.querySelectorAll('[data-reveal]');
     const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
-    let revealObservers = [];
-    const configureReveals = () => {
-      revealObservers.forEach((observer) => observer.disconnect());
-      revealObservers = [];
-      document.documentElement.classList.remove('has-reveal');
-      if (!('IntersectionObserver' in window) || motionPreference.matches) return;
-      document.documentElement.classList.add('has-reveal');
-      revealItems.forEach((item) => {
-        const height = item.getBoundingClientRect().height;
-        // Separate entrance/exit thresholds prevent toggling at one boundary.
-        // Pixel-based limits also keep tall blocks readable on small screens.
-        const enter = Math.min(80, height * .2) / height;
-        const leave = Math.min(20, height * .05) / height;
-        const observer = new IntersectionObserver(([entry]) => {
-          if (item.contains(document.activeElement)) { item.classList.add('revealed'); return; }
-          if (entry.isIntersecting && entry.intersectionRatio >= enter) item.classList.add('revealed');
-          else if (!entry.isIntersecting || entry.intersectionRatio <= leave) {
-            item.style.setProperty('--reveal-offset', entry.boundingClientRect.top < 0 ? '-10px' : '10px');
-            item.classList.remove('revealed');
-          }
-        }, { threshold: [0, leave, enter], rootMargin: '-8px 0px -8px 0px' });
-        observer.observe(item);
-        revealObservers.push(observer);
-      });
-    };
-    configureReveals();
-    motionPreference.addEventListener('change', configureReveals);
-    let resizeTimer;
-    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(configureReveals, 150); });
-    document.addEventListener('focusin', (event) => event.target.closest('[data-reveal]')?.classList.add('revealed'));
-    const sections = document.querySelectorAll('main section[id]');
-    const links = document.querySelectorAll('.menu-link[data-section]');
-    if ('IntersectionObserver' in window) {
-      const navObserver = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) links.forEach((link) => { const active = link.getAttribute('href') === `/#${entry.target.id}`; link.classList.toggle('active', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); }); }), { rootMargin: '-35% 0px -55% 0px' });
-      sections.forEach((section) => navObserver.observe(section));
-    }
-    const pixelTransitions = document.querySelectorAll('[data-pixel-transition]');
-    if (!('IntersectionObserver' in window) || motionPreference.matches) pixelTransitions.forEach((transition) => transition.classList.add('is-visible'));
-    else {
-      const pixelObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
-        if (entry.isIntersecting) entry.target.classList.add('is-visible');
-      }), { threshold: .25 });
-      pixelTransitions.forEach((transition) => pixelObserver.observe(transition));
-    }
     const dialog = document.getElementById('gallery-dialog');
     const dialogImage = document.getElementById('dialog-img');
     const dialogTitle = document.getElementById('dialog-title');

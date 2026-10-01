@@ -102,10 +102,6 @@
 .dialog-image img{display:block;max-width:100%;max-height:calc(100vh - 11rem);object-fit:contain}
 .dialog-bottom{padding:.9rem .4rem .1rem;text-align:center}
 .dialog-bottom p{font-weight:700;margin:0}
-.has-reveal [data-reveal]{opacity:0;transform:translateY(var(--reveal-offset,10px));transition:opacity .35s cubic-bezier(.2,.7,.2,1),transform .35s cubic-bezier(.2,.7,.2,1);transition-delay:0ms}
-.has-reveal [data-reveal].revealed{opacity:1;transform:translateY(0)}
-.has-reveal [data-reveal].revealed { transition-delay: var(--reveal-delay, 0ms); }
-.has-reveal [data-reveal]:focus-within { opacity: 1; transform: none; }
 @media(max-width:900px){.technology-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.split-heading{grid-template-columns:1fr;gap:1.4rem}.split-heading .eyebrow,.split-heading>p:last-child{grid-column:1;grid-row:auto}.experience-layout{grid-template-columns:1fr}.experience-intro{position:static}.about-grid{grid-template-columns:1fr}.about-label{flex-direction:row}.about-orbit{font-size:5rem}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:900px){.project-entry{grid-template-columns:1fr 130px 2rem}.project-entry-number{grid-column:1/-1}.case-grid{grid-template-columns:1fr}.case-grid aside{border-left:0;border-top:1px solid #ffffff40;padding:1rem 0 0}}
 @media(max-width:700px){.section-technologies,.section-education,.section-gallery{padding-top:5rem;padding-bottom:5rem}.gallery-grid{grid-template-columns:1fr}.section-experience,.section-about{padding:5rem 0}.education-card{grid-template-columns:1fr;gap:1rem}.education-mark{font-size:5.5rem}.education-foot{grid-column:1}.experience-item{grid-template-columns:2rem 1fr 2rem}.contact-email{gap:.5rem}.contact-bottom{flex-wrap:wrap;margin-top:5rem}.section-contact{padding-top:5rem}}
@@ -139,8 +135,6 @@
 .hero::before { content: ''; position: absolute; z-index: -1; pointer-events: none; inset: -6rem 0 -2rem; background: radial-gradient(ellipse at 15% 28%, #2563eb24, transparent 55%), radial-gradient(ellipse at 85% 35%, #8b5cf62b, transparent 52%), radial-gradient(ellipse at 56% 84%, #17c9d417, transparent 48%); mask-image: radial-gradient(ellipse at 50% 45%, black 25%, transparent 75%); }
 .section-gallery { background: radial-gradient(ellipse at 88% 20%, #8b5cf612, transparent 54%), radial-gradient(ellipse at 8% 75%, #17c9d410, transparent 50%); }
 .education-card + .education-card { margin-top: 1.5rem; }
-.education-monogram { display: block; font-family: 'Sora Variable', Sora, sans-serif; font-size: clamp(3rem, 6vw, 5rem); font-weight: 800; letter-spacing: -.06em; color: var(--paper); }
-.education-monogram > span { display: block; font-family: 'Inter Variable', Inter, sans-serif; font-size: .65rem; text-align: center; letter-spacing: .15em; margin-top: .5rem; }
 .split-heading { grid-template-columns: minmax(0, .65fr) minmax(0, 2fr); gap: 1rem 2.5rem; container-type: inline-size; }
 .split-heading h2 { font-size: clamp(2rem, 7.2cqi, 6.25rem); overflow-wrap: normal; word-break: normal; }
 .section-technologies .split-heading h2 { font-size: clamp(1.8rem, 7.2cqi, 6.25rem); white-space: nowrap; }

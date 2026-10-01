@@ -1,0 +1,104 @@
+/* Shared rhythm: interaction → card → content → scene. */
+:root {
+  --motion-quick: 220ms;
+  --motion-card: 460ms;
+  --motion-reveal: 760ms;
+  --motion-scene: 980ms;
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+}
+
+.has-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(var(--motion-offset, 24px));
+  transition: opacity var(--motion-reveal) var(--ease-out), transform var(--motion-reveal) var(--ease-out), clip-path var(--motion-reveal) var(--ease-out);
+  transition-delay: 0ms;
+}
+.has-reveal [data-reveal].revealed { opacity: 1; transform: none; transition-delay: var(--reveal-delay, 0ms); }
+.has-reveal [data-motion='primary'] { clip-path: inset(0 0 100% 0); }
+.has-reveal [data-motion='primary'].revealed { clip-path: inset(0); }
+.has-reveal [data-motion='card'] { transform: translateY(var(--motion-offset, 24px)) scale(.985); transition-duration: var(--motion-card); }
+.has-reveal [data-motion='media'] { clip-path: inset(0 0 100% 0); transform: translateY(16px); transition-duration: var(--motion-scene); }
+.has-reveal [data-motion='media'].revealed { clip-path: inset(0); transform: none; }
+.has-reveal [data-motion='media'] img { transform: scale(1.05); transition: transform var(--motion-scene) var(--ease-out); }
+.has-reveal [data-motion='media'].revealed img { transform: scale(1); }
+
+/* Composite scenes reveal their label, title and supporting copy independently. */
+.has-reveal [data-motion='sequence'] { opacity: 1; transform: none; }
+.has-reveal [data-reveal] [data-motion-step] {
+  opacity: 0;
+  transform: translateY(var(--motion-offset, 20px));
+  transition: opacity var(--motion-reveal) var(--ease-out), transform var(--motion-reveal) var(--ease-out), clip-path var(--motion-reveal) var(--ease-out);
+  transition-delay: 0ms;
+}
+.has-reveal [data-reveal] [data-motion-step='primary'] { clip-path: inset(0 0 100% 0); }
+.has-reveal [data-reveal].revealed [data-motion-step] {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0);
+  transition-delay: var(--step-delay, 0ms);
+}
+.has-reveal [data-reveal].motion-exiting,
+.has-reveal [data-reveal].motion-exiting [data-motion-step] { transition-duration: var(--motion-quick); }
+.has-reveal [data-reveal]:focus-within,
+.has-reveal [data-reveal]:focus-within [data-motion-step] { opacity: 1; transform: none; clip-path: none; transition-delay: 0ms; }
+
+/* The hero begins only after the preloader hands the page over. */
+.page-loading main { visibility: hidden; opacity: 1; transform: none; }
+.page-ready main { visibility: visible; opacity: 1; transform: none; transition: none; }
+.hero-enter, .hero-surname { animation: none; }
+.hero-name > span { overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
+.hero-word { display: block; }
+.hero-name { animation: none !important; }
+.page-ready .hero-enter:not(.hero-name):not(.profile-card) { animation: motion-secondary var(--motion-reveal) var(--ease-out) var(--enter-delay, 0ms) both; }
+.page-ready .hero-word { animation: motion-word var(--motion-scene) var(--ease-out) var(--word-delay, 110ms) both; }
+.page-ready .profile-card { animation: motion-portrait var(--motion-scene) var(--ease-out) 440ms both; }
+.page-ready .portrait-frame img { animation: motion-image var(--motion-scene) var(--ease-out) 440ms both; }
+.page-ready .profile-topline, .page-ready .profile-bottomline { animation: motion-secondary var(--motion-reveal) var(--ease-out) 620ms both; }
+.page-ready .hero-footer { animation: motion-secondary var(--motion-reveal) var(--ease-out) 660ms both; }
+.hero-footer a > span { position: relative; display: inline-grid; place-items: center; height: 2.5rem; width: 1.4rem; overflow: hidden; }
+.hero-footer a > span::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: currentColor; opacity: .35; transform-origin: top; animation: scroll-line 2.6s var(--ease-out) infinite; }
+@keyframes motion-secondary { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes motion-word { from { transform: translateY(115%); } to { transform: none; } }
+@keyframes motion-portrait { from { opacity: 0; transform: translateY(26px); clip-path: inset(0 0 100% 0 round 1.25rem); } to { opacity: 1; transform: none; clip-path: inset(0 round 1.25rem); } }
+@keyframes motion-image { from { transform: scale(1.05); } to { transform: scale(1); } }
+@keyframes scroll-line { 0% { transform: scaleY(0); } 55% { transform: scaleY(1); } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+/* Institution identity uses equal plates and a quiet connecting structure. */
+.education-card { grid-template-columns: 180px minmax(0, 1fr); gap: 1.5rem 2rem; }
+.education-mark { width: 160px; height: 160px; padding: 1rem; border: 1px solid #ffffff50; border-radius: 50%; background: #f8fafc; }
+.education-mark img { width: 100%; height: 100%; object-fit: contain; }
+.education-card::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: #d1e3ff; transform: scaleY(1); transform-origin: top; transition: transform var(--motion-scene) var(--ease-out); }
+.has-reveal .education-card:not(.revealed)::before { transform: scaleY(0); }
+.education-card .education-details { display: grid; }
+.education-details .eyebrow { order: 3; margin-bottom: 0; }
+.education-details h3 { margin: 0 0 1rem; }
+.education-details > p:last-child { margin: 0 0 1rem; }
+.education-foot { margin-top: .4rem; }
+.experience-item .experience-index { transition: opacity var(--motion-card), transform var(--motion-reveal) var(--ease-out); }
+.has-reveal .experience-item:not(.revealed) .experience-index { opacity: 0; transform: translateX(-16px); }
+.gallery-image { clip-path: inset(0); transition: clip-path var(--motion-scene) var(--ease-out); }
+.has-reveal .gallery-item:not(.revealed) .gallery-image { clip-path: inset(0 0 100% 0); }
+.has-reveal .gallery-item img { transform: scale(1.05); transition: transform var(--motion-scene) var(--ease-out); }
+.has-reveal .gallery-item.revealed img { transform: scale(1); }
+.gallery-item:hover .gallery-image img { transform: scale(1.025); }
+.personal-quote blockquote { transition-duration: var(--motion-scene) !important; }
+.pixel-transition i { transition-duration: var(--motion-scene); transition-delay: calc((var(--pixel) + var(--row)) * 19ms); }
+.section-heading::after, .split-heading::after, .education-heading::after { transition-duration: var(--motion-scene); }
+.is-visible .contribution-chart { animation-duration: var(--motion-scene); }
+
+@media (max-width: 700px) {
+  .education-card { grid-template-columns: minmax(0, 1fr); }
+  .education-mark { width: 120px; height: 120px; }
+  .has-reveal [data-reveal] { --motion-offset: 14px; }
+  .has-reveal [data-reveal] [data-motion-step] { transition-delay: 0ms; }
+  .has-reveal [data-reveal].revealed [data-motion-step] { transition-delay: min(var(--step-delay, 0ms), 180ms); }
+  .page-ready .profile-card { animation: motion-secondary var(--motion-reveal) var(--ease-out) 320ms both; }
+  .has-reveal [data-motion='media'], .has-reveal [data-motion='media'].revealed { clip-path: none; }
+  .has-reveal [data-motion='media'] img, .has-reveal [data-motion='media'].revealed img { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .has-reveal [data-reveal], .has-reveal [data-reveal] [data-motion-step], .hero-word { opacity: 1; transform: none; clip-path: none; }
+  .education-card::before, .has-reveal .education-card:not(.revealed)::before { transform: none; }
+  .gallery-image, .has-reveal .gallery-item:not(.revealed) .gallery-image { clip-path: none; }
+  .hero-footer a > span::before { display: none; }
+}

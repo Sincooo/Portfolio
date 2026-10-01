@@ -232,7 +232,7 @@
 /* GitHub enters once in a measured sequence while the live-data behavior remains intact. */
 .section-github { position: relative; }
 .github-area { margin-top: 0; }
-.github-heading h3 { font-size: clamp(2.6rem, 5.4vw, 5.2rem); line-height: .95; }
+.github-heading h2 { font-size: clamp(2.6rem, 5.4vw, 5.2rem); line-height: .95; }
 .github-intro { max-width: 670px; }
 .github-stat-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin: 1.75rem 0; }
 .github-stat-row > div { display: grid; gap: .3rem; padding: 1rem; border: 1px solid var(--line); border-radius: .8rem; background: var(--surface); }

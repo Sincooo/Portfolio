@@ -1,14 +1,7 @@
 ---
 import TechnologyIcon from './TechnologyIcon.astro';
-
-type Technology = {
-  name: string;
-  tag: string;
-  color: string;
-  summary: string;
-  story: string;
-  next: string;
-};
+import type { Technology } from '../data/technologies';
+import '../styles/technologies.css';
 
 const { technologies } = Astro.props as { technologies: Technology[] };
 const midpoint = Math.ceil(technologies.length / 2);
@@ -70,24 +63,31 @@ const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
     const announcement = marquee.querySelector<HTMLElement>('[data-technology-announcement]')!;
     const items = [...marquee.querySelectorAll<HTMLButtonElement>('[data-technology]')];
     let selected: HTMLButtonElement | null = null;
+    let highlighted: HTMLButtonElement | null = null;
     let typingTimer = 0;
+    let typingDelay = 0;
     let currentCopy = '';
 
-    const stopTyping = () => window.clearInterval(typingTimer);
+    const stopTyping = () => { window.clearInterval(typingTimer); window.clearTimeout(typingDelay); };
     const typeCopy = (value: string) => {
       stopTyping();
       currentCopy = value;
       copy.textContent = '';
       if (reduceMotion.matches) { copy.textContent = value; return; }
       let index = 0;
-      typingTimer = window.setInterval(() => {
-        index += 1;
-        copy.textContent = value.slice(0, index);
-        if (index >= value.length) stopTyping();
-      }, 13);
+      typingDelay = window.setTimeout(() => {
+        typingTimer = window.setInterval(() => {
+          index += 2;
+          copy.textContent = value.slice(0, index);
+          if (index >= value.length) stopTyping();
+        }, 18);
+      }, 180);
     };
     const activate = (item: HTMLButtonElement, persist = false) => {
+      if (highlighted === item) { if (persist) { selected = item; item.setAttribute('aria-pressed', 'true'); } return; }
+      highlighted = item;
       items.forEach((candidate) => candidate.setAttribute('aria-pressed', String(candidate === item && persist)));
+      items.forEach((candidate) => candidate.classList.toggle('is-selected', candidate === item));
       selected = persist ? item : null;
       marquee.querySelectorAll('[data-technology-row]').forEach((row) => row.classList.toggle('is-paused', row.contains(item)));
       tag.textContent = item.dataset.tag || '';
@@ -97,13 +97,22 @@ const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
       typeCopy(detail);
       announcement.textContent = `${item.dataset.name}. ${item.dataset.tag}. ${detail} ${item.dataset.next}`;
       marquee.classList.add('has-selection');
+      if (!reduceMotion.matches) {
+        [tag, name, next].forEach((element, index) => {
+          element.getAnimations().forEach((animation) => animation.cancel());
+          element.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], {
+            duration: 300, delay: index * 50, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards',
+          });
+        });
+      }
     };
     const reset = () => {
       if (selected) return;
+      highlighted = null;
       stopTyping();
       marquee.classList.remove('has-selection');
       marquee.querySelectorAll('[data-technology-row]').forEach((row) => row.classList.remove('is-paused'));
-      items.forEach((candidate) => candidate.setAttribute('aria-pressed', 'false'));
+      items.forEach((candidate) => { candidate.setAttribute('aria-pressed', 'false'); candidate.classList.remove('is-selected'); });
       tag.textContent = 'HOVER, FOCUS, OR TAP A TECHNOLOGY';
       name.textContent = 'A moving record of the tools I’m learning.';
       copy.textContent = 'Each item pauses its row and opens the learning story behind it.';
@@ -112,9 +121,19 @@ const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
     };
 
     items.forEach((item) => {
+      item.addEventListener('pointerdown', (event) => {
+        if (item.closest('[aria-hidden="true"]')) event.preventDefault();
+      });
       item.addEventListener('pointerenter', (event) => { if ((event as PointerEvent).pointerType === 'mouse') activate(item); });
       item.addEventListener('pointerleave', (event) => { if ((event as PointerEvent).pointerType === 'mouse') reset(); });
-      item.addEventListener('focus', () => activate(item, true));
+      item.addEventListener('focus', () => {
+        if (!item.matches(':focus-visible')) return;
+        // Keyboard visitors get a stationary, horizontally scrollable original row.
+        // It stays stationary afterward so focus never resumes on a moving target.
+        item.closest('[data-technology-row]')?.classList.add('is-keyboard');
+        item.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+        activate(item, true);
+      });
       item.addEventListener('blur', () => { selected = null; reset(); });
       item.addEventListener('click', (event) => {
         if (matchMedia('(hover: hover) and (pointer: fine)').matches) return;
@@ -125,8 +144,9 @@ const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
       });
     });
     document.addEventListener('pointerdown', (event) => {
-      if (!marquee.contains(event.target as Node) && selected) { selected = null; reset(); }
+      if (selected && event.target instanceof Element && event.target.closest('[data-technology]') !== selected) { selected = null; reset(); }
     });
+    marquee.addEventListener('keydown', (event) => { if (event.key === 'Escape') { selected = null; reset(); } });
     reduceMotion.addEventListener('change', (event) => {
       if (event.matches && marquee.classList.contains('has-selection')) { stopTyping(); copy.textContent = currentCopy; }
     });

@@ -1,9 +1,19 @@
 ---
 interface Props { name: string }
 const { name } = Astro.props;
+
+const icons: Record<string, string> = {
+  Java: '/assets/technology/java.svg',
+  HTML: '/assets/technology/html5.svg',
+  CSS: '/assets/technology/css3.svg',
+  JavaScript: '/assets/technology/javascript.svg',
+  Python: '/assets/technology/python.svg',
+  'Visual Basic': '/assets/technology/visual-basic.svg',
+};
+
+const icon = icons[name];
+const className = name.toLowerCase().replace(/\s+/g, '-');
 ---
-<span class={`technology-icon icon-${name.toLowerCase()}`} aria-hidden="true">
-  {name === 'Java' ? <svg viewBox="0 0 32 32" fill="none"><path d="M7 14h17v5a7 7 0 0 1-7 7h-3a7 7 0 0 1-7-7v-5Zm17 2h2a3 3 0 0 1 0 6h-3M5 29h22M12 10c-4-4 5-4 1-8M19 10c-4-4 5-4 1-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
-    : name === 'HTML' || name === 'CSS' ? <svg viewBox="0 0 32 32"><path d="m4 3 2 23 10 3 10-3 2-23Z" fill="currentColor" /><text x="16" y="22" text-anchor="middle" fill="#0c1017" font-family="Arial,sans-serif" font-size="20" font-weight="800">{name === 'HTML' ? '5' : '3'}</text></svg>
-    : <span>{name === 'JavaScript' ? 'JS' : name === 'Python' ? 'Py' : 'VB'}</span>}
+<span class={`technology-icon icon-${className}`} aria-hidden="true">
+  {icon && <img src={icon} alt="" width="64" height="64" loading="lazy" decoding="async" />}
 </span>
