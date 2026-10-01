@@ -1,0 +1,116 @@
+/* One centered measure for the portfolio and its existing project pages. */
+.section-shell { max-width: 1200px; padding-inline: clamp(1.25rem, 5vw, 4rem); }
+.split-heading > p:last-child, .project-heading > p { max-width: 62ch; }
+.section-technologies, .section-education, .section-gallery { padding-block: clamp(3.5rem, 7vw, 6rem); }
+
+/* The portrait stays readable while its frame and surrounding layers move. */
+.profile-card { max-width: 360px; margin: 0; padding: 0; border: 0; background: none; justify-self: center; isolation: isolate; }
+.profile-card::before { display: none; }
+.page-ready .profile-card { animation: profile-arrive 760ms var(--ease-out) 440ms both; }
+.profile-topline, .profile-bottomline { position: relative; z-index: 2; padding: .8rem .5rem; font-size: .65rem; }
+.profile-scene { position: relative; padding: 1.25rem; perspective: 900px; }
+.profile-grid { position: absolute; inset: -1rem; z-index: -1; border-radius: 50%; background: radial-gradient(ellipse, #8b5cf621, transparent 68%), repeating-linear-gradient(0deg, transparent 0 23px, var(--line) 24px 25px), repeating-linear-gradient(90deg, transparent 0 23px, var(--line) 24px 25px); mask-image: radial-gradient(ellipse, black, transparent 70%); }
+.profile-art { position: relative; padding: .6rem; border: 1px solid var(--strong-line); border-radius: 3rem .9rem 3rem .9rem; background: var(--surface); box-shadow: 0 16px 40px #00000024; transform: rotate(-3deg) rotateY(calc(var(--profile-x, 0) * 3deg)) rotateX(calc(var(--profile-y, 0) * -3deg)); transition: transform 320ms var(--ease-out), border-color 220ms, box-shadow 320ms; }
+.profile-art .portrait-frame { height: 340px; border-radius: 2.5rem .55rem 2.5rem .55rem; }
+.profile-frame-label { position: absolute; bottom: 1.05rem; left: 1.2rem; padding: .35rem .6rem; border: 1px solid #ffffff55; border-radius: .4rem; background: #0c1017e6; color: #fff; font-size: .58rem; font-weight: 800; letter-spacing: .14em; }
+.profile-orbit { position: absolute; inset: .6rem -.15rem; z-index: -1; border: 1px solid color-mix(in srgb, var(--accent-yellow) 50%, transparent); border-radius: 50%; animation: profile-orbit 28s linear infinite; animation-play-state: paused; pointer-events: none; }
+.profile-orbit--two { inset: 2rem -.6rem; border-color: color-mix(in srgb, var(--violet) 65%, transparent); animation-duration: 36s; animation-direction: reverse; }
+.profile-orbit i { position: absolute; top: 12%; left: 12%; width: .65rem; height: .65rem; border-radius: 50%; background: var(--accent-yellow); box-shadow: 0 0 14px color-mix(in srgb, var(--accent-yellow) 40%, transparent); }
+.profile-orbit--two i { background: var(--violet); }
+.profile-symbol { position: absolute; z-index: 2; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid var(--line); border-radius: .8rem; color: var(--text); background: var(--surface); font-family: monospace; font-weight: 700; animation: profile-float 6s ease-in-out infinite; animation-play-state: paused; pointer-events: none; }
+.profile-symbol--code { top: 12%; left: -.4rem; transform: rotate(-8deg); }
+.profile-symbol--star { bottom: 12%; right: -.4rem; color: var(--accent-yellow); font-size: 1.5rem; animation-delay: -3s; }
+.profile-card.is-in-view :is(.profile-orbit, .profile-symbol) { animation-play-state: running; }
+@keyframes profile-orbit { to { transform: rotate(360deg); } }
+@keyframes profile-float { 50% { translate: 0 -7px; } }
+@keyframes profile-arrive { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+/* A smaller portrait balances a readable biography and grouped details. */
+.section-about { padding-block: clamp(3.5rem, 7vw, 6rem); }
+.about-grid { grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr); gap: clamp(2rem, 4vw, 4rem); }
+.about-portrait { width: 100%; max-width: 300px; justify-self: center; }
+.about-copy { max-width: 620px; }
+.about-copy h2 { font-size: clamp(2.5rem, 4.5vw, 4.3rem); margin-bottom: 1.25rem; }
+.about-grid .about-copy > p:not(.eyebrow) { max-width: 58ch; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.75; }
+.about-orbit { right: -.6rem; bottom: -.6rem; width: 4rem; font-size: 2.6rem; }
+.about-facts { gap: .7rem; margin-top: 1.5rem; padding-top: 0; border: 0; }
+.about-facts > div { padding: 1rem; border: 1px solid #0c101728; border-radius: .8rem; background: #ffffff24; transition: background 220ms, border-color 220ms; }
+.about-facts dt { font-size: .6rem; }
+.about-facts dd { font-size: .85rem; }
+
+/* Two chapters share a rail; the institution marks retain their actual colors. */
+.education-timeline { position: relative; max-width: 1020px; margin: 0 auto; padding: 0 0 0 2rem; list-style: none; }
+.education-timeline::before { content: ''; position: absolute; left: .5rem; top: 2.8rem; bottom: 2.8rem; width: 1px; background: linear-gradient(#729aff, var(--violet)); }
+.education-stage { position: relative; }
+.education-stage + .education-stage { margin-top: 1.5rem; }
+.education-stage::before { content: ''; position: absolute; left: -1.78rem; top: 2.8rem; width: .6rem; height: .6rem; border: 2px solid var(--page-bg); border-radius: 50%; background: #729aff; box-shadow: 0 0 0 1px var(--strong-line); transition: box-shadow 220ms; }
+.education-stage:last-child::before { background: var(--violet); }
+.education-timeline .education-card { grid-template-columns: 112px minmax(0, 1fr); gap: 1rem 1.5rem; min-height: 0; padding: 1.65rem; border: 1px solid #89b1ff70; border-radius: 1.25rem .45rem 1.25rem .45rem; background: radial-gradient(ellipse at 90% 0, #89b1ff33, transparent 65%), linear-gradient(125deg, #1847a8, #2359c8); box-shadow: 0 12px 30px #00000012; }
+.education-stage:last-child .education-card { border-color: #b7a5ff70; background: radial-gradient(ellipse at 90% 0, #b7a5ff2b, transparent 65%), linear-gradient(125deg, #392c75, #514198); }
+.education-timeline .education-card::before { width: 3px; background: linear-gradient(#cbdcff, #ffffff33); }
+.education-card::after { content: ''; position: absolute; top: .75rem; right: .75rem; width: 2rem; height: 2rem; border-top: 1px solid #ffffff66; border-right: 1px solid #ffffff66; pointer-events: none; }
+.education-timeline .education-mark { width: 112px; height: 112px; padding: .8rem; border: 4px solid #ffffff26; box-shadow: 0 0 0 7px #ffffff0c; }
+.education-timeline .education-mark img { width: 100%; height: 100%; object-fit: contain; transition: transform 320ms var(--ease-out); }
+.education-timeline .education-details .eyebrow { order: 0; margin: 0 0 .65rem; color: #fff; }
+.education-timeline .education-details h3 { margin: 0 0 .65rem; font-size: clamp(1.4rem, 2.4vw, 2.15rem); line-height: 1.2; max-width: 24ch; }
+.education-timeline .education-details > p:last-child { margin: 0; font-size: 1rem; }
+.education-timeline .education-foot { margin: .5rem 0 0; padding-top: .9rem; border-color: #ffffff33; position: relative; z-index: 1; }
+.education-step-number { position: absolute; right: 1.5rem; bottom: 2rem; color: #ffffff10; font-family: 'Sora Variable', sans-serif; font-size: 6rem; font-weight: 800; line-height: 1; pointer-events: none; transition: transform 460ms var(--ease-out); }
+
+/* Feedback stays local to the control or card being explored. */
+.button span, .contact-links a, .hero-socials a, .footer-top, .site-footer nav a { transition: transform 220ms var(--ease-out), color 220ms; }
+.button, .repository-card, .gallery-item, .project-folder-link { transition: border-color 220ms, box-shadow 320ms, background 220ms, transform 320ms var(--ease-out); }
+.contact-links a, .hero-socials a, .site-footer nav a { text-decoration-thickness: 1px; text-underline-offset: .35em; }
+.repository-top > span:last-child, .gallery-caption > span:last-child { display: inline-block; transition: transform 220ms var(--ease-out); }
+.project-folder-preview { transition: transform 460ms var(--ease-out); }
+.experience-item { transition: border-color 220ms; }
+@media (hover: hover) and (pointer: fine) {
+  .button:not(:disabled):hover, .button:focus-visible { box-shadow: 0 5px 0 #00000016; }
+  .button:hover span { transform: translate(2px, -2px); }
+  .profile-card:hover .profile-art { border-color: var(--accent-yellow); box-shadow: 0 16px 40px #00000024, 0 0 0 5px color-mix(in srgb, var(--accent-yellow) 10%, transparent); }
+  .profile-card:hover .profile-cross { transform: rotate(75deg); }
+  .about-facts > div:hover { border-color: #0c101757; background: #ffffff3b; }
+  .education-stage:hover::before { box-shadow: 0 0 0 5px color-mix(in srgb, var(--violet) 20%, transparent); }
+  .has-reveal .education-card.revealed:hover { transform: translateY(-3px); box-shadow: 0 16px 35px #00000028; }
+  .education-card:hover .education-mark img { transform: scale(1.04); }
+  .education-card:hover .education-step-number { transform: translateY(-5px); }
+  .repository-card:hover, .repository-card:focus-visible { box-shadow: 0 8px 24px #00000018; transform: translateY(-3px); }
+  .has-reveal .gallery-item.revealed:hover { transform: translateY(-3px); box-shadow: 0 8px 24px #00000018; }
+  .gallery-item:hover .gallery-caption > span:last-child, .repository-card:hover .repository-top > span:last-child { transform: translate(3px, -3px); }
+  .project-folder.is-active:hover .project-folder-preview { transform: scale(1.025); }
+  .contact-links a:hover, .hero-socials a:hover, .site-footer nav a:hover { transform: translateY(-2px); text-decoration: underline; }
+  .experience-item:hover { border-color: #0c10177a; }
+}
+@media (max-width: 820px) {
+  .about-grid { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .about-portrait { max-width: 245px; }
+  .about-copy { width: 100%; margin-inline: auto; }
+  .profile-art .portrait-frame { height: 290px; }
+}
+@media (max-width: 700px) {
+  .profile-card { max-width: 320px; width: 100%; margin: 0; }
+  .profile-scene { overflow: clip; }
+  .profile-symbol { width: 2.35rem; height: 2.35rem; }
+  .profile-symbol--code { left: 0; }
+  .profile-symbol--star { right: 0; }
+  .profile-orbit--two { inset: 2rem 0; }
+  .education-timeline { padding-left: 1.4rem; }
+  .education-timeline::before { left: .25rem; }
+  .education-stage::before { left: -1.4rem; }
+  .education-timeline .education-card { grid-template-columns: minmax(0, 1fr); padding: 1.25rem; }
+  .education-timeline .education-mark { width: 88px; height: 88px; }
+  .education-timeline .education-details h3 { font-size: 1.45rem; }
+}
+@media (max-width: 480px) {
+  .education-heading h2 { font-size: clamp(2rem, 8vw, 2.65rem); }
+  .about-facts { grid-template-columns: minmax(0, 1fr); }
+  .about-facts > div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: .5rem; align-items: center; }
+  .about-facts dt { margin: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .profile-art { transform: none; }
+  .profile-orbit, .profile-symbol { animation: none; }
+  .profile-orbit--one { transform: rotate(-15deg); }
+  .profile-orbit--two { transform: rotate(15deg); }
+  .has-reveal .education-card.revealed:hover, .has-reveal .gallery-item.revealed:hover, .repository-card:hover, .project-folder.is-active:hover .project-folder-preview { transform: none; }
+}

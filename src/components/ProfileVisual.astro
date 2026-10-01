@@ -1,0 +1,50 @@
+<figure class="profile-card hero-enter" data-profile-visual>
+  <div class="profile-topline"><span>THE PERSON BEHIND THE CODE</span><span class="profile-cross" aria-hidden="true">✳</span></div>
+  <div class="profile-scene">
+    <div class="profile-grid" aria-hidden="true"></div>
+    <div class="profile-orbit profile-orbit--one" aria-hidden="true"><i></i></div>
+    <div class="profile-orbit profile-orbit--two" aria-hidden="true"><i></i></div>
+    <span class="profile-symbol profile-symbol--code" aria-hidden="true">{'{ }'}</span>
+    <span class="profile-symbol profile-symbol--star" aria-hidden="true">+</span>
+    <div class="profile-art">
+      <div class="portrait-frame"><img src="/assets/portrait-700.webp" srcset="/assets/portrait-350.webp 350w, /assets/portrait-700.webp 700w" sizes="(max-width: 700px) 280px, (max-width: 900px) 28vw, 330px" alt="Portrait of Edward Ranz V. Cardoza" width="700" height="1050" fetchpriority="high" decoding="async" /></div>
+      <span class="profile-frame-label" aria-hidden="true">ERC / 01</span>
+    </div>
+  </div>
+  <figcaption class="profile-bottomline"><span>CURIOUS. LEARNING. BUILDING.</span><span aria-hidden="true">↗</span></figcaption>
+</figure>
+
+<script>
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const mouse = matchMedia('(hover: hover) and (pointer: fine)');
+  document.querySelectorAll<HTMLElement>('[data-profile-visual]').forEach((profile) => {
+    const scene = profile.querySelector<HTMLElement>('.profile-scene')!;
+    let frame = 0;
+    let horizontal = 0;
+    let vertical = 0;
+    const reset = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      scene.style.removeProperty('--profile-x');
+      scene.style.removeProperty('--profile-y');
+    };
+    profile.addEventListener('pointermove', (event) => {
+      if (event.pointerType !== 'mouse' || !mouse.matches || motion.matches) return;
+      const bounds = profile.getBoundingClientRect();
+      horizontal = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1));
+      vertical = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        scene.style.setProperty('--profile-x', String(horizontal));
+        scene.style.setProperty('--profile-y', String(vertical));
+        frame = 0;
+      });
+    }, { passive: true });
+    profile.addEventListener('pointerleave', reset);
+    motion.addEventListener('change', reset);
+    mouse.addEventListener('change', reset);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => profile.classList.toggle('is-in-view', entry.isIntersecting)).observe(profile);
+    } else profile.classList.add('is-in-view');
+  });
+</script>

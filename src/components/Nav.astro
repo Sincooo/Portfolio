@@ -45,7 +45,7 @@ const items = [
         <img src="/favicon.svg" alt="" width="32" height="32" />
         <span>ERC<span>.</span></span>
       </div>
-      <p id="site-menu-title">Explore the portfolio</p>
+      <p id="site-menu-title">Navigation</p>
       <button class="menu-close menu-control" type="button" data-menu-close aria-label="Close navigation menu">
         <span class="menu-toggle-copy" aria-hidden="true">
           <span class="menu-toggle-track"><span>Menu</span><span>Close</span></span>
@@ -61,7 +61,7 @@ const items = [
             class="menu-link"
             href={item.href}
             data-section={item.section}
-            style={`--menu-order: ${index}; --menu-delay: ${140 + index * 42}ms; --menu-exit-delay: ${(8 - index) * 12}ms`}
+            style={`--menu-delay: ${70 + index * 22}ms`}
           >
             <span class="menu-active-mark" aria-hidden="true"></span>
             <span class="menu-link-copy">
@@ -75,11 +75,11 @@ const items = [
       </nav>
 
       <aside class="menu-aside" aria-label="Portfolio details">
-        <div class="menu-aside-block" style="--menu-delay: 720ms">
+        <div class="menu-aside-block">
           <p class="menu-aside-label">Based in</p>
           <p>Cavite — Philippines</p>
         </div>
-        <div class="menu-aside-block" style="--menu-delay: 790ms">
+        <div class="menu-aside-block">
           <p class="menu-aside-label">Elsewhere</p>
           <div class="menu-secondary-links">
             <a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
@@ -88,7 +88,7 @@ const items = [
             <a href="mailto:cardozaedwardranz14@gmail.com">Email <span aria-hidden="true">↗</span></a>
           </div>
         </div>
-        <p class="menu-note menu-aside-block" style="--menu-delay: 860ms">Computer Science student<br />Aspiring Software Engineer</p>
+        <p class="menu-note menu-aside-block">Computer Science student<br />Aspiring Software Engineer</p>
       </aside>
     </div>
   </div>
@@ -126,7 +126,7 @@ const items = [
     closeComplete = onComplete;
     if (animate && !motionQuery.matches) {
       dialog.classList.add('is-closing');
-      closeTimer = window.setTimeout(() => finishClose(restoreFocus), 480);
+      closeTimer = window.setTimeout(() => finishClose(restoreFocus), 300);
       return;
     }
     finishClose(restoreFocus);
@@ -138,11 +138,13 @@ const items = [
     closeComplete = undefined;
     dialog.classList.remove('is-closing');
     dialog.showModal();
+    dialog.scrollTop = 0;
     setOpenState(true);
     requestAnimationFrame(() => {
       const initialLink = dialog.querySelector<HTMLAnchorElement>('.menu-link.active')
         || dialog.querySelector<HTMLAnchorElement>('.menu-link');
       initialLink?.focus({ preventScroll: true });
+      initialLink?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
     });
   };
 

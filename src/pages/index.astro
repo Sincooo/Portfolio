@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
+import ProfileVisual from '../components/ProfileVisual.astro';
 import TechnologyMarquee from '../components/TechnologyMarquee.astro';
 import ProjectShowcase from '../components/ProjectShowcase.astro';
 import GitHubActivity from '../components/GitHubActivity.astro';
@@ -31,11 +32,7 @@ const seminars = [
         </div>
         <div class="hero-socials hero-enter" style="--enter-delay: 380ms"><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a><span aria-hidden="true">/</span><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a></div>
       </div>
-      <figure class="profile-card hero-enter" style="--enter-delay: 210ms">
-        <div class="profile-topline"><span>THE PERSON BEHIND THE CODE</span><span class="profile-cross" aria-hidden="true">✳</span></div>
-        <div class="portrait-frame"><img src="/assets/portrait-700.webp" srcset="/assets/portrait-350.webp 350w, /assets/portrait-700.webp 700w" sizes="(max-width: 700px) 310px, (max-width: 900px) 28vw, 355px" alt="Portrait of Edward Ranz V. Cardoza" width="700" height="1050" fetchpriority="high" decoding="async" /></div>
-        <figcaption class="profile-bottomline"><span>CURIOUS. LEARNING. BUILDING.</span><span aria-hidden="true">↗</span></figcaption>
-      </figure>
+      <ProfileVisual />
       <div class="hero-footer"><p>COMPUTER SCIENCE <span aria-hidden="true">/</span> CVSU MAIN CAMPUS</p><a href="#technologies">Explore my journey <span aria-hidden="true">↓</span></a></div>
     </section>
 
@@ -45,7 +42,7 @@ const seminars = [
     </section>
 
     <section id="projects" class="section-shell section-projects">
-      <div class="section-heading project-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>02 / SELECTED WORK</p><h2 data-motion-step="primary" style="--step-delay: 90ms">PROJECT<br /><span>FOLDERS</span></h2><p data-motion-step style="--step-delay: 190ms">A small collection of public repositories. Open a folder to view the reusable case-study template prepared for each project.</p></div>
+      <div class="section-heading project-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>02 / SELECTED WORK</p><h2 data-motion-step="primary" style="--step-delay: 90ms">PROJECT<br /><span>FOLDERS</span></h2><p data-motion-step style="--step-delay: 190ms">A selection of public repositories from my learning journey.</p></div>
       <ProjectShowcase projects={projects} />
     </section>
 
@@ -72,8 +69,10 @@ const seminars = [
 
     <section id="education" class="section-shell section-education">
       <div class="education-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>04 / EDUCATION</p><h2 data-motion-step="primary" style="--step-delay: 90ms">THE<br /><span>FOUNDATION</span></h2></div>
-      <div class="education-card" data-reveal data-motion="sequence"><div class="education-mark" data-motion-step style="--step-delay: 110ms"><img src="/assets/cvsu-logo.png" alt="Cavite State University official logo" width="200" height="174" loading="lazy" /></div><div class="education-details"><p class="eyebrow" data-motion-step style="--step-delay: 300ms">2025 — PRESENT</p><h3 data-motion-step style="--step-delay: 160ms">Bachelor of Science in Computer Science</h3><p data-motion-step style="--step-delay: 230ms">Cavite State University<br />Main Campus</p></div><div class="education-foot" data-motion-step style="--step-delay: 370ms">LEARNING IN PROGRESS <span aria-hidden="true">↗</span></div></div>
-      <div class="education-card" data-reveal data-motion="sequence"><div class="education-mark" data-motion-step style="--step-delay: 110ms"><img src="/assets/pcu-logo.png" alt="Philippine Christian University official seal" width="300" height="298" loading="lazy" decoding="async" /></div><div class="education-details"><p class="eyebrow" data-motion-step style="--step-delay: 300ms">2023 — 2025</p><h3 data-motion-step style="--step-delay: 160ms">Senior High School</h3><p data-motion-step style="--step-delay: 230ms">Philippine Christian University<br />Dasmariñas</p></div><div class="education-foot" data-motion-step style="--step-delay: 370ms">SENIOR HIGH SCHOOL <span aria-hidden="true">↗</span></div></div>
+      <ol class="education-timeline">
+        <li class="education-stage"><article class="education-card" data-reveal data-motion="sequence"><span class="education-step-number" aria-hidden="true">01</span><div class="education-mark" data-motion-step style="--step-delay: 110ms"><img src="/assets/cvsu-logo.png" alt="Cavite State University official logo" width="200" height="174" loading="lazy" /></div><div class="education-details"><p class="eyebrow" data-motion-step style="--step-delay: 160ms">2025 — PRESENT</p><h3 data-motion-step style="--step-delay: 210ms">Bachelor of Science in Computer Science</h3><p data-motion-step style="--step-delay: 260ms">Cavite State University<br />Main Campus</p></div><div class="education-foot" data-motion-step style="--step-delay: 330ms">LEARNING IN PROGRESS <span aria-hidden="true">↗</span></div></article></li>
+        <li class="education-stage"><article class="education-card" data-reveal data-motion="sequence"><span class="education-step-number" aria-hidden="true">02</span><div class="education-mark" data-motion-step style="--step-delay: 110ms"><img src="/assets/pcu-logo.png" alt="Philippine Christian University official seal" width="300" height="298" loading="lazy" decoding="async" /></div><div class="education-details"><p class="eyebrow" data-motion-step style="--step-delay: 160ms">2023 — 2025</p><h3 data-motion-step style="--step-delay: 210ms">Senior High School</h3><p data-motion-step style="--step-delay: 260ms">Philippine Christian University<br />Dasmariñas</p></div><div class="education-foot" data-motion-step style="--step-delay: 330ms">SENIOR HIGH SCHOOL <span aria-hidden="true">↗</span></div></article></li>
+      </ol>
     </section>
 
     <section id="experience" class="section-experience">

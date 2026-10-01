@@ -121,7 +121,6 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 1rem;
-  min-height: 190px;
   padding: clamp(1.25rem, 3vw, 2rem);
   border: 1px solid var(--line);
   border-radius: 1rem;
@@ -130,7 +129,7 @@
 .technology-info-index { color: var(--accent-yellow); font-size: 1.4rem; }
 .technology-info-tag { margin: 0 0 .6rem; color: var(--cyan); font-size: .65rem; font-weight: 800; letter-spacing: .13em; }
 .technology-info-name { margin: 0 0 .7rem; font-family: 'Sora Variable', Sora, sans-serif; font-size: clamp(1.25rem, 2.4vw, 2rem); letter-spacing: -.045em; }
-.technology-info-copy { max-width: 850px; min-height: 3.2em; margin: 0; color: var(--muted); line-height: 1.65; }
+.technology-info-copy { max-width: 850px; margin: 0; color: var(--muted); line-height: 1.65; }
 .technology-info-copy::after { content: ''; display: inline-block; width: 1px; height: 1em; margin-left: 3px; background: var(--accent-yellow); vertical-align: -.12em; animation: typing-caret .75s steps(1) infinite; }
 .technology-info-next { margin: .75rem 0 0; color: var(--accent-yellow); font-size: .75rem; }
 @keyframes marquee-forward { from { transform: translateX(-50%); } to { transform: translateX(0); } }
@@ -290,7 +289,7 @@
   .section-github,
   .section-projects { padding-top: 4.25rem; padding-bottom: 4.25rem; }
   .technology-row { margin-inline: calc(clamp(1.25rem, 5vw, 5rem) * -1); border-radius: 0; border-inline: 0; }
-  .technology-info { min-height: 230px; padding: 1.15rem; }
+  .technology-info { padding: 1.15rem; }
   .project-controls > p { display: none; }
   .project-controls { justify-content: flex-end; }
   .project-folder-track { padding-top: 2.3rem; padding-right: 2rem; }

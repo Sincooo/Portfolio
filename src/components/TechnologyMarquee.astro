@@ -42,10 +42,10 @@ const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
   <aside class="technology-info">
     <div class="technology-info-index" aria-hidden="true">↳</div>
     <div>
-      <p class="technology-info-tag">HOVER, FOCUS, OR TAP A TECHNOLOGY</p>
-      <h3 class="technology-info-name">A moving record of the tools I’m learning.</h3>
-      <p class="technology-info-copy" data-technology-copy>Each item pauses its row and opens the learning story behind it.</p>
-      <p class="technology-info-next" data-technology-next></p>
+      <p class="technology-info-tag">LEARNING NOTES</p>
+      <h3 class="technology-info-name">Tools I’m learning.</h3>
+      <p class="technology-info-copy" hidden><span data-technology-copy-layout aria-hidden="true"></span><span data-technology-copy></span></p>
+      <p class="technology-info-next" data-technology-next hidden></p>
       <p class="sr-only" data-technology-announcement aria-live="polite"></p>
     </div>
   </aside>
@@ -59,6 +59,9 @@ const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
     const tag = marquee.querySelector<HTMLElement>('.technology-info-tag')!;
     const name = marquee.querySelector<HTMLElement>('.technology-info-name')!;
     const copy = marquee.querySelector<HTMLElement>('[data-technology-copy]')!;
+    const copyLayout = marquee.querySelector<HTMLElement>('[data-technology-copy-layout]')!;
+    const copyContainer = copy.parentElement!;
+    const panel = marquee.querySelector<HTMLElement>('.technology-info')!;
     const next = marquee.querySelector<HTMLElement>('[data-technology-next]')!;
     const announcement = marquee.querySelector<HTMLElement>('[data-technology-announcement]')!;
     const items = [...marquee.querySelectorAll<HTMLButtonElement>('[data-technology]')];
@@ -67,11 +70,26 @@ const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
     let typingTimer = 0;
     let typingDelay = 0;
     let currentCopy = '';
+    let panelAnimation: Animation | undefined;
+
+    const updatePanel = (change: () => void) => {
+      const previousHeight = panel.getBoundingClientRect().height;
+      panelAnimation?.cancel();
+      change();
+      const nextHeight = panel.getBoundingClientRect().height;
+      if (reduceMotion.matches || Math.abs(previousHeight - nextHeight) < 1) return;
+      // Measure the actual selected story once; typing never changes its layout.
+      panelAnimation = panel.animate([{ height: `${previousHeight}px` }, { height: `${nextHeight}px` }], {
+        duration: 320, easing: 'cubic-bezier(.22,1,.36,1)',
+      });
+    };
 
     const stopTyping = () => { window.clearInterval(typingTimer); window.clearTimeout(typingDelay); };
     const typeCopy = (value: string) => {
       stopTyping();
       currentCopy = value;
+      copyLayout.textContent = value;
+      copyContainer.hidden = !value;
       copy.textContent = '';
       if (reduceMotion.matches) { copy.textContent = value; return; }
       let index = 0;
@@ -90,13 +108,16 @@ const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
       items.forEach((candidate) => candidate.classList.toggle('is-selected', candidate === item));
       selected = persist ? item : null;
       marquee.querySelectorAll('[data-technology-row]').forEach((row) => row.classList.toggle('is-paused', row.contains(item)));
-      tag.textContent = item.dataset.tag || '';
-      name.textContent = item.dataset.name || '';
-      next.textContent = item.dataset.next || '';
       const detail = `${item.dataset.summary} ${item.dataset.story}`;
-      typeCopy(detail);
+      updatePanel(() => {
+        marquee.classList.add('has-selection');
+        tag.textContent = item.dataset.tag || '';
+        name.textContent = item.dataset.name || '';
+        next.textContent = item.dataset.next || '';
+        next.hidden = !next.textContent;
+        typeCopy(detail);
+      });
       announcement.textContent = `${item.dataset.name}. ${item.dataset.tag}. ${detail} ${item.dataset.next}`;
-      marquee.classList.add('has-selection');
       if (!reduceMotion.matches) {
         [tag, name, next].forEach((element, index) => {
           element.getAnimations().forEach((animation) => animation.cancel());
@@ -110,13 +131,19 @@ const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
       if (selected) return;
       highlighted = null;
       stopTyping();
-      marquee.classList.remove('has-selection');
       marquee.querySelectorAll('[data-technology-row]').forEach((row) => row.classList.remove('is-paused'));
       items.forEach((candidate) => { candidate.setAttribute('aria-pressed', 'false'); candidate.classList.remove('is-selected'); });
-      tag.textContent = 'HOVER, FOCUS, OR TAP A TECHNOLOGY';
-      name.textContent = 'A moving record of the tools I’m learning.';
-      copy.textContent = 'Each item pauses its row and opens the learning story behind it.';
-      next.textContent = '';
+      updatePanel(() => {
+        marquee.classList.remove('has-selection');
+        tag.textContent = 'LEARNING NOTES';
+        name.textContent = 'Tools I’m learning.';
+        copy.textContent = '';
+        copyLayout.textContent = '';
+        copyContainer.hidden = true;
+        currentCopy = '';
+        next.textContent = '';
+        next.hidden = true;
+      });
       announcement.textContent = '';
     };
 
@@ -148,7 +175,9 @@ const rows = [technologies.slice(0, midpoint), technologies.slice(midpoint)];
     });
     marquee.addEventListener('keydown', (event) => { if (event.key === 'Escape') { selected = null; reset(); } });
     reduceMotion.addEventListener('change', (event) => {
+      panelAnimation?.cancel();
       if (event.matches && marquee.classList.contains('has-selection')) { stopTyping(); copy.textContent = currentCopy; }
     });
+    window.addEventListener('resize', () => panelAnimation?.cancel(), { passive: true });
   });
 </script>

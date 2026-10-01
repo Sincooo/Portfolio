@@ -5,6 +5,15 @@ export function initializeMotion() {
   const pixels = [...document.querySelectorAll<HTMLElement>('[data-pixel-transition]')];
   let observers: IntersectionObserver[] = [];
 
+  // Observe the full heading box; clipping that same box can prevent entry.
+  items.filter((item) => item.dataset.motion === 'primary').forEach((item) => {
+    if (item.querySelector(':scope > .motion-mask-content')) return;
+    const content = document.createElement('span');
+    content.className = 'motion-mask-content';
+    content.append(...item.childNodes);
+    item.append(content);
+  });
+
   const configure = () => {
     observers.forEach((observer) => observer.disconnect());
     observers = [];

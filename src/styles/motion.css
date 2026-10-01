@@ -14,11 +14,12 @@
   transition-delay: 0ms;
 }
 .has-reveal [data-reveal].revealed { opacity: 1; transform: none; transition-delay: var(--reveal-delay, 0ms); }
-.has-reveal [data-motion='primary'] { clip-path: inset(0 0 100% 0); }
-.has-reveal [data-motion='primary'].revealed { clip-path: inset(0); }
+.motion-mask-content { display: block; }
+.has-reveal [data-motion='primary'] > .motion-mask-content { clip-path: inset(0 0 100% 0); transition: clip-path var(--motion-reveal) var(--ease-out); }
+.has-reveal [data-motion='primary'].revealed > .motion-mask-content { clip-path: inset(0); }
 .has-reveal [data-motion='card'] { transform: translateY(var(--motion-offset, 24px)) scale(.985); transition-duration: var(--motion-card); }
-.has-reveal [data-motion='media'] { clip-path: inset(0 0 100% 0); transform: translateY(16px); transition-duration: var(--motion-scene); }
-.has-reveal [data-motion='media'].revealed { clip-path: inset(0); transform: none; }
+.has-reveal [data-motion='media'] { transform: translateY(16px); transition-duration: var(--motion-scene); }
+.has-reveal [data-motion='media'].revealed { transform: none; }
 .has-reveal [data-motion='media'] img { transform: scale(1.05); transition: transform var(--motion-scene) var(--ease-out); }
 .has-reveal [data-motion='media'].revealed img { transform: scale(1); }
 
@@ -41,6 +42,7 @@
 .has-reveal [data-reveal].motion-exiting [data-motion-step] { transition-duration: var(--motion-quick); }
 .has-reveal [data-reveal]:focus-within,
 .has-reveal [data-reveal]:focus-within [data-motion-step] { opacity: 1; transform: none; clip-path: none; transition-delay: 0ms; }
+.has-reveal [data-motion='primary']:focus-within > .motion-mask-content { clip-path: none; }
 
 /* The hero begins only after the preloader hands the page over. */
 .page-loading main { visibility: hidden; opacity: 1; transform: none; }
@@ -93,11 +95,12 @@
   .has-reveal [data-reveal] [data-motion-step] { transition-delay: 0ms; }
   .has-reveal [data-reveal].revealed [data-motion-step] { transition-delay: min(var(--step-delay, 0ms), 180ms); }
   .page-ready .profile-card { animation: motion-secondary var(--motion-reveal) var(--ease-out) 320ms both; }
-  .has-reveal [data-motion='media'], .has-reveal [data-motion='media'].revealed { clip-path: none; }
+  .has-reveal [data-motion='media'] .about-image-mask { clip-path: none; }
   .has-reveal [data-motion='media'] img, .has-reveal [data-motion='media'].revealed img { transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .has-reveal [data-reveal], .has-reveal [data-reveal] [data-motion-step], .hero-word { opacity: 1; transform: none; clip-path: none; }
+  .has-reveal [data-motion='primary'] > .motion-mask-content { clip-path: none; }
   .education-card::before, .has-reveal .education-card:not(.revealed)::before { transform: none; }
   .gallery-image, .has-reveal .gallery-item:not(.revealed) .gallery-image { clip-path: none; }
   .hero-footer a > span::before { display: none; }

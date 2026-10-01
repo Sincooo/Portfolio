@@ -458,7 +458,6 @@
   .project-showcase::before { filter: none; opacity: .12; }
   .project-showcase .project-folder-viewport { perspective: none; }
   .project-showcase .project-controls { align-items: center; padding-inline: .9rem; }
-  .project-showcase .project-controls__intro > p:last-child { display: none; }
   .project-showcase .project-folder-track { padding-top: 2.65rem; padding-bottom: 1.25rem; }
   .project-showcase .project-folder {
     width: min(86vw, 540px);

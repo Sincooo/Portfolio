@@ -8,26 +8,22 @@
 .technology-icon img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .technology-row.is-paused .technology-pill:not(.is-selected) { opacity: .62; }
 .technology-pill.is-selected { transform: scale(1.025); border-color: var(--tile-accent); background: var(--surface-hover); opacity: 1; }
-.technology-info { min-height: 280px; transition: border-color var(--motion-quick), background var(--motion-card); }
-.technology-info-copy { min-height: 8.25em; }
+.technology-marquee .technology-info { min-height: 0; padding: clamp(1rem, 2.5vw, 1.5rem); overflow: hidden; align-items: start; transition: border-color var(--motion-quick), background var(--motion-card); }
+.technology-info-name { margin-bottom: 0; font-size: clamp(1.25rem, 2.2vw, 1.7rem); }
+.has-selection .technology-info-name { margin-bottom: .7rem; }
+.technology-marquee .technology-info-copy { position: relative; min-height: 0; max-width: 68ch; }
+[data-technology-copy-layout] { display: block; visibility: hidden; }
+[data-technology-copy] { position: absolute; inset: 0; }
 .has-selection .technology-info { border-color: var(--strong-line); background: linear-gradient(135deg, var(--surface), color-mix(in srgb, var(--surface) 80%, var(--blue))); }
-.technology-info-copy::after { display: none; }
-.has-selection .technology-info-copy::after { display: inline-block; }
+.technology-info-copy::after { display: none !important; }
+.has-selection [data-technology-copy]::after { content: ''; display: inline-block; width: 1px; height: 1em; margin-left: 3px; background: var(--accent-yellow); vertical-align: -.12em; animation: typing-caret .75s steps(1) infinite; }
 .technology-row.is-keyboard { overflow-x: auto; mask-image: none; scrollbar-width: thin; }
 .technology-row.is-keyboard .technology-track { animation: none; transform: none; }
 .technology-row.is-keyboard .technology-set[aria-hidden='true'] { display: none; }
-@media (max-width: 700px) {
-  .technology-info { min-height: 390px; }
-  .technology-info-copy { min-height: 12em; }
-}
-@media (max-width: 360px) {
-  .technology-info { min-height: 470px; }
-  .technology-info-copy { min-height: 16em; }
-}
 @media (prefers-reduced-motion: reduce) {
   .technology-row { overflow-x: auto; mask-image: none; }
   .technology-track { animation: none; transform: none; }
   .technology-set[aria-hidden='true'] { display: none; }
   .technology-pill.is-selected { transform: none; }
-  .has-selection .technology-info-copy::after { display: none; }
+  .has-selection [data-technology-copy]::after { display: none; }
 }
