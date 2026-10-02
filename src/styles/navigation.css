@@ -171,8 +171,6 @@
 @media (hover: hover) and (pointer: fine) {
   .menu-dialog { cursor: url('/assets/cursor-arrow.svg') 5 4, default !important; }
   .menu-dialog :is(a, button) { cursor: url('/assets/cursor-pointer.svg') 15 4, pointer !important; }
-  .contrast-cursor-active .menu-dialog,
-  .contrast-cursor-active .menu-dialog :is(a[href], button:not(:disabled)) { cursor: none !important; }
 }
 @media (max-width: 700px) {
   .portfolio-brand { z-index: 79; }

@@ -14,14 +14,17 @@ const hand = 'M12 20V6a3 3 0 0 1 6 0v10l2-1a3 3 0 0 1 4 2l1-1a3 3 0 0 1 4 3c4-1 
   let y = 0;
   let tracking = false;
   let lastTarget: Element | null = null;
-  const hide = () => {
-    tracking = false;
+  const useNativeCursor = () => {
     root.classList.remove('contrast-cursor-active');
     cursors.forEach((cursor) => cursor.classList.remove('is-visible'));
     lastTarget = null;
   };
+  const hide = () => { tracking = false; useNativeCursor(); };
   const update = () => {
     if (!desktop.matches || forcedColors.matches || reducedMotion.matches || !supported) { hide(); return; }
+    // A modal's backdrop retargets hits to the dialog, even outside its bounds.
+    // Native SVG cursors remain visible throughout top-layer slide animations.
+    if (document.querySelector('dialog[open]')) { useNativeCursor(); return; }
     const target = document.elementFromPoint(x, y);
     if (!target) { hide(); return; }
     // Explicit text, resize, drag and disabled cursors remain native.
@@ -44,19 +47,9 @@ const hand = 'M12 20V6a3 3 0 0 1 6 0v10l2-1a3 3 0 0 1 4 2l1-1a3 3 0 0 1 4 3c4-1 
       cursors.forEach((cursor) => cursor.dataset.surface = light ? 'light' : 'dark');
       lastTarget = target;
     }
-    const modal = target.closest<HTMLDialogElement>('dialog[open]');
-    const host = modal || document.body;
-    const inDialog = !!modal;
-    const bounds = inDialog ? host.getBoundingClientRect() : null;
-    const scale = bounds ? bounds.width / host.offsetWidth : 1;
-    const localX = bounds ? (x - bounds.left) / scale - host.clientLeft + host.scrollLeft : x;
-    const localY = bounds ? (y - bounds.top) / scale - host.clientTop + host.scrollTop : y;
     cursors.forEach((cursor) => {
-      // Keep the cursor in the browser's top layer while a preview is open.
-      if (cursor.parentElement !== host) host.append(cursor);
       cursor.dataset.shape = hand ? 'hand' : 'arrow';
-      cursor.style.position = inDialog ? 'absolute' : 'fixed';
-      cursor.style.transform = `translate3d(${localX - (hand ? 15 : 5)}px, ${localY - 4}px, 0)`;
+      cursor.style.transform = `translate3d(${x - (hand ? 15 : 5)}px, ${y - 4}px, 0)`;
       cursor.classList.add('is-visible');
     });
     root.classList.add('contrast-cursor-active');
@@ -74,10 +67,9 @@ const hand = 'M12 20V6a3 3 0 0 1 6 0v10l2-1a3 3 0 0 1 4 2l1-1a3 3 0 0 1 4 3c4-1 
   forcedColors.addEventListener('change', hide);
   reducedMotion.addEventListener('change', hide);
   document.querySelectorAll('dialog').forEach((dialog) => {
-    new MutationObserver(() => { if (dialog.open && tracking) update(); }).observe(dialog, { attributes: true, attributeFilter: ['open'] });
+    new MutationObserver(() => { if (tracking) update(); }).observe(dialog, { attributes: true, attributeFilter: ['open'] });
     dialog.addEventListener('close', () => {
-      cursors.forEach((cursor) => document.body.append(cursor));
-      hide();
+      if (tracking) update(); else useNativeCursor();
     });
   });
 </script>

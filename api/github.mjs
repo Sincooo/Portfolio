@@ -14,7 +14,7 @@ export default async function handler(request, response) {
     const days = parseCalendar(await requestGitHub('https://github.com/users/Sincooo/contributions'));
     response.setHeader('Cache-Control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=600');
     response.statusCode = 200;
-    response.end(JSON.stringify({ days, updated: new Date().toISOString() }));
+    response.end(JSON.stringify({ user: 'Sincooo', days, updated: new Date().toISOString() }));
   } catch {
     response.setHeader('Cache-Control', 'no-store');
     response.statusCode = 503;

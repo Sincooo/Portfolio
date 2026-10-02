@@ -8,7 +8,7 @@
 .profile-card::before { display: none; }
 .page-ready .profile-card { animation: profile-arrive 760ms var(--ease-out) 440ms both; }
 .profile-topline, .profile-bottomline { position: relative; z-index: 2; padding: .8rem .5rem; font-size: .65rem; }
-.profile-scene { position: relative; padding: 1.25rem; perspective: 900px; }
+.profile-scene { overflow: clip; position: relative; padding: 1.25rem; perspective: 900px; }
 .profile-grid { position: absolute; inset: -1rem; z-index: -1; border-radius: 50%; background: radial-gradient(ellipse, #8b5cf621, transparent 68%), repeating-linear-gradient(0deg, transparent 0 23px, var(--line) 24px 25px), repeating-linear-gradient(90deg, transparent 0 23px, var(--line) 24px 25px); mask-image: radial-gradient(ellipse, black, transparent 70%); }
 .profile-art { position: relative; padding: .6rem; border: 1px solid var(--strong-line); border-radius: 3rem .9rem 3rem .9rem; background: var(--surface); box-shadow: 0 16px 40px #00000024; transform: rotate(-3deg) rotateY(calc(var(--profile-x, 0) * 3deg)) rotateX(calc(var(--profile-y, 0) * -3deg)); transition: transform 320ms var(--ease-out), border-color 220ms, box-shadow 320ms; }
 .profile-art .portrait-frame { height: 340px; border-radius: 2.5rem .55rem 2.5rem .55rem; }
@@ -89,7 +89,6 @@
 }
 @media (max-width: 700px) {
   .profile-card { max-width: 320px; width: 100%; margin: 0; }
-  .profile-scene { overflow: clip; }
   .profile-symbol { width: 2.35rem; height: 2.35rem; }
   .profile-symbol--code { left: 0; }
   .profile-symbol--star { right: 0; }

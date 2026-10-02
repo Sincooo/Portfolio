@@ -1,11 +1,13 @@
 ---
 import snapshot from '../data/github.json';
-const total = snapshot.days.reduce((sum, day) => sum + day.count, 0);
-const activeDays = snapshot.days.filter((day) => day.count > 0).length;
-const weeks = Math.ceil(snapshot.days.length / 7);
+import { getActivityStats, formatStatistic } from '../lib/github-activity';
+const stats = getActivityStats(snapshot.days);
+const { total, activeDays, longestStreak, activePercent } = stats;
+const offset = new Date(`${snapshot.days[0].date}T12:00:00Z`).getUTCDay();
+const weeks = Math.ceil((snapshot.days.length + offset) / 7);
 const months = snapshot.days.flatMap((day, index) => {
   const date = new Date(`${day.date}T12:00:00Z`);
-  return date.getUTCDate() <= 7 && date.getUTCDay() === 0 ? [{ index: Math.floor(index / 7), label: date.toLocaleDateString('en', {month: 'short', timeZone: 'UTC'}) }] : [];
+  return date.getUTCDate() <= 7 && date.getUTCDay() === 0 ? [{ index: Math.floor((index + offset) / 7), label: date.toLocaleDateString('en', {month: 'short', timeZone: 'UTC'}) }] : [];
 });
 const dateLabel = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateString('en', {month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'});
 const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
@@ -13,33 +15,39 @@ const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
 <div class="github-area" data-github-reveal>
   <div class="github-heading" data-github-step style="--github-delay: 0ms"><div><p class="eyebrow">07 / OPEN SOURCE</p><h2>BUILDING<br />IN PUBLIC<span class="period">.</span></h2></div><a href="https://github.com/Sincooo?tab=repositories" target="_blank" rel="noopener noreferrer">All repositories <span aria-hidden="true">↗</span></a></div>
   <p class="github-intro" data-github-step style="--github-delay: 90ms">A live view of my public repositories and contribution activity. The saved snapshot keeps the section useful if GitHub is temporarily unavailable.</p>
-  <div class="github-stat-row" data-github-step style="--github-delay: 150ms" aria-label="GitHub activity summary">
-    <div><strong id="github-total">{total}</strong><span>contributions shown</span></div>
-    <div><strong id="github-active-days">{activeDays}</strong><span>active days shown</span></div>
-    <div><strong>@Sincooo</strong><span>GitHub profile</span></div>
+  <p class="github-period" id="github-period" data-github-step style="--github-delay: 120ms">{dateLabel(snapshot.days[0].date)} — {dateLabel(snapshot.days.at(-1)!.date)}</p>
+  <div class="github-activity-layout" data-github-step style="--github-delay: 150ms">
+    <div class="github-stat-row" aria-label="GitHub activity summary" data-github-counters>
+      <div class="github-stat-card"><span class="github-stat-label">Contributions</span><strong class="github-stat-value" role="img" aria-label={`${formatStatistic(total)} contributions`}><span id="github-total" data-github-counter data-target={total} data-decimals="0" data-unit="contributions" aria-hidden="true">{formatStatistic(total)}</span></strong><p class="github-stat-note">In the displayed calendar</p></div>
+      <div class="github-stat-card"><span class="github-stat-label">Longest streak</span><strong class="github-stat-value" role="img" aria-label={`${longestStreak} ${longestStreak === 1 ? 'day' : 'days'}`}><span id="github-longest-streak" data-github-counter data-target={longestStreak} data-decimals="0" data-unit="days" aria-hidden="true">{longestStreak}</span><span class="github-stat-unit" data-streak-unit aria-hidden="true">{longestStreak === 1 ? 'day' : 'days'}</span></strong><p class="github-stat-note">Consecutive active days</p></div>
+      <div class="github-stat-card"><span class="github-stat-label">Active days</span><strong class="github-stat-value" role="img" aria-label={`${formatStatistic(activePercent, 1)} percent active days`}><span id="github-active-percent" data-github-counter data-target={activePercent} data-decimals="1" data-unit="percent active days" aria-hidden="true">{formatStatistic(activePercent, 1)}</span><span class="github-stat-unit" aria-hidden="true">%</span></strong><p class="github-stat-note"><span id="github-active-days">{activeDays}</span> of <span id="github-calendar-days">{snapshot.days.length}</span> days</p></div>
+    </div>
+  <div class="contribution-card">
+    <div class="contribution-heading"><h3>My GitHub contributions</h3><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">@Sincooo <span aria-hidden="true">↗</span></a></div>
+    <div class="contribution-scroll" tabindex="0" role="region" aria-label="Contribution calendar. Scroll horizontally on small screens.">
+      <svg class="contribution-chart" viewBox={`0 0 ${weeks * 16 + 32} 148`} role="img" aria-labelledby="contribution-title contribution-description">
+        <title id="contribution-title">{total} contributions in the displayed calendar</title><desc id="contribution-description">GitHub activity from {dateLabel(snapshot.days[0].date)} to {dateLabel(snapshot.days.at(-1)!.date)}. Darker orange squares represent more contributions. Daily counts are available below.</desc>
+        {months.map(month => <text x={32 + month.index * 16} y="16">{month.label}</text>)}
+        {['Mon', 'Wed', 'Fri'].map((day, index) => <text x="0" y={49 + index * 32}>{day}</text>)}
+        {snapshot.days.map((day, index) => <rect x={32 + Math.floor((index + offset) / 7) * 16} y={28 + (index + offset) % 7 * 16} width="12" height="12" rx="2" class={`activity-level-${day.level}`}><title>{dateLabel(day.date)}: {day.count} {day.count === 1 ? 'contribution' : 'contributions'}</title></rect>)}
+      </svg>
+    </div>
+    <div class="contribution-footer"><p><strong>{total}</strong> contributions in the displayed calendar</p><div class="contribution-legend" aria-hidden="true"><span>Less</span>{[0,1,2,3,4].map(level => <i class={`activity-level-${level}`}></i>)}<span>More</span></div></div>
+    <p class="activity-updated" id="activity-updated" aria-live="polite">Calendar snapshot · {updated}</p>
+    <details class="activity-details"><summary>View daily contribution counts</summary><ul>{snapshot.days.filter(day => day.count > 0).map(day => <li><time datetime={day.date}>{dateLabel(day.date)}</time><span>{day.count} {day.count === 1 ? 'contribution' : 'contributions'}</span></li>)}</ul><p>All other displayed days have no contributions.</p></details>
   </div>
-  <div class="repository-grid" id="repository-grid" data-github-step style="--github-delay: 210ms">
+  </div>
+  <div class="repository-grid" id="repository-grid" data-github-step style="--github-delay: 240ms">
     {snapshot.repositories.map((repo) => <a class="repository-card" href={repo.url} target="_blank" rel="noopener noreferrer">
       <div class="repository-top"><span>PUBLIC{repo.fork ? ' / FORK' : ''}</span><span aria-hidden="true">↗</span></div><h3>{repo.name}</h3><p>{repo.description || 'No description provided on GitHub.'}</p><div class="repository-meta"><span>{repo.language || 'Language not specified'}</span><span aria-label={`${repo.stars} stars`}>☆ {repo.stars}</span><span aria-label={`${repo.forks} forks`}>⑂ {repo.forks}</span></div>
     </a>)}
   </div>
-  <p class="repository-status" id="repository-status" aria-live="polite" data-github-step style="--github-delay: 250ms">Repository snapshot · {dateLabel(snapshot.repositoriesUpdated.slice(0, 10))}</p>
-  <div class="contribution-card" data-github-step style="--github-delay: 300ms">
-    <div class="contribution-heading"><h3>My GitHub contributions</h3><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">@Sincooo <span aria-hidden="true">↗</span></a></div>
-    <div class="contribution-scroll" tabindex="0" role="region" aria-label="Contribution calendar. Scroll horizontally on small screens.">
-      <svg class="contribution-chart" viewBox={`0 0 ${weeks * 16 + 32} 148`} role="img" aria-labelledby="contribution-title contribution-description">
-        <title id="contribution-title">{total} contributions in the displayed year</title><desc id="contribution-description">GitHub activity from {dateLabel(snapshot.days[0].date)} to {dateLabel(snapshot.days.at(-1)!.date)}. Darker orange squares represent more contributions. Daily counts are available below.</desc>
-        {months.map(month => <text x={32 + month.index * 16} y="16">{month.label}</text>)}
-        {['Mon', 'Wed', 'Fri'].map((day, index) => <text x="0" y={49 + index * 32}>{day}</text>)}
-        {snapshot.days.map((day, index) => <rect x={32 + Math.floor(index / 7) * 16} y={28 + index % 7 * 16} width="12" height="12" rx="2" class={`activity-level-${day.level}`}><title>{dateLabel(day.date)}: {day.count} {day.count === 1 ? 'contribution' : 'contributions'}</title></rect>)}
-      </svg>
-    </div>
-    <div class="contribution-footer"><p><strong>{total}</strong> contributions in the displayed year</p><div class="contribution-legend" aria-hidden="true"><span>Less</span>{[0,1,2,3,4].map(level => <i class={`activity-level-${level}`}></i>)}<span>More</span></div></div>
-    <p class="activity-updated" id="activity-updated" aria-live="polite">Calendar snapshot · {updated}</p>
-    <details class="activity-details"><summary>View daily contribution counts</summary><ul>{snapshot.days.filter(day => day.count > 0).map(day => <li><time datetime={day.date}>{dateLabel(day.date)}</time><span>{day.count} {day.count === 1 ? 'contribution' : 'contributions'}</span></li>)}</ul><p>All other displayed days have no contributions.</p></details>
-  </div>
+  <p class="repository-status" id="repository-status" aria-live="polite" data-github-step style="--github-delay: 280ms">Repository snapshot · {dateLabel(snapshot.repositoriesUpdated.slice(0, 10))}</p>
 </div>
 <script>
+  import { getActivityStats, formatStatistic } from '../lib/github-activity';
+  import { initializeActivityCounters } from '../scripts/activity-counters';
+  const updateCounters = initializeActivityCounters(document.querySelector<HTMLElement>('[data-github-counters]')!);
   const grid = document.getElementById('repository-grid')!;
   const status = document.getElementById('repository-status')!;
   type Repository = { name: string; description: string | null; html_url: string; language: string | null; stargazers_count: number; forks_count: number; private: boolean; fork: boolean; owner: { login: string } };
@@ -77,7 +85,8 @@ const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
   const renderActivity = (days: ActivityDay[]) => {
     if (days.length < 350 || days.length > 371 || days.some(day => !/^\d{4}-\d{2}-\d{2}$/.test(day.date) || !Number.isInteger(day.count) || day.count < 0 || !Number.isInteger(day.level) || day.level < 0 || day.level > 4)) throw new Error('Invalid calendar');
     const dateLabel = (value: string) => new Date(`${value}T12:00:00Z`).toLocaleDateString('en', {month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'});
-    const total = days.reduce((sum, day) => sum + day.count, 0);
+    const stats = getActivityStats(days);
+    const { total } = stats;
     const offset = new Date(`${days[0].date}T12:00:00Z`).getUTCDay();
     const weeks = Math.ceil((days.length + offset) / 7);
     const svgNode = (tag: string, attrs: Record<string, string>, text?: string) => {
@@ -86,7 +95,7 @@ const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
       if (text) node.textContent = text;
       return node;
     };
-    const nodes = [svgNode('title', { id: 'contribution-title' }, `${total} contributions in the displayed year`), svgNode('desc', { id: 'contribution-description' }, `GitHub activity from ${dateLabel(days[0].date)} to ${dateLabel(days.at(-1)!.date)}. Daily counts are available below.`)];
+    const nodes = [svgNode('title', { id: 'contribution-title' }, `${total} contributions in the displayed calendar`), svgNode('desc', { id: 'contribution-description' }, `GitHub activity from ${dateLabel(days[0].date)} to ${dateLabel(days.at(-1)!.date)}. Daily counts are available below.`)];
     ['Mon', 'Wed', 'Fri'].forEach((day, index) => nodes.push(svgNode('text', {x: '0', y: String(49 + index * 32)}, day)));
     const list = document.querySelector('.activity-details ul')!;
     const counts: HTMLLIElement[] = [];
@@ -104,9 +113,12 @@ const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
     });
     chart.setAttribute('viewBox', `0 0 ${weeks * 16 + 32} 148`);
     chart.replaceChildren(...nodes); list.replaceChildren(...counts);
-    document.querySelector('.contribution-footer strong')!.textContent = String(total);
-    document.getElementById('github-total')!.textContent = String(total);
-    document.getElementById('github-active-days')!.textContent = String(days.filter((day) => day.count > 0).length);
+    document.querySelector('.contribution-footer strong')!.textContent = formatStatistic(total);
+    document.getElementById('github-active-days')!.textContent = String(stats.activeDays);
+    document.getElementById('github-calendar-days')!.textContent = String(days.length);
+    document.querySelector('[data-streak-unit]')!.textContent = stats.longestStreak === 1 ? 'day' : 'days';
+    document.getElementById('github-period')!.textContent = `${dateLabel(days[0].date)} — ${dateLabel(days.at(-1)!.date)}`;
+    updateCounters({ 'github-total': total, 'github-longest-streak': stats.longestStreak, 'github-active-percent': stats.activePercent });
   };
   let inView = false;
   let lastAttempt = 0;
@@ -118,9 +130,11 @@ const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
       const response = await fetch('/api/github', {signal: AbortSignal.timeout(10000)});
       if (!response.ok) throw new Error('Activity unavailable');
       const result = await response.json();
-      if (!Array.isArray(result.days)) throw new Error('Invalid activity response');
+      if (result.user !== 'Sincooo' || !Array.isArray(result.days)) throw new Error('Invalid activity response');
       renderActivity(result.days);
-      calendarStatus.textContent = 'Updated from GitHub · Refreshes every 5 minutes while visible';
+      const checked = new Date(result.updated);
+      const checkedLabel = Number.isFinite(checked.getTime()) ? checked.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'Asia/Manila' }) : '';
+      calendarStatus.textContent = `Verified from GitHub${checkedLabel ? ` · ${checkedLabel}` : ''}`;
     } catch { calendarStatus.textContent = 'Showing the saved calendar · View GitHub for the latest activity'; }
     finally { refreshing = false; }
   };
