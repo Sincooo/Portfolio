@@ -13,8 +13,8 @@ const dateLabel = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateSt
 const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
 ---
 <div class="github-area" data-github-reveal>
-  <div class="github-heading" data-github-step style="--github-delay: 0ms"><div><p class="eyebrow">07 / OPEN SOURCE</p><h2>BUILDING<br />IN PUBLIC<span class="period">.</span></h2></div><a href="https://github.com/Sincooo?tab=repositories" target="_blank" rel="noopener noreferrer">All repositories <span aria-hidden="true">↗</span></a></div>
-  <p class="github-intro" data-github-step style="--github-delay: 90ms">A live view of my public repositories and contribution activity. The saved snapshot keeps the section useful if GitHub is temporarily unavailable.</p>
+  <div class="github-heading" data-github-step style="--github-delay: 0ms"><div><p class="eyebrow">07 / OPEN SOURCE</p><h2>BUILDING<br />IN PUBLIC</h2></div><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">View GitHub <span aria-hidden="true">↗</span></a></div>
+  <p class="github-intro" data-github-step style="--github-delay: 90ms">A record of the code I contribute, one day at a time.</p>
   <p class="github-period" id="github-period" data-github-step style="--github-delay: 120ms">{dateLabel(snapshot.days[0].date)} — {dateLabel(snapshot.days.at(-1)!.date)}</p>
   <div class="github-activity-layout" data-github-step style="--github-delay: 150ms">
     <div class="github-stat-row" aria-label="GitHub activity summary" data-github-counters>
@@ -37,48 +37,12 @@ const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
     <details class="activity-details"><summary>View daily contribution counts</summary><ul>{snapshot.days.filter(day => day.count > 0).map(day => <li><time datetime={day.date}>{dateLabel(day.date)}</time><span>{day.count} {day.count === 1 ? 'contribution' : 'contributions'}</span></li>)}</ul><p>All other displayed days have no contributions.</p></details>
   </div>
   </div>
-  <div class="repository-grid" id="repository-grid" data-github-step style="--github-delay: 240ms">
-    {snapshot.repositories.map((repo) => <a class="repository-card" href={repo.url} target="_blank" rel="noopener noreferrer">
-      <div class="repository-top"><span>PUBLIC{repo.fork ? ' / FORK' : ''}</span><span aria-hidden="true">↗</span></div><h3>{repo.name}</h3><p>{repo.description || 'No description provided on GitHub.'}</p><div class="repository-meta"><span>{repo.language || 'Language not specified'}</span><span aria-label={`${repo.stars} stars`}>☆ {repo.stars}</span><span aria-label={`${repo.forks} forks`}>⑂ {repo.forks}</span></div>
-    </a>)}
-  </div>
-  <p class="repository-status" id="repository-status" aria-live="polite" data-github-step style="--github-delay: 280ms">Repository snapshot · {dateLabel(snapshot.repositoriesUpdated.slice(0, 10))}</p>
+
 </div>
 <script>
   import { getActivityStats, formatStatistic } from '../lib/github-activity';
   import { initializeActivityCounters } from '../scripts/activity-counters';
   const updateCounters = initializeActivityCounters(document.querySelector<HTMLElement>('[data-github-counters]')!);
-  const grid = document.getElementById('repository-grid')!;
-  const status = document.getElementById('repository-status')!;
-  type Repository = { name: string; description: string | null; html_url: string; language: string | null; stargazers_count: number; forks_count: number; private: boolean; fork: boolean; owner: { login: string } };
-  const render = (repositories: Repository[]) => {
-    const cards = repositories.filter(repo => !repo.private && repo.owner?.login.toLowerCase() === 'sincooo').slice(0, 6).map(repo => {
-      const card = document.createElement('a'); card.className = 'repository-card'; card.href = `https://github.com/Sincooo/${encodeURIComponent(repo.name)}`; card.target = '_blank'; card.rel = 'noopener noreferrer';
-      const top = document.createElement('div'); top.className = 'repository-top';
-      const label = document.createElement('span'); label.textContent = repo.fork ? 'PUBLIC / FORK' : 'PUBLIC';
-      const arrow = document.createElement('span'); arrow.textContent = '↗'; arrow.setAttribute('aria-hidden', 'true'); top.append(label, arrow);
-      const title = document.createElement('h3'); title.textContent = repo.name;
-      const description = document.createElement('p'); description.textContent = repo.description || 'No description provided on GitHub.';
-      const meta = document.createElement('div'); meta.className = 'repository-meta';
-      const language = document.createElement('span'); language.textContent = repo.language || 'Language not specified';
-      const stars = document.createElement('span'); stars.textContent = `☆ ${repo.stargazers_count}`; stars.setAttribute('aria-label', `${repo.stargazers_count} stars`);
-      const forks = document.createElement('span'); forks.textContent = `⑂ ${repo.forks_count}`; forks.setAttribute('aria-label', `${repo.forks_count} forks`);
-      meta.append(language, stars, forks); card.append(top, title, description, meta); return card;
-    });
-    // Keep the verified snapshot if a malformed or empty response arrives.
-    if (!cards.length) throw new Error('No public repositories returned');
-    grid.replaceChildren(...cards);
-  };
-  const refresh = async () => {
-    try {
-      const response = await fetch('https://api.github.com/users/Sincooo/repos?per_page=100&sort=updated', { signal: AbortSignal.timeout(8000) });
-      if (!response.ok) throw new Error('GitHub request failed');
-      const repositories = await response.json();
-      if (!Array.isArray(repositories)) throw new Error('Invalid GitHub response');
-      render(repositories);
-      status.textContent = 'Repository information refreshed from GitHub';
-    } catch { status.textContent = 'Showing the saved repository snapshot · View GitHub for the latest activity'; }
-  };
   type ActivityDay = { date: string; count: number; level: number };
   const calendarStatus = document.getElementById('activity-updated')!;
   const chart = document.querySelector<SVGSVGElement>('.contribution-chart')!;
@@ -140,16 +104,14 @@ const updated = dateLabel(snapshot.contributionsUpdated.slice(0, 10));
   };
   // Astro's static local preview has no Vercel function; retain its saved calendar.
   const deployed = !['localhost', '127.0.0.1', '::1'].includes(location.hostname);
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { observer.disconnect(); refresh(); } }, { rootMargin: '200px' });
-    observer.observe(grid);
-    if (deployed) {
-      const activityObserver = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; if (inView) refreshActivity(); }, {rootMargin: '100px'});
-      activityObserver.observe(chart);
-    }
-  } else refresh();
   if (deployed) {
-    if (!('IntersectionObserver' in window)) { inView = true; refreshActivity(); }
+    if ('IntersectionObserver' in window) {
+      const activityObserver = new IntersectionObserver(([entry]) => {
+        inView = entry.isIntersecting;
+        if (inView) refreshActivity();
+      }, {rootMargin: '100px'});
+      activityObserver.observe(chart);
+    } else { inView = true; refreshActivity(); }
     setInterval(refreshActivity, 300000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshActivity(); });
   }

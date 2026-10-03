@@ -81,16 +81,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible, [tabindex='0']:foc
 .github-heading h2 { margin: .75rem 0 0; font-family: 'Sora Variable', Sora, sans-serif; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.06em; }
 .github-heading a, .contribution-heading a { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; font-size: .875rem; text-underline-offset: 5px; }
 .github-intro { color: var(--muted); line-height: 1.6; margin: 1rem 0 1.5rem; }
-.repository-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.repository-card { display: flex; flex-direction: column; min-width: 0; padding: 1.4rem; border: 1px solid var(--line); border-radius: 1rem; color: var(--text); background: var(--surface); text-decoration: none; }
-.repository-card:hover { border-color: var(--accent-yellow); background: var(--surface-hover); }
-.repository-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: .75rem; font-weight: 700; letter-spacing: .08em; }
-.repository-top > span:last-child { color: var(--accent-yellow); font-size: 1.3rem; }
-.repository-card h3 { font-family: 'Sora Variable', Sora, sans-serif; font-size: 1.3rem; letter-spacing: -.045em; margin: 1.3rem 0 .75rem; overflow-wrap: anywhere; }
-.repository-card p { color: var(--muted); font-size: .9rem; line-height: 1.6; margin: 0 0 1.5rem; }
-.repository-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .75rem; }
-.repository-meta > span:first-child { margin-right: auto; }
-.repository-status, .activity-updated { font-size: .8rem; color: var(--muted); line-height: 1.6; }
+.activity-updated { font-size: .8rem; color: var(--muted); line-height: 1.6; }
 .contribution-card { padding: clamp(1rem, 3vw, 2rem); margin-top: 2rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); }
 .contribution-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .contribution-heading h3 { font-family: 'Sora Variable', Sora, sans-serif; font-size: 1.15rem; letter-spacing: -.03em; margin: 0; }
@@ -124,13 +115,11 @@ button:focus-visible, a:focus-visible, summary:focus-visible, [tabindex='0']:foc
 .loader-line { display: block; height: 3px; background: var(--accent-yellow); margin-top: .75rem; transform-origin: left; animation: loader-progress 1.2s ease-out both; }
 @keyframes loader-progress { from { transform: scaleX(.08); } to { transform: scaleX(1); } }
 @media (prefers-reduced-motion: no-preference) {
-  body, .section-about, .section-experience, .portfolio-brand, .desktop-nav, .theme-toggle, .profile-card, .gallery-dialog, .repository-card, .contribution-card { transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease; }
+  body, .section-about, .section-experience, .portfolio-brand, .desktop-nav, .theme-toggle, .profile-card, .gallery-dialog, .contribution-card { transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease; }
 }
-@media (max-width: 900px) { .repository-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 700px) {
   .site-header { padding-right: calc(clamp(1.25rem, 5vw, 5rem) + 3.5rem); }
   .theme-toggle { top: .85rem; right: clamp(1.25rem, 5vw, 5rem); }
-  .repository-grid { grid-template-columns: minmax(0, 1fr); }
   .github-heading, .contribution-heading { align-items: start; flex-wrap: wrap; }
   .contribution-footer { align-items: start; flex-direction: column; margin: .5rem 0 1rem; }
   .personal-quote { margin-top: 3rem; }

@@ -242,13 +242,6 @@
 .is-visible .contribution-chart { animation: graph-reveal .75s cubic-bezier(.2, .7, .2, 1) .38s both; transform-origin: left; }
 @keyframes graph-reveal { from { opacity: .25; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0); } }
 
-/* Two restrained pixel fields soften the strongest color boundaries. */
-.pixel-transition { display: grid; grid-template-columns: repeat(12, 1fr); height: clamp(3rem, 6vw, 5rem); overflow: hidden; background: var(--page-bg); }
-.pixel-transition i { background: var(--pixel-color); opacity: calc(1 - (var(--row) * .22) - (var(--pixel) * .009)); transform: scaleY(0); transform-origin: top; transition: transform 420ms cubic-bezier(.2, .7, .2, 1) calc((var(--pixel) + var(--row)) * 11ms); }
-.pixel-transition.is-visible i { transform: scaleY(1); }
-.pixel-to-page { --pixel-color: var(--about-bg); }
-.pixel-to-contact { --pixel-color: var(--page-bg); background: #f4c95d; }
-
 .section-quote { padding: clamp(4.5rem, 7vw, 6.5rem) 0; background: var(--page-bg); }
 .personal-quote { position: relative; margin-top: 0; text-align: center; }
 .personal-quote figcaption { padding-top: 0; border-top: 0; color: var(--cyan); }
@@ -303,7 +296,6 @@
   .about-copy h2 { font-size: clamp(2.7rem, 13vw, 4.6rem); }
   .about-facts div { grid-template-columns: 7rem 1fr; }
   .github-stat-row { grid-template-columns: minmax(0, 1fr); }
-  .repository-card { padding: 1.15rem; }
   .personal-quote blockquote { font-size: clamp(1.65rem, 7.8vw, 2.7rem); }
   .site-footer-inner { grid-template-columns: 1fr auto; }
   .site-footer nav { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; }
@@ -334,12 +326,10 @@
   .has-reveal .about-portrait:not(.revealed) .about-image-mask { transform: none; clip-path: none; transition: none; }
   [data-github-step] { opacity: 1; transform: none; transition: none; }
   .is-visible .contribution-chart { animation: none; }
-  .pixel-transition i { transform: none; transition: none; }
 }
 
 @media (forced-colors: active) {
   .technology-row { mask-image: none; }
   .project-folder { border: 2px solid CanvasText; background: Canvas; color: CanvasText; box-shadow: none; }
   .project-folder-tab { border: 2px solid CanvasText; }
-  .pixel-transition { display: none; }
 }

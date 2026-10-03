@@ -38,8 +38,6 @@
   clip-path: inset(0);
   transition-delay: var(--step-delay, 0ms);
 }
-.has-reveal [data-reveal].motion-exiting,
-.has-reveal [data-reveal].motion-exiting [data-motion-step] { transition-duration: var(--motion-quick); }
 .has-reveal [data-reveal]:focus-within,
 .has-reveal [data-reveal]:focus-within [data-motion-step] { opacity: 1; transform: none; clip-path: none; transition-delay: 0ms; }
 .has-reveal [data-motion='primary']:focus-within > .motion-mask-content { clip-path: none; }
@@ -84,7 +82,6 @@
 .has-reveal .gallery-item.revealed img { transform: scale(1); }
 .gallery-item:hover .gallery-image img { transform: scale(1.025); }
 .personal-quote blockquote { transition-duration: var(--motion-scene) !important; }
-.pixel-transition i { transition-duration: var(--motion-scene); transition-delay: calc((var(--pixel) + var(--row)) * 19ms); }
 .section-heading::after, .split-heading::after, .education-heading::after { transition-duration: var(--motion-scene); }
 .is-visible .contribution-chart { animation-duration: var(--motion-scene); }
 
@@ -104,4 +101,20 @@
   .education-card::before, .has-reveal .education-card:not(.revealed)::before { transform: none; }
   .gallery-image, .has-reveal .gallery-item:not(.revealed) .gallery-image { clip-path: none; }
   .hero-footer a > span::before { display: none; }
+}
+
+/* Additional depth and sequencing play once; returning content stays still. */
+.has-reveal [data-motion='card']:not(.revealed) { transform: translateY(30px) scale(.975) rotate(-.6deg); }
+.has-reveal [data-motion='card'].revealed { transform: none; }
+.has-reveal [data-motion-step='primary'] { filter: blur(3px); transition-property: opacity, transform, clip-path, filter; }
+.has-reveal .revealed [data-motion-step='primary'], .has-reveal [data-reveal]:focus-within [data-motion-step='primary'] { filter: none; }
+.github-area.is-visible .github-stat-card { animation: statistic-entry 700ms var(--ease-out) both; }
+.github-area.is-visible .github-stat-card:nth-child(1) { animation-delay: 180ms; }
+.github-area.is-visible .github-stat-card:nth-child(2) { animation-delay: 270ms; }
+.github-area.is-visible .github-stat-card:nth-child(3) { animation-delay: 360ms; }
+@keyframes statistic-entry { from { opacity: 0; transform: translateY(20px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .has-reveal [data-motion='card']:not(.revealed) { transform: none; }
+  .has-reveal [data-motion-step='primary'] { filter: none; }
+  .github-area.is-visible .github-stat-card { animation: none; }
 }

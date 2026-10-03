@@ -21,7 +21,7 @@ const seminars = [
     <section id="home" class="hero section-shell">
       <div class="hero-statement">
         <p class="hero-greeting hero-enter" style="--enter-delay: 40ms">Hello, I am <span aria-hidden="true">↘</span></p>
-        <h1 class="hero-name"><span class="hero-given"><span class="hero-word" style="--word-delay: 100ms">Edward Ranz</span></span><span class="hero-surname"><span class="hero-word" style="--word-delay: 180ms">CARDOZA<span class="name-period" aria-hidden="true">.</span></span></span></h1>
+        <h1 class="hero-name"><span class="hero-given"><span class="hero-word" style="--word-delay: 100ms">Edward Ranz</span></span><span class="hero-surname"><span class="hero-word" style="--word-delay: 180ms">CARDOZA</span></span></h1>
         <p class="hero-role hero-enter" style="--enter-delay: 190ms">Aspiring Software Engineer</p>
         <p class="hero-intro hero-enter" style="--enter-delay: 260ms">A Computer Science student curious about how systems work. I’m learning to build software and sharpening my programming skills, one step at a time.</p>
         <p class="hero-location hero-enter" style="--enter-delay: 310ms"><span aria-hidden="true">⌖</span> Cavite — Philippines</p>
@@ -37,7 +37,7 @@ const seminars = [
     </section>
 
     <section id="technologies" class="section-shell section-technologies">
-      <div class="split-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>01 / LANGUAGES & TOOLS</p><h2 data-motion-step="primary" style="--step-delay: 90ms">TECHNOLOGIES<span class="period">.</span></h2><p data-motion-step style="--step-delay: 190ms">The story behind what I’ve learned matters more than a percentage. These are foundations I’m developing—not claims of expertise.</p></div>
+      <div class="split-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>01 / LANGUAGES & TOOLS</p><h2 data-motion-step="primary" style="--step-delay: 90ms">TECHNOLOGIES</h2><p data-motion-step style="--step-delay: 190ms">The story behind what I’ve learned matters more than a percentage. These are foundations I’m developing—not claims of expertise.</p></div>
       <TechnologyMarquee technologies={technologies} />
     </section>
 
@@ -54,7 +54,7 @@ const seminars = [
         </div>
         <div class="about-copy">
           <p class="eyebrow" data-reveal>03 / ABOUT</p>
-          <h2 data-reveal data-motion="primary">CURIOUS BY<br /><em>default.</em></h2>
+          <h2 data-reveal data-motion="primary">CURIOUS BY<br /><em>default</em></h2>
           <p data-reveal>I’m a Computer Science student at Cavite State University – Main Campus, building my foundation in software development through Java and other languages introduced through coursework. I’m interested in AI engineering and cloud engineering, while remaining open to exploring different environments and sectors of technology. I value steady progress, learning, and mastering the fundamentals.</p>
           <dl class="about-facts" data-reveal>
             <div><dt>Based in</dt><dd>Cavite, Philippines</dd></div>
@@ -64,8 +64,6 @@ const seminars = [
         </div>
       </div>
     </section>
-
-    <div class="pixel-transition pixel-to-page" data-pixel-transition aria-hidden="true">{Array.from({length: 48}, (_, index) => <i style={`--pixel: ${index % 12}; --row: ${Math.floor(index / 12)}`}></i>)}</div>
 
     <section id="education" class="section-shell section-education">
       <div class="education-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>04 / EDUCATION</p><h2 data-motion-step="primary" style="--step-delay: 90ms">THE<br /><span>FOUNDATION</span></h2></div>
@@ -77,7 +75,7 @@ const seminars = [
 
     <section id="experience" class="section-experience">
       <div class="section-shell experience-layout">
-        <div class="experience-intro" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>05 / EXPERIENCE</p><h2 data-motion-step="primary" style="--step-delay: 90ms">LEARNING<br />BEYOND<br /><em>the classroom.</em></h2><p data-motion-step style="--step-delay: 190ms">Experience is also the questions you ask and the conversations you join. These seminars are part of how I continue exploring technology and its impact.</p></div>
+        <div class="experience-intro" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>05 / EXPERIENCE</p><h2 data-motion-step="primary" style="--step-delay: 90ms">LEARNING<br />BEYOND<br /><em>the classroom</em></h2><p data-motion-step style="--step-delay: 190ms">Experience is also the questions you ask and the conversations you join. These seminars are part of how I continue exploring technology and its impact.</p></div>
         <div class="experience-list">
           {seminars.map((seminar, index) => <article class="experience-item" data-reveal data-motion="card" style={`--reveal-delay: ${index * 85}ms`}>
             <span class="experience-index">0{index + 1}</span>
@@ -89,7 +87,7 @@ const seminars = [
     </section>
 
     <section id="gallery" class="section-shell section-gallery">
-      <div class="split-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>06 / GALLERY</p><h2 data-motion-step="primary" style="--step-delay: 90ms">A VISUAL<br /><span>RECORD.</span></h2><p data-motion-step style="--step-delay: 190ms">A place for the work, moments, and milestones that shape my path. For now, these certificates document seminars I’ve attended.</p></div>
+      <div class="split-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>06 / GALLERY</p><h2 data-motion-step="primary" style="--step-delay: 90ms">A VISUAL<br /><span>RECORD</span></h2><p data-motion-step style="--step-delay: 190ms">A place for the work, moments, and milestones that shape my path. For now, these certificates document seminars I’ve attended.</p></div>
       <div class="gallery-subhead"><h3>Certificates</h3><span>01 — 03</span></div>
       <div class="gallery-grid">
         {seminars.map((seminar, index) => <button class="gallery-item" type="button" data-gallery-index={index} data-reveal data-motion="card" style={`--reveal-delay: ${index * 90}ms`} aria-label={`Open certificate: ${seminar.title}`}>
@@ -111,12 +109,10 @@ const seminars = [
       </figure>
     </section>
 
-    <div class="pixel-transition pixel-to-contact" data-pixel-transition aria-hidden="true">{Array.from({length: 48}, (_, index) => <i style={`--pixel: ${index % 12}; --row: ${Math.floor(index / 12)}`}></i>)}</div>
-
     <section id="contact" class="section-contact">
       <div class="section-shell contact-inner" data-reveal data-motion="sequence">
         <p class="eyebrow" data-motion-step>08 / CONTACT</p>
-        <h2 data-motion-step="primary" style="--step-delay: 90ms">LET’S BUILD<br /><span>SOMETHING TOGETHER.</span></h2>
+        <h2 data-motion-step="primary" style="--step-delay: 90ms">LET’S BUILD<br /><span>SOMETHING TOGETHER</span></h2>
         <p data-motion-step style="--step-delay: 190ms">Interested in connecting, sharing ideas, or following what I’m learning? My inbox and profiles are open.</p>
         <a class="contact-email" data-motion-step style="--step-delay: 260ms" href="mailto:cardozaedwardranz14@gmail.com">cardozaedwardranz14@gmail.com <span aria-hidden="true">↗</span></a>
         <div class="contact-links" data-motion-step style="--step-delay: 320ms"><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://www.facebook.com/ranz.edward.92" target="_blank" rel="noopener noreferrer">Facebook ↗</a></div>
@@ -126,7 +122,7 @@ const seminars = [
 
   <footer class="site-footer">
     <div class="section-shell site-footer-inner">
-      <a class="footer-brand" href="#home">RANZ<span>.</span></a>
+      <a class="footer-brand" href="#home">RANZ</a>
       <nav aria-label="Footer links"><a href={cv.url} download={cv.filename}>CV ↓</a><a href="https://github.com/Sincooo" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/edward-ranz-cardoza" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></nav>
       <a class="footer-top" href="#home">Back to top ↑</a>
       <p>© {new Date().getFullYear()} Edward Ranz V. Cardoza</p>

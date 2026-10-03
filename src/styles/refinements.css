@@ -59,9 +59,9 @@
 
 /* Feedback stays local to the control or card being explored. */
 .button span, .contact-links a, .hero-socials a, .footer-top, .site-footer nav a { transition: transform 220ms var(--ease-out), color 220ms; }
-.button, .repository-card, .gallery-item, .project-folder-link { transition: border-color 220ms, box-shadow 320ms, background 220ms, transform 320ms var(--ease-out); }
+.button, .gallery-item, .project-folder-link { transition: border-color 220ms, box-shadow 320ms, background 220ms, transform 320ms var(--ease-out); }
 .contact-links a, .hero-socials a, .site-footer nav a { text-decoration-thickness: 1px; text-underline-offset: .35em; }
-.repository-top > span:last-child, .gallery-caption > span:last-child { display: inline-block; transition: transform 220ms var(--ease-out); }
+.gallery-caption > span:last-child { display: inline-block; transition: transform 220ms var(--ease-out); }
 .project-folder-preview { transition: transform 460ms var(--ease-out); }
 .experience-item { transition: border-color 220ms; }
 @media (hover: hover) and (pointer: fine) {
@@ -74,9 +74,8 @@
   .has-reveal .education-card.revealed:hover { transform: translateY(-3px); box-shadow: 0 16px 35px #00000028; }
   .education-card:hover .education-mark img { transform: scale(1.04); }
   .education-card:hover .education-step-number { transform: translateY(-5px); }
-  .repository-card:hover, .repository-card:focus-visible { box-shadow: 0 8px 24px #00000018; transform: translateY(-3px); }
   .has-reveal .gallery-item.revealed:hover { transform: translateY(-3px); box-shadow: 0 8px 24px #00000018; }
-  .gallery-item:hover .gallery-caption > span:last-child, .repository-card:hover .repository-top > span:last-child { transform: translate(3px, -3px); }
+  .gallery-item:hover .gallery-caption > span:last-child { transform: translate(3px, -3px); }
   .project-folder.is-active:hover .project-folder-preview { transform: scale(1.025); }
   .contact-links a:hover, .hero-socials a:hover, .site-footer nav a:hover { transform: translateY(-2px); text-decoration: underline; }
   .experience-item:hover { border-color: #0c10177a; }
@@ -111,5 +110,5 @@
   .profile-orbit, .profile-symbol { animation: none; }
   .profile-orbit--one { transform: rotate(-15deg); }
   .profile-orbit--two { transform: rotate(15deg); }
-  .has-reveal .education-card.revealed:hover, .has-reveal .gallery-item.revealed:hover, .repository-card:hover, .project-folder.is-active:hover .project-folder-preview { transform: none; }
+  .has-reveal .education-card.revealed:hover, .has-reveal .gallery-item.revealed:hover, .project-folder.is-active:hover .project-folder-preview { transform: none; }
 }
