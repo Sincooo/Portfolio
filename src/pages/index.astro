@@ -5,6 +5,7 @@ import ProfileVisual from '../components/ProfileVisual.astro';
 import TechnologyMarquee from '../components/TechnologyMarquee.astro';
 import ProjectShowcase from '../components/ProjectShowcase.astro';
 import GitHubActivity from '../components/GitHubActivity.astro';
+import SectionSeparator from '../components/SectionSeparator.astro';
 import { projects } from '../data/projects';
 import { cv } from '../data/site';
 import { technologies } from '../data/technologies';
@@ -46,6 +47,7 @@ const seminars = [
       <ProjectShowcase projects={projects} />
     </section>
 
+    <SectionSeparator from="page" to="about" />
     <section id="about" class="section-about">
       <div class="section-shell about-grid">
         <div class="about-portrait" data-reveal data-motion="media">
@@ -65,6 +67,7 @@ const seminars = [
       </div>
     </section>
 
+    <SectionSeparator from="about" to="page" />
     <section id="education" class="section-shell section-education">
       <div class="education-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>04 / EDUCATION</p><h2 data-motion-step="primary" style="--step-delay: 90ms">THE<br /><span>FOUNDATION</span></h2></div>
       <ol class="education-timeline">
@@ -73,6 +76,7 @@ const seminars = [
       </ol>
     </section>
 
+    <SectionSeparator from="page" to="experience" />
     <section id="experience" class="section-experience">
       <div class="section-shell experience-layout">
         <div class="experience-intro" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>05 / EXPERIENCE</p><h2 data-motion-step="primary" style="--step-delay: 90ms">LEARNING<br />BEYOND<br /><em>the classroom</em></h2><p data-motion-step style="--step-delay: 190ms">Experience is also the questions you ask and the conversations you join. These seminars are part of how I continue exploring technology and its impact.</p></div>
@@ -86,6 +90,7 @@ const seminars = [
       </div>
     </section>
 
+    <SectionSeparator from="experience" to="page" />
     <section id="gallery" class="section-shell section-gallery">
       <div class="split-heading" data-reveal data-motion="sequence"><p class="eyebrow" data-motion-step>06 / GALLERY</p><h2 data-motion-step="primary" style="--step-delay: 90ms">A VISUAL<br /><span>RECORD</span></h2><p data-motion-step style="--step-delay: 190ms">A place for the work, moments, and milestones that shape my path. For now, these certificates document seminars I’ve attended.</p></div>
       <div class="gallery-subhead"><h3>Certificates</h3><span>01 — 03</span></div>
@@ -109,6 +114,7 @@ const seminars = [
       </figure>
     </section>
 
+    <SectionSeparator from="page" to="contact" />
     <section id="contact" class="section-contact">
       <div class="section-shell contact-inner" data-reveal data-motion="sequence">
         <p class="eyebrow" data-motion-step>08 / CONTACT</p>

@@ -14,6 +14,7 @@ const items = [
   { label: 'GitHub', href: '/#github', number: '08', section: 'github' },
   { label: 'Contact', href: '/#contact', number: '09', section: 'contact' },
 ];
+const showSectionIndicator = Astro.url.pathname === '/' || Astro.url.pathname === '/index.html';
 ---
 
 <a class="portfolio-brand" href="/#home" aria-label="ERC — Edward Ranz Cardoza — Home">
@@ -37,6 +38,10 @@ const items = [
     <span class="menu-trigger-mark" aria-hidden="true"><i></i><i></i></span>
   </button>
 </header>
+
+{showSectionIndicator && <nav class="section-indicator" aria-label="Page sections">
+  {items.map((item, index) => <a href={item.href} data-section={item.section} aria-label={`Go to ${item.label} section`} aria-current={index === 0 ? 'location' : undefined}><span class="section-indicator-dot" aria-hidden="true"></span></a>)}
+</nav>}
 
 <dialog class="menu-dialog" id="site-menu" aria-labelledby="site-menu-title">
   <div class="menu-surface">
@@ -100,6 +105,7 @@ const items = [
   const closeButton = dialog?.querySelector<HTMLButtonElement>('[data-menu-close]');
   const primaryLinks = dialog ? Array.from(dialog.querySelectorAll<HTMLAnchorElement>('.menu-link[data-section]')) : [];
   const allMenuLinks = dialog ? Array.from(dialog.querySelectorAll<HTMLAnchorElement>('a')) : [];
+  const sectionLinks = [...primaryLinks, ...document.querySelectorAll<HTMLAnchorElement>('.section-indicator a')];
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   let closeTimer = 0;
   let closeComplete: (() => void) | undefined;
@@ -180,8 +186,11 @@ const items = [
     setOpenState(false);
   });
 
+  let activeSection: string | undefined;
   const setActiveSection = (section: string) => {
-    primaryLinks.forEach((link) => {
+    if (activeSection === section) return;
+    activeSection = section;
+    sectionLinks.forEach((link) => {
       const active = Boolean(section) && link.dataset.section === section;
       link.classList.toggle('active', active);
       if (active) link.setAttribute('aria-current', 'location');

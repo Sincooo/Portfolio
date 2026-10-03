@@ -1,0 +1,28 @@
+/* Zero-height boundaries borrow only the surrounding sections' empty padding. */
+.section-separator { --separator-height: clamp(52px, 7vw, 92px); --separator-progress: .5; position: relative; z-index: 2; height: 0; pointer-events: none; }
+.separator-window { position: absolute; inset: calc(var(--separator-height) / -2) 0 auto; height: var(--separator-height); overflow: clip; background: var(--separator-from); mask-image: linear-gradient(transparent, #000 4px, #000 calc(100% - 4px), transparent); }
+.separator-scroll-plane { position: absolute; inset: 0 -4% -20%; transform-origin: center bottom; transform: translate3d(calc((var(--separator-progress) - .5) * 3%), calc((var(--separator-progress) - .5) * 10%), 0) scaleY(calc(.92 + var(--separator-progress) * .16)); }
+.separator-wave { position: absolute; inset: 0 auto auto 0; width: 200%; height: 100%; display: block; animation: separator-drift 24s linear infinite; animation-play-state: paused; }
+.separator-wave--back { top: -9%; fill: color-mix(in srgb, var(--separator-from) 65%, var(--separator-to)); animation-duration: 29s; animation-delay: -7s; }
+.separator-wave--middle { top: -4%; fill: color-mix(in srgb, var(--separator-from) 32%, var(--separator-to)); animation-duration: 21s; animation-direction: reverse; animation-delay: -12s; }
+.separator-wave--front { fill: var(--separator-to); animation-duration: 16s; animation-delay: -3s; }
+.is-drifting .separator-wave { animation-play-state: running; }
+@keyframes separator-drift { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: no-preference) {
+  .separator-window { transition: background-color 150ms ease; }
+  .separator-wave { transition: fill 150ms ease; }
+}
+
+/* Small marks, generous hit areas, and a constant surface on every background. */
+.section-indicator { position: fixed; z-index: 70; top: 50%; right: max(.35rem, env(safe-area-inset-right)); transform: translateY(-50%); display: grid; gap: 2px; padding: 4px 0; border-radius: 99px; background: color-mix(in srgb, var(--page-bg) 88%, transparent); box-shadow: 0 0 0 1px #ffffff38, 0 0 0 2px #0c10171a; transition: opacity 180ms ease, visibility 180ms; }
+.section-indicator a { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; text-decoration: none; }
+.section-indicator-dot { width: 5px; height: 5px; border: 1px solid var(--text); border-radius: 50%; opacity: .55; transition: transform 220ms ease, opacity 220ms ease, background-color 220ms ease; }
+.section-indicator a[aria-current='location'] .section-indicator-dot { transform: scale(1.5); background: var(--accent-yellow); border-color: var(--accent-yellow); opacity: 1; }
+.section-indicator a:hover .section-indicator-dot, .section-indicator a:focus-visible .section-indicator-dot { opacity: 1; }
+.section-indicator a:focus-visible { outline: 2px solid var(--focus); outline-offset: 0; }
+.menu-open .section-indicator, body.modal-open .section-indicator { opacity: 0; visibility: hidden; }
+/* Preserve a centered content column while reserving room for the right rail. */
+@media (max-width: 700px) { body:has(.section-indicator) .section-shell { padding-inline: max(2.25rem, 5vw); } .section-indicator { right: max(3px, env(safe-area-inset-right)); } }
+@media (max-height: 520px) { .section-indicator { top: auto; bottom: 1rem; max-height: calc(100dvh - 6.5rem); overflow-y: auto; scrollbar-width: none; transform: none; gap: 0; padding: 0; } }
+@media (prefers-reduced-motion: reduce) { .separator-wave { animation: none; } .separator-scroll-plane { transform: none; } .section-indicator, .section-indicator-dot { transition: none; } }
+@media (forced-colors: active) { .section-separator { visibility: hidden; } .section-indicator { background: Canvas; border: 1px solid CanvasText; box-shadow: none; } .section-indicator-dot { border-color: CanvasText; } .section-indicator a[aria-current='location'] .section-indicator-dot { background: Highlight; border-color: Highlight; } }

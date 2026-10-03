@@ -1,0 +1,19 @@
+---
+import '../styles/section-navigation.css';
+interface Props { from: 'page' | 'about' | 'experience'; to: 'page' | 'about' | 'experience' | 'contact' }
+const { from, to } = Astro.props;
+const colors = { page: 'var(--page-bg)', about: 'var(--about-bg)', experience: 'var(--experience-bg)', contact: '#f4c95d' };
+// Two identical periods make each layer's idle loop seamless.
+const wave = 'M0 60 C240 16 480 16 720 60 S1200 104 1440 60 C1680 16 1920 16 2160 60 S2640 104 2880 60 V160 H0Z';
+---
+<div class="section-separator" data-section-separator aria-hidden="true" style={`--separator-from:${colors[from]};--separator-to:${colors[to]}`}>
+  <div class="separator-window">
+    <div class="separator-scroll-plane">
+      {['back', 'middle', 'front'].map(layer => <svg class={`separator-wave separator-wave--${layer}`} viewBox="0 0 2880 120" preserveAspectRatio="none" focusable="false"><path d={wave} /></svg>)}
+    </div>
+  </div>
+</div>
+<script>
+  import { initializeSeparators } from '../scripts/section-separators';
+  initializeSeparators();
+</script>
