@@ -1,0 +1,55 @@
+/* Light surfaces use compact, tinted shadows; all motion and photo masks stay shared. */
+@media (forced-colors: none) {
+  :root[data-theme='light'] .profile-art {
+    background: #fffefa;
+    border-color: #d4dae5;
+    box-shadow: 0 2px 5px -2px #38476914, 0 12px 26px -13px #38476924;
+  }
+  :root[data-theme='light'] .profile-grid {
+    opacity: .5;
+    background-image: radial-gradient(ellipse, #8b5cf614, transparent 68%), repeating-linear-gradient(0deg, transparent 0 23px, #a6b1c526 24px 25px), repeating-linear-gradient(90deg, transparent 0 23px, #a6b1c526 24px 25px);
+  }
+  :root[data-theme='light'] .profile-orbit { border-color: #b8954a66; }
+  :root[data-theme='light'] .profile-orbit--two { border-color: #9274bf59; }
+  :root[data-theme='light'] .profile-orbit i { box-shadow: 0 0 8px #b8954a24; }
+  :root[data-theme='light'] .profile-frame-expansion { border-color: #ae873f73; }
+  :root[data-theme='light'] .profile-symbol {
+    background: #fffefa;
+    border-color: #d4dae5;
+    box-shadow: 0 3px 8px -5px #38476929;
+  }
+
+  :root[data-theme='light'] .project-showcase {
+    background-color: color-mix(in srgb, var(--scene-accent) 4%, #fffefa);
+    border-color: color-mix(in srgb, var(--scene-accent) 18%, #dbe1eb);
+  }
+  /* Negative spread lets the soft shadow fade within the existing stack gutters.
+     Large outer shadows are cut into rectangles by the necessary reading window. */
+  :root[data-theme='light'] .project-showcase .project-folder {
+    box-shadow: 0 3px 6px -4px #38476924, 0 9px 16px -12px #38476924;
+  }
+  :root[data-theme='light'] .project-showcase .project-folder.is-active {
+    box-shadow: 0 4px 8px -5px #3847692e, 0 12px 20px -14px #3847692e;
+  }
+  :root[data-theme='light'] .project-card-surface {
+    border-color: #ffffff45;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--card-accent) 56%, #25365b), color-mix(in srgb, var(--card-accent) 40%, #23314f));
+  }
+  :root[data-theme='light'] .project-showcase .project-folder-tab {
+    background: color-mix(in srgb, var(--card-accent) 68%, #243354);
+    border-color: #ffffff45;
+  }
+  :root[data-theme='light'] .project-showcase .project-folder-media {
+    background: color-mix(in srgb, var(--card-accent) 22%, #21314f);
+    border-color: #ffffff3d;
+  }
+  :root[data-theme='light'] .project-showcase .project-folder-preview {
+    background: radial-gradient(circle at 76% 18%, color-mix(in srgb, var(--card-accent) 70%, #fff) 0 2%, transparent 24%), linear-gradient(145deg, color-mix(in srgb, var(--card-accent) 28%, #1a2949), color-mix(in srgb, var(--card-accent) 44%, #23314f));
+  }
+}
+@media (hover: hover) and (pointer: fine) and (forced-colors: none) {
+  :root[data-theme='light'] .profile-card:hover .profile-art {
+    border-color: #b69a5e;
+    box-shadow: 0 3px 7px -3px #3847691a, 0 16px 30px -17px #3847692e, 0 0 0 3px #b8954a0f;
+  }
+}

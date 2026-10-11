@@ -55,8 +55,6 @@
 .page-ready .portrait-frame img { animation: motion-image var(--motion-scene) var(--ease-out) 440ms both; }
 .page-ready .profile-topline, .page-ready .profile-bottomline { animation: motion-secondary var(--motion-reveal) var(--ease-out) 620ms both; }
 .page-ready .hero-footer { animation: motion-secondary var(--motion-reveal) var(--ease-out) 660ms both; }
-.hero-footer a > span { position: relative; display: inline-grid; place-items: center; height: 2.5rem; width: 1.4rem; overflow: hidden; }
-.hero-footer a > span::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: currentColor; opacity: .35; }
 @keyframes motion-secondary { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 @keyframes motion-word { from { transform: translateY(115%); } to { transform: none; } }
 @keyframes motion-portrait { from { opacity: 0; transform: translateY(26px); clip-path: inset(0 0 100% 0 round 1.25rem); } to { opacity: 1; transform: none; clip-path: inset(0 round 1.25rem); } }
@@ -99,7 +97,6 @@
   .has-reveal [data-motion='primary'] > .motion-mask-content { clip-path: none; }
   .education-card::before, .has-reveal .education-card:not(.revealed)::before { transform: none; }
   .gallery-image, .has-reveal .gallery-item:not(.revealed) .gallery-image { clip-path: none; }
-  .hero-footer a > span::before { display: none; }
 }
 
 /* Additional depth and sequencing play once; returning content stays still. */
