@@ -115,7 +115,6 @@
 .split-heading::after { grid-column: 2; }
 .has-reveal .section-heading:not(.revealed)::after, .has-reveal .split-heading:not(.revealed)::after, .has-reveal .education-heading:not(.revealed)::after { transform: scaleX(0); }
 .experience-item a, .contact-links a { transition: transform .2s ease, background .2s ease, color .2s ease; }
-.experience-item a:hover, .contact-links a:hover { transform: translateY(-2px); }
 @media (max-width: 900px) { .split-heading::after { grid-column: 1; } }
 @media (max-width: 540px) {
   .technology-grid { grid-template-columns: minmax(0, 1fr); gap: .75rem; }

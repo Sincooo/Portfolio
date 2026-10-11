@@ -1,0 +1,32 @@
+/* Only the photo is masked. Reserved space and bounded motion protect the outlines. */
+.profile-scene { --portrait-x: 0; --portrait-y: 0; --portrait-scroll: 0; overflow: visible; padding: 1.75rem 1.5rem; }
+.profile-card, .profile-art, .profile-photo-pointer { overflow: visible; }
+.profile-depth { position: absolute; inset: 1.75rem 1.5rem; pointer-events: none; }
+.profile-depth--background { z-index: 0; opacity: calc(1 - var(--portrait-scroll)); transform: translate3d(calc(var(--portrait-scroll) * -6px), calc(var(--portrait-scroll) * -12px), 0) scale(calc(1 + var(--portrait-scroll) * .06)); }
+.profile-depth--foreground { z-index: 2; opacity: calc(1 - var(--portrait-scroll) * .92); transform: translate3d(calc(var(--portrait-scroll) * 6px), calc(var(--portrait-scroll) * 12px), 0) scale(calc(1 + var(--portrait-scroll) * .035)); }
+.profile-parallax { position: absolute; inset: 0; }
+.profile-parallax--background { transform: translate3d(calc(var(--portrait-x) * -4px), calc(var(--portrait-y) * -3px), 0); }
+.profile-parallax--foreground { transform: translate3d(calc(var(--portrait-x) * 5px), calc(var(--portrait-y) * 4px), 0); }
+.profile-photo-pointer { position: relative; z-index: 1; transform: translate3d(calc(var(--portrait-x) * 2px), calc(var(--portrait-y) * 1.5px), 0) rotateY(calc(var(--portrait-x) * 2deg)) rotateX(calc(var(--portrait-y) * -2deg)); }
+.profile-art { transform: rotate(-3deg); transition: border-color 220ms, box-shadow 320ms; }
+.profile-grid { inset: -.7rem; z-index: 0; animation: portrait-grid-drift 18s ease-in-out infinite; animation-play-state: paused; }
+.profile-orbit { z-index: 1; inset: -.4rem; animation: portrait-orbit-rock 12s ease-in-out infinite alternate; }
+.profile-orbit--two { inset: .6rem -.55rem; animation-duration: 16s; animation-direction: alternate-reverse; }
+.profile-orbit i { top: 0; left: 0; offset-path: ellipse(50% 50% at 50% 50%); offset-distance: 0%; offset-rotate: 0deg; animation: portrait-orbit-dot 28s linear infinite; }
+.profile-orbit--two i { animation-duration: 36s; animation-direction: reverse; }
+.profile-symbol--code { top: 9%; left: -.65rem; }
+.profile-symbol--star { bottom: 8%; right: -.65rem; }
+.profile-frame-expansion { position: absolute; inset: -.3rem; border: 1px solid color-mix(in srgb, var(--accent-yellow) 65%, transparent); border-radius: 3rem .9rem 3rem .9rem; transform: rotate(-3deg); transition: transform 420ms cubic-bezier(.2,.8,.2,1); }
+.is-engaged .profile-frame-expansion { transform: rotate(-3deg) scale(1.04, 1.025); }
+.profile-edge-highlight { position: absolute; inset: -2px; width: calc(100% + 4px); height: calc(100% + 4px); overflow: visible; }
+.profile-edge-highlight path { fill: none; stroke: var(--accent-yellow); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-dasharray: 14 86; opacity: 0; filter: drop-shadow(0 0 3px var(--accent-yellow)); }
+.profile-card :is(.profile-grid, .profile-orbit, .profile-orbit i, .profile-symbol) { animation-play-state: paused; }
+.profile-card.is-animating :is(.profile-grid, .profile-orbit, .profile-orbit i, .profile-symbol) { animation-play-state: running; }
+@keyframes portrait-grid-drift { 50% { transform: rotate(4deg) scale(1.025); } }
+@keyframes portrait-orbit-rock { from { transform: rotate(-3.5deg); } to { transform: rotate(3.5deg); } }
+@keyframes portrait-orbit-dot { to { offset-distance: 100%; } }
+@media (prefers-reduced-motion: reduce) {
+  .profile-depth, .profile-photo-pointer, .profile-parallax, .profile-art, .profile-frame-expansion { transform: none; opacity: 1; transition: none; }
+  .profile-card :is(.profile-grid, .profile-orbit, .profile-orbit i, .profile-symbol) { animation: none; }
+  .profile-edge-highlight { display: none; }
+}

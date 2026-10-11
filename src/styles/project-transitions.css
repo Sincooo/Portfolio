@@ -1,0 +1,9 @@
+/* Progressive enhancement: ordinary browser navigation remains the fallback. */
+@view-transition { navigation: auto; }
+::view-transition-group(*) { animation-duration: 620ms; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 160ms; }
+::view-transition { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none; }
+}

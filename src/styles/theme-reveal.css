@@ -1,0 +1,28 @@
+/* Capture one complete palette, including project surfaces with their own navigation names. */
+:root.theme-changing,
+:root.theme-changing *,
+:root.theme-changing *::before,
+:root.theme-changing *::after { transition: none !important; }
+:root.theme-changing * { view-transition-name: none !important; }
+
+:root.theme-revealing::view-transition-group(root) { animation: none; }
+:root.theme-revealing::view-transition-image-pair(root) { isolation: isolate; }
+:root.theme-revealing::view-transition-old(root),
+:root.theme-revealing::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  opacity: 1;
+  height: 100%;
+}
+:root.theme-revealing::view-transition-old(root) { z-index: 1; }
+:root.theme-revealing::view-transition-new(root) {
+  z-index: 2;
+  animation: theme-circle-reveal 520ms cubic-bezier(.4, 0, .2, 1) both;
+}
+@keyframes theme-circle-reveal {
+  from { clip-path: circle(0 at var(--theme-x) var(--theme-y)); }
+  to { clip-path: circle(var(--theme-radius) at var(--theme-x) var(--theme-y)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root.theme-revealing::view-transition-new(root) { animation: none; }
+}

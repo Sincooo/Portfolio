@@ -22,8 +22,8 @@ export function initializeActivityCounters(container: HTMLElement) {
     const began = performance.now();
     container.dataset.counterState = 'running';
     const tick = (now: number) => {
-      const progress = Math.min(1, (now - began) / 1000);
-      const eased = 1 - (1 - progress) ** 3;
+      const progress = Math.min(1, (now - began) / 2600);
+      const eased = 1 - (1 - progress) ** 2;
       counters.forEach((counter, index) => {
         counter.current = origins[index] + (counter.target - origins[index]) * eased;
         counter.element.textContent = formatStatistic(counter.current, counter.decimals);

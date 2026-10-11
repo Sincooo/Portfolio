@@ -152,7 +152,6 @@
 .menu-link-arrow { color: var(--muted); font-family: 'Inter Variable', sans-serif; font-size: 1rem; transition: transform 220ms var(--ease-out), color 220ms; }
 .menu-link:hover, .menu-link:focus-visible, .menu-link.active { border-color: var(--accent-yellow); }
 .menu-link:hover .menu-link-text, .menu-link:focus-visible .menu-link-text { transform: translateY(-100%); }
-.menu-link:hover .menu-link-arrow, .menu-link:focus-visible .menu-link-arrow { transform: translate(2px, -2px); }
 .menu-link.active :is(.menu-link-arrow, .menu-link-number) { color: var(--accent-yellow); }
 .menu-link.active .menu-active-mark { border-color: var(--accent-yellow); background: var(--accent-yellow); }
 .menu-aside { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; animation: drawer-link-in 350ms var(--ease-out) 280ms both; }

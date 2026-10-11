@@ -17,15 +17,16 @@ const availableTechnologies = project.primaryLanguage ? [project.primaryLanguage
 <BaseLayout title={`${project.title} — Edward Ranz V. Cardoza`} description={pageDescription}>
   <Nav />
   <main id="main" class="project-detail section-shell">
-    <a class="project-detail__back" href="/#projects">
+    <a class="project-detail__back" href={`/#project-${project.slug}`}>
       <span aria-hidden="true">←</span>
       Back to selected projects
     </a>
 
     <header class="project-detail__header">
+      <div class="project-detail__surface" aria-hidden="true" style={`view-transition-name: project-${project.slug}-surface`}></div>
       <div class="project-detail__heading">
         <p class="eyebrow">{project.category} <span aria-hidden="true">/</span> {project.status}</p>
-        <h1>{project.title}</h1>
+        <h1 style={`view-transition-name: project-${project.slug}-title`}>{project.title}</h1>
         {
           project.summary
             ? <p class="project-detail__summary">{project.summary}</p>

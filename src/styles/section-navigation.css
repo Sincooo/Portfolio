@@ -1,12 +1,14 @@
-/* Zero-height boundaries borrow only the surrounding sections' empty padding. */
-.section-separator { --separator-height: clamp(52px, 7vw, 92px); --separator-progress: .5; position: relative; z-index: 2; height: 0; pointer-events: none; }
-.separator-window { position: absolute; inset: calc(var(--separator-height) / -2) 0 auto; height: var(--separator-height); overflow: clip; background: var(--separator-from); mask-image: linear-gradient(transparent, #000 4px, #000 calc(100% - 4px), transparent); }
-.separator-scroll-plane { position: absolute; inset: 0 -4% -20%; transform-origin: center bottom; transform: translate3d(calc((var(--separator-progress) - .5) * 3%), calc((var(--separator-progress) - .5) * 10%), 0) scaleY(calc(.92 + var(--separator-progress) * .16)); }
-.separator-wave { position: absolute; inset: 0 auto auto 0; width: 200%; height: 100%; display: block; animation: separator-drift 24s linear infinite; animation-play-state: paused; }
-.separator-wave--back { top: -9%; fill: color-mix(in srgb, var(--separator-from) 65%, var(--separator-to)); animation-duration: 29s; animation-delay: -7s; }
-.separator-wave--middle { top: -4%; fill: color-mix(in srgb, var(--separator-from) 32%, var(--separator-to)); animation-duration: 21s; animation-direction: reverse; animation-delay: -12s; }
-.separator-wave--front { fill: var(--separator-to); animation-duration: 16s; animation-delay: -3s; }
+/* Zero-height curves borrow empty section padding and never alter document flow. */
+.section-separator { --separator-height: clamp(72px, 8.5vw, 112px); --separator-progress: .5; --separator-energy: 0; --separator-response: 0; position: relative; z-index: 2; height: 0; pointer-events: none; }
+.separator-window { position: absolute; inset: calc(var(--separator-height) / -2) 0 auto; height: var(--separator-height); overflow: hidden; overflow: clip; background: var(--separator-from); }
+/* Overscan keeps the bottom solid even at maximum bounded scroll response. */
+.separator-scroll-plane { position: absolute; inset: 0 -14%; transform-origin: center; transform: translate3d(calc((var(--separator-progress) - .5) * 16px + var(--separator-response) * 28px), calc(var(--separator-response) * 3px), 0) scaleY(calc(.72 + var(--separator-energy) * .68)); }
+.separator-wave { position: absolute; inset: 0 auto auto 0; width: 200%; height: 100%; display: block; overflow: visible; animation: separator-drift 16s linear infinite; animation-play-state: paused; }
+.separator-wave--back { top: -5%; fill: color-mix(in srgb, var(--separator-from) 65%, var(--separator-to)); animation-duration: 21s; animation-delay: -7s; }
+.separator-wave--middle { top: -2%; fill: color-mix(in srgb, var(--separator-from) 32%, var(--separator-to)); animation-duration: 16s; animation-direction: reverse; animation-delay: -12s; }
+.separator-wave--front { fill: var(--separator-to); animation-duration: 12s; animation-delay: -3s; }
 .is-drifting .separator-wave { animation-play-state: running; }
+.is-drifting .separator-scroll-plane { will-change: transform; }
 @keyframes separator-drift { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: no-preference) {
   .separator-window { transition: background-color 150ms ease; }

@@ -11,30 +11,32 @@
   const loader = document.querySelector<HTMLElement>('.page-loader');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   if (loader && root.classList.contains('page-loading')) {
-    const started = performance.now();
-    const minimum = 1700;
+    let leaving = false;
+    let exitTimer = 0;
+    let assetTimer = 0;
+    const complete = () => {
+      window.clearTimeout(exitTimer);
+      window.clearTimeout(assetTimer);
+      root.classList.remove('page-loading', 'page-revealing');
+      root.classList.add('page-ready');
+      try { sessionStorage.setItem('portfolio-loader-shown', 'true'); } catch {}
+      motion.removeEventListener('change', onMotionChange);
+    };
     const finish = () => {
       if (!root.classList.contains('page-loading')) return;
-      if (motion.matches) {
-        root.classList.remove('page-loading');
-        root.classList.add('page-ready');
-        return;
-      }
+      if (motion.matches) { complete(); return; }
+      if (leaving) return;
+      leaving = true;
       loader.classList.add('is-leaving');
       root.classList.add('page-revealing');
-      window.setTimeout(() => {
-        root.classList.remove('page-loading', 'page-revealing');
-        root.classList.add('page-ready');
-        try { sessionStorage.setItem('portfolio-loader-shown', 'true'); } catch {}
-      }, 420);
+      exitTimer = window.setTimeout(complete, 420);
     };
+    const onMotionChange = (event: MediaQueryListEvent) => { if (event.matches) finish(); };
     const portrait = document.querySelector<HTMLImageElement>('.portrait-frame img');
     const assets = Promise.allSettled([document.fonts.ready, portrait?.decode().catch(() => {})]);
-    const assetLimit = new Promise((resolve) => window.setTimeout(resolve, 4500));
-    Promise.race([assets, assetLimit]).then(() => {
-      const remaining = Math.max(0, minimum - (performance.now() - started));
-      window.setTimeout(finish, remaining);
-    });
-    motion.addEventListener('change', (event) => { if (event.matches) finish(); });
+    const assetLimit = new Promise(resolve => { assetTimer = window.setTimeout(resolve, 4500); });
+    // Loading follows asset readiness without a minimum delay.
+    void Promise.race([assets, assetLimit]).then(finish);
+    motion.addEventListener('change', onMotionChange);
   }
 </script>

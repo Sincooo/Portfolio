@@ -8,9 +8,15 @@ import '../styles/phase2.css';
 import '../styles/motion.css';
 import '../styles/refinements.css';
 import '../styles/activity-flow.css';
+import '../styles/portrait-motion.css';
+import '../styles/spring-buttons.css';
+import '../styles/project-transitions.css';
+import '../styles/traveling-borders.css';
 import ContrastCursor from '../components/ContrastCursor.astro';
 import PageLoader from '../components/PageLoader.astro';
 import MotionController from '../components/MotionController.astro';
+import SpringButtons from '../components/SpringButtons.astro';
+import TravelingBorders from '../components/TravelingBorders.astro';
 
 const {
   title = 'Edward Ranz Cardoza — Aspiring Software Engineer',
@@ -48,6 +54,8 @@ const {
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
     <MotionController />
+    <SpringButtons />
+    <TravelingBorders />
     <ContrastCursor />
   </body>
 </html>

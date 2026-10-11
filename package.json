@@ -10,9 +10,10 @@
     "github:refresh": "node scripts/refresh-github.mjs"
   },
   "dependencies": {
-    "astro": "latest",
     "@fontsource-variable/inter": "latest",
-    "@fontsource-variable/sora": "latest"
+    "@fontsource-variable/sora": "latest",
+    "astro": "latest",
+    "gsap": "3.15.0"
   },
   "devDependencies": {
     "@astrojs/check": "latest",
